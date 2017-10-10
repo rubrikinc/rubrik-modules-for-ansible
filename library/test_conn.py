@@ -23,7 +23,7 @@ def main():
     debug_output = []
 
     try:
-	    rk = RubrikClient.create(module.params['node'], module.params['rubrik_user'], module.params['rubrik_pass'])
+        rk = RubrikClient.create(module.params['node'], module.params['rubrik_user'], module.params['rubrik_pass'])
 
     except:
         module.fail_json(msg="Rubrik node connection issues.  Please check Rubrik node IP address or hostname in the YAML configuration file.")
