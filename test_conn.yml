@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Test connection to Rubrik 
+      test_conn:
+        node: "rubrik.demo.com"
+        rubrik_user: "foo"
+        rubrik_pass: "bar"
