@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Register host with Rubrik cluster 
+      register_host:
+        node: "rubrik.demo.com"
+        rubrik_user: "foo"
+        rubrik_pass: "bar"
+        host_name: "{{ item.host_name }}"
+      with_items:
+      - { host_name: '172.21.11.119' }
+

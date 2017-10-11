@@ -11,7 +11,7 @@ Contains the module for managing Rubrik services for managed Ansible nodes.
 1. cd to `module-utils/RubrikLib_Int`, run `sudo -H python setup.py install`
 1. cp `module-utils/pyRubrik.py` to your Ansible module_utils path (in my case it was `/usr/local/lib/python2.7/dist-packages/ansible/module_utils`)
 
-### Playbooks
+## Playbooks
 
 #### cluster_info
 
@@ -114,4 +114,37 @@ changed: [localhost] => (item={u'vmware_vm_name': u'th-ubu-chef-client'}) => {"c
 
 PLAY RECAP *************************************************************************************
 localhost                  : ok=2    changed=1    unreachable=0    failed=0
+```
+
+#### register_host
+
+Registers the given hosts with the Rubrik cluster. NOTE: the hosts will need to be resolvable via DNS by the Rubrik cluster, or IP addresses used instead of hostnames, and Rubrik Connector should have already been installed.
+
+```yaml
+---
+- hosts: localhost
+  tasks:
+    - name: Register host with Rubrik cluster 
+      register_host:
+        node: "rubrik.demo.com"
+        rubrik_user: "foo"
+        rubrik_pass: "bar"
+        host_name: "{{ item.host_name }}"
+      with_items:
+      - { host_name: '172.21.11.119' }
+```
+
+Example output:
+
+```none
+tim@th-ubu-chef-client:~/ansible$ ansible-playbook register_host.yml -v                                                                                         PLAY [localhost] *******************************************************************************
+
+TASK [Gathering Facts] *************************************************************************
+ok: [localhost]
+
+TASK [Register host with Rubrik cluster] *******************************************************
+changed: [localhost] => (item={u'host_name': u'172.21.11.119'}) => {"changed": true, "debug_out": [], "failed": false, "item": {"host_name": "172.21.11.119"}}  
+
+PLAY RECAP *************************************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0                                                                                     
 ```
