@@ -13,9 +13,9 @@ Contains the module for managing Rubrik services for managed Ansible nodes.
 
 ### Playbooks
 
-#### test_conn
+#### cluster_info
 
-Tests the connection to the Rubrik cluster, throwing an error if the connection cannot be made.
+Tests the connection to the Rubrik cluster, returns info about the cluster throwing an error if the connection cannot be made.
 
 ```yaml
 ---
@@ -31,18 +31,17 @@ Tests the connection to the Rubrik cluster, throwing an error if the connection 
 Example output:
 
 ```
-tim@th-ubu-chef-client:~/ansible$ ansible-playbook test_conn.yml
-
+tim@th-ubu-chef-client:~/ansible$ ansible-playbook cluster_info.yml -v
 PLAY [localhost] *******************************************************************************
-
+                                      
 TASK [Gathering Facts] *************************************************************************
-ok: [localhost]
+ok: [localhost]                                                                                                                                                 
 
 TASK [Test connection to Rubrik] ***************************************************************
-ok: [localhost]
+ok: [localhost] => {"changed": false, "debug_out": [], "failed": false, "message": {"api_version": "1", "id": "89fc0d86-6f1c-4652-aefa-37b7ba0e6229", "version": "4.0.3-474"}}                        
 
 PLAY RECAP *************************************************************************************
-localhost                  : ok=2    changed=0    unreachable=0    failed=0   
+localhost                  : ok=2    changed=0    unreachable=0    failed=
 ```
 
 #### set_sla
@@ -79,4 +78,40 @@ ok: [localhost] => (item={u'vmware_vm_name': u'th-ubu-chef-client'})
 
 PLAY RECAP *************************************************************************************
 localhost                  : ok=2    changed=0    unreachable=0    failed=0                                   
+```
+
+#### od_backup
+
+This playbook takes an on-demand snapshot of the object specified in the confiugration.
+
+```yaml
+---
+- hosts: localhost
+  tasks:
+    - name: On-demand VMware backup of list of VMs 
+      od_backup:
+        node: "rubrik.demo.com"
+        rubrik_user: "foo"
+        rubrik_pass: "bar"
+        object_type: "vmware_vm"
+        vmware_vm_name: "{{ item.vmware_vm_name }}"
+      with_items:
+      - { vmware_vm_name: 'th-ubu-chef-client' }
+```
+
+Example output:
+
+```none
+tim@th-ubu-chef-client:~/ansible$ ansible-playbook od_backup.yml -v
+
+PLAY [localhost] *******************************************************************************
+
+TASK [Gathering Facts] *************************************************************************
+ok: [localhost]
+
+TASK [On-demand VMware backup of list of VMs] **************************************************
+changed: [localhost] => (item={u'vmware_vm_name': u'th-ubu-chef-client'}) => {"changed": true, "debug_out": [], "failed": false, "item": {"vmware_vm_name": "th-ubu-chef-client"}}
+
+PLAY RECAP *************************************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0
 ```

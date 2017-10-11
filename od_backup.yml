@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  tasks:
+    - name: On-demand VMware backup of list of VMs 
+      od_backup:
+        node: "rubrik.demo.com"
+        rubrik_user: "foo"
+        rubrik_pass: "bar"
+        object_type: "vmware_vm"
+        vmware_vm_name: "{{ item.vmware_vm_name }}"
+      with_items:
+      - { vmware_vm_name: 'th-ubu-chef-client' }
