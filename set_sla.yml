@@ -2,7 +2,7 @@
 - hosts: localhost
   tasks:
     - name: Set SLA for VMware Virtual Machine 
-      test_conn:
+      set_sla:
         node: "rubrik.demo.com"
         rubrik_user: "foo"
         rubrik_pass: "bar"
