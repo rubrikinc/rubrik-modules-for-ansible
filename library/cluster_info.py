@@ -30,7 +30,9 @@ def main():
     except:
         module.fail_json(msg="Rubrik node connection issues.  Please check Rubrik node IP address or hostname in the YAML configuration file.")
 
-    module.exit_json(changed=False, debug_out=debug_output)
+    cluster_info = rk.get_public_cluster_info()
+
+    module.exit_json(message=cluster_info, changed=False, debug_out=debug_output)
 
 if __name__ == '__main__':
     main()
