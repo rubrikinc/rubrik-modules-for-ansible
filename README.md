@@ -137,7 +137,8 @@ Registers the given hosts with the Rubrik cluster. NOTE: the hosts will need to 
 Example output:
 
 ```none
-tim@th-ubu-chef-client:~/ansible$ ansible-playbook register_host.yml -v                                                                                         PLAY [localhost] *******************************************************************************
+tim@th-ubu-chef-client:~/ansible$ ansible-playbook register_host.yml -v
+PLAY [localhost] *******************************************************************************
 
 TASK [Gathering Facts] *************************************************************************
 ok: [localhost]
