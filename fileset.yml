@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Create or modify a fileset
+      fileset:
+        node: "rubrik.demo.com"
+        rubrik_user: "foo"
+        rubrik_pass: "bar"
+        host_name: "{{ item.host_name }}"
+        fileset_template: "{{ item.fileset_template }}"
+        sla_domain: "Bronze"
+      with_items:
+      - { host_name: '172.21.11.119', fileset_template: 'th-allthethings' }
+      - { host_name: '172.21.11.119', fileset_template: 'th-test-fileset' }
+

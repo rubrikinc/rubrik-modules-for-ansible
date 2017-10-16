@@ -33,6 +33,7 @@ def main():
         module.fail_json(msg="Rubrik node connection issues.  Please check Rubrik node IP address or hostname in the YAML configuration file.")
 
     '''Check to see if VM exists'''
+    my_vm = False
     vm_query = rk.query_vm(primary_cluster_id='local', limit=20000, is_relic=False, name=module.params['vmware_vm_name'])
     for vm in vm_query.data:
         if vm.name == module.params['vmware_vm_name']:
@@ -46,6 +47,7 @@ def main():
         debug_output.append('SLA Domain = effective')
         module.exit_json(changed=False, debug_out=debug_output)
     else:
+        my_sla = False
         sla_query = rk.query_sla_domain(primary_cluster_id='local', limit=20000, is_relic=False, name=module.params['sla_domain'])
         for sla in sla_query.data:
             if sla.name == module.params['sla_domain']:

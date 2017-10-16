@@ -34,13 +34,15 @@ def main():
         module.fail_json(msg="Rubrik node connection issues.  Please check Rubrik node IP address or hostname in the YAML configuration file.")
 
     ''' Check to see if object type exists'''
+    object_exists = False
     object_types = ['vmware_vm']
     object_exists = module.params['object_type'] in object_types
-    if object_exists == False:
+    if not object_exists:
         message = "Object type " + module.params['object_type'] + " does not exist.  Please check the object_type value in your Ansible YAML file"
         module.fail_json(msg=message)
 
     '''Check to see if VM exists'''
+    my_vm = False
     vm_query = rk.query_vm(primary_cluster_id='local', limit=20000, is_relic=False, name=module.params['vmware_vm_name'])
     for vm in vm_query.data:
         if vm.name == module.params['vmware_vm_name']:
@@ -50,6 +52,7 @@ def main():
         module.fail_json(msg="VMware VM does not exist.  Please check the YAML configuration file.")
 
     '''Figure out the SLA Domain ID'''
+    my_sla = False
     if module.params['sla_domain']:
         my_sla_name = module.params['sla_domain']
     else:

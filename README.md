@@ -30,15 +30,15 @@ Tests the connection to the Rubrik cluster, returns info about the cluster throw
 
 Example output:
 
-```
+```none
 tim@th-ubu-chef-client:~/ansible$ ansible-playbook cluster_info.yml -v
 PLAY [localhost] *******************************************************************************
-                                      
+
 TASK [Gathering Facts] *************************************************************************
-ok: [localhost]                                                                                                                                                 
+ok: [localhost]
 
 TASK [Test connection to Rubrik] ***************************************************************
-ok: [localhost] => {"changed": false, "debug_out": [], "failed": false, "message": {"api_version": "1", "id": "89fc0d86-6f1c-4652-aefa-37b7ba0e6229", "version": "4.0.3-474"}}                        
+ok: [localhost] => {"changed": false, "debug_out": [], "failed": false, "message": {"api_version": "1", "id": "89fc0d86-6f1c-4652-aefa-37b7ba0e6229", "version": "4.0.3-474"}}
 
 PLAY RECAP *************************************************************************************
 localhost                  : ok=2    changed=0    unreachable=0    failed=
@@ -77,7 +77,7 @@ TASK [Set SLA for VMware Virtual Machine] **************************************
 ok: [localhost] => (item={u'vmware_vm_name': u'th-ubu-chef-client'})
 
 PLAY RECAP *************************************************************************************
-localhost                  : ok=2    changed=0    unreachable=0    failed=0                                   
+localhost                  : ok=2    changed=0    unreachable=0    failed=0
 ```
 
 #### od_backup
@@ -144,8 +144,47 @@ TASK [Gathering Facts] *********************************************************
 ok: [localhost]
 
 TASK [Register host with Rubrik cluster] *******************************************************
-changed: [localhost] => (item={u'host_name': u'172.21.11.119'}) => {"changed": true, "debug_out": [], "failed": false, "item": {"host_name": "172.21.11.119"}}  
+changed: [localhost] => (item={u'host_name': u'172.21.11.119'}) => {"changed": true, "debug_out": [], "failed": false, "item": {"host_name": "172.21.11.119"}}
 
 PLAY RECAP *************************************************************************************
-localhost                  : ok=2    changed=1    unreachable=0    failed=0                                                                                     
+localhost                  : ok=2    changed=1    unreachable=0    failed=0
+```
+
+#### fileset
+
+Creates or updates a fileset, or filesets for the list of hosts and fileset templates given in the configuration.
+
+```yaml
+---
+- hosts: localhost
+  tasks:
+    - name: Create or modify a fileset
+      fileset:
+        node: "rubrik.demo.com"
+        rubrik_user: "foo"
+        rubrik_pass: "bar"
+        host_name: "{{ item.host_name }}"
+        fileset_template: "{{ item.fileset_template }}"
+        sla_domain: "Bronze"
+      with_items:
+      - { host_name: '172.21.11.119', fileset_template: 'th-allthethings' }
+      - { host_name: '172.21.11.119', fileset_template: 'th-test-fileset' }
+```
+
+Example output:
+
+```none
+tim@th-ubu-chef-client:~/ansible$ ansible-playbook fileset.yml -v
+
+PLAY [localhost] *******************************************************************************
+
+TASK [Gathering Facts] *************************************************************************
+ok: [localhost]
+
+TASK [Create or modify a fileset] **************************************************************
+ok: [localhost] => (item={u'fileset_template': u'th-allthethings', u'host_name': u'172.21.11.119'}) => {"changed": false, "debug_out": ["Fileset already exists, with id Fileset:::a967f2f2-6ec9-443d-8192-85670398d361", "Fileset is already configured with the correct SLA domain"], "failed": false, "item": {"fileset_template": "th-allthethings", "host_name": "172.21.11.119"}}
+ok: [localhost] => (item={u'fileset_template': u'th-test-fileset', u'host_name': u'172.21.11.119'}) => {"changed": false, "debug_out": ["Fileset already exists, with id Fileset:::5c061039-b9cb-49b8-a3ca-398546de672c", "Fileset is already configured with the correct SLA domain"], "failed": false, "item": {"fileset_template": "th-test-fileset", "host_name": "172.21.11.119"}}
+
+PLAY RECAP *************************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0
 ```
