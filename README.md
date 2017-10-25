@@ -1,6 +1,6 @@
 # Rubrik Ansible Module
 
-## Overview
+##  Overview
 
 Contains the module for managing Rubrik services for managed Ansible nodes.
 
@@ -187,4 +187,80 @@ ok: [localhost] => (item={u'fileset_template': u'th-test-fileset', u'host_name':
 
 PLAY RECAP *************************************************************************************
 localhost                  : ok=2    changed=0    unreachable=0    failed=0
+```
+#### connector_win
+
+Installs the Rubrik Connector Service on a Windows machine, and configures the service to start with the provided service account.
+
+```yaml
+---
+- hosts: windows
+  vars:
+    node: "rubrik.demo.com"
+    rubrik_user: "admin"
+    rubrik_pass: "Password123!"
+    service_user: "sa_rubrik@demo.com"
+    service_pass: "Password123!"
+  tasks:
+    - name: Create temp folder, if it doesn't exist
+      win_file:
+        path: C:\Temp
+        state: directory
+    - name: Download Rubrik connector
+      win_get_url:
+        url: "https://{{ node }}/connector/RubrikBackupService.zip"
+        dest: C:\Temp\RubrikBackupService.zip
+        validate_certs: no
+        force: no
+    - name: Unzip connector archive
+      win_unzip:
+        src: C:\Temp\RubrikBackupService.zip
+        dest: C:\Temp\
+    - name: Install connector software
+      win_package:
+        path: C:\Temp\RubrikBackupService.msi
+        state: present
+        creates_service: 'Rubrik Backup Service'
+        wait: yes
+    - name: Set logon for service
+      win_service:
+        username: "{{ service_user }}"
+        password: "{{ service_pass }}"
+        name: 'Rubrik Backup Service'
+```
+
+Example output:
+
+```none
+tim@th-ubu-chef-client:~/ansible$ ansible-playbook connector_win.yml 
+
+PLAY [windows] ************************************************************************
+
+TASK [Gathering Facts] ****************************************************************
+ok: [172.17.60.179]
+ok: [172.17.60.229]
+
+TASK [Create temp folder, if it doesn't exist] ****************************************
+ok: [172.17.60.229]
+ok: [172.17.60.179]
+
+TASK [Download Rubrik connector] ******************************************************
+ok: [172.17.60.179]
+ok: [172.17.60.229]
+
+TASK [Unzip connector archive] ********************************************************
+changed: [172.17.60.179]
+changed: [172.17.60.229]
+
+TASK [Install connector software] *****************************************************
+ok: [172.17.60.179]
+ok: [172.17.60.229]
+
+TASK [Set logon for service] **********************************************************
+ok: [172.17.60.179]
+ok: [172.17.60.229]
+
+PLAY RECAP ****************************************************************************
+172.17.60.179              : ok=6    changed=1    unreachable=0    failed=0   
+172.17.60.229              : ok=6    changed=1    unreachable=0    failed=0   
 ```
