@@ -2,8 +2,6 @@
 - hosts: windows
   vars:
     node: "rubrik.demo.com"
-    rubrik_user: "admin"
-    rubrik_pass: "Password123!"
     service_user: "sa_rubrik@demo.com"
     service_pass: "Password123!"
   tasks:
