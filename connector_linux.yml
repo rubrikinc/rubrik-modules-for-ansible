@@ -1,0 +1,34 @@
+---
+- hosts: linux
+  tasks:
+    - name: Group Servers by Operating System Family
+      action: group_by key={{ ansible_os_family }}
+
+- hosts: RedHat
+  vars:
+    rubrik_cluster: "rubrik.demo.com"
+  tasks:
+  - name: Download Rubrik connector
+    get_url:
+      url: "https://{{ rubrik_cluster }}/connector/rubrik-agent.x86_64.rpm"
+      dest: /tmp/rubrik-agent.x86_64.rpm
+      validate_certs: no
+      force: no
+  - name: Install connector software
+    yum:
+      name: /tmp/rubrik-agent.x86_64.rpm
+      state: present
+
+- hosts: Debian
+  vars:
+    rubrik_cluster: "rubrik.demo.com"
+  tasks:
+  - name: Download Rubrik connector
+    get_url:
+      url: "https://{{ rubrik_cluster }}/connector/rubrik-agent.x86_64.deb"
+      dest: /tmp/rubrik-agent.x86_64.deb
+      validate_certs: no
+      force: no
+  - name: Install connector software
+    apt:
+      deb: /tmp/rubrik-agent.x86_64.deb
