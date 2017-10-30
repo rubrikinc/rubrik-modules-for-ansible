@@ -196,9 +196,7 @@ Installs the Rubrik Connector Service on a Windows machine, and configures the s
 ---
 - hosts: windows
   vars:
-    node: "rubrik.demo.com"
-    rubrik_user: "admin"
-    rubrik_pass: "Password123!"
+    rubrik_cluster: "rubrik.demo.com"
     service_user: "sa_rubrik@demo.com"
     service_pass: "Password123!"
   tasks:

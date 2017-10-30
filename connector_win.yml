@@ -1,7 +1,7 @@
 ---
 - hosts: windows
   vars:
-    node: "rubrik.demo.com"
+    rubrik_cluster: "rubrik.demo.com"
     service_user: "sa_rubrik@demo.com"
     service_pass: "Password123!"
   tasks:
@@ -11,7 +11,7 @@
         state: directory
     - name: Download Rubrik connector
       win_get_url:
-        url: "https://{{ node }}/connector/RubrikBackupService.zip"
+        url: "https://{{ rubrik_cluster }}/connector/RubrikBackupService.zip"
         dest: C:\Temp\RubrikBackupService.zip
         validate_certs: no
         force: no
