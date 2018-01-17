@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Set SLA for VMware Virtual Machine 
+      set_sla:
+        node: "rubrik.demo.com"
+        rubrik_user: "foo"
+        rubrik_pass: "bar"
+        vmware_vm_name: "{{ item.vmware_vm_name }}"
+        sla_domain: "Bronze"
+      with_items:
+      - { vmware_vm_name: 'th-ubu-chef-client' }
+
