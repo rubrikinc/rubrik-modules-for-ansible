@@ -1,6 +1,4 @@
-# Rubrik Ansible Module
-
-## Beta
+# Rubrik Ansible Module (Beta)
 
 ## Disclaimer
 
