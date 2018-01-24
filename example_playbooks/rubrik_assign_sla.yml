@@ -1,0 +1,16 @@
+---
+
+- name: Validate the Rubrik Modules
+  hosts: local
+  connection: local
+  vars_files:
+    - ./variables.yml
+
+  tasks:
+
+    - name: Assign a SLA Domain to a vSphrre VM
+      rubrik_assign_sla:
+        provider={{ credentials }}
+        sla_domain_name={{ sla_domain_name }}
+        vsphere_vm_name={{ vsphere_vm_name }}
+        

@@ -1,0 +1,14 @@
+---
+
+- name: Validate the Rubrik Modules
+  hosts: local
+  connection: local
+  vars_files:
+    - ./variables.yml
+
+  tasks:
+
+    - name: Retrieve public information about the Rubrik cluster
+      rubrik_cluster_information:
+        provider={{ credentials }}
+        
