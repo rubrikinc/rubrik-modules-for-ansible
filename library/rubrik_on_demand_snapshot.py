@@ -1,3 +1,4 @@
+#!/usr/bin/python
 
 
 def get_vsphere_vm_id(rubrik, vsphere_vm_name, module):

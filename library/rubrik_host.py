@@ -1,3 +1,6 @@
+#!/usr/bin/python
+
+
 def current_hosts(rubrik, hostname):
 
     host_present = False
