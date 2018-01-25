@@ -1,4 +1,81 @@
 #!/usr/bin/python
+# Copyright: Rubrik
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
+ANSIBLE_METADATA = {'metadata_version': '1.1',
+                    'status': ['stableinterface'],
+                    'supported_by': 'community'}
+
+
+DOCUMENTATION = '''
+---
+module: rubrik_host
+requirements: pyRubrik
+extends_documentation_fragment: rubrik
+version_added: "2.5"
+short_description: Manage a Physical Host.
+description:
+    - Add, Delete, or Manage Protection of a Physical Host.
+author:
+    - Drew Russell (t. @drusse11)
+options:
+    hostname:
+        description:
+            - The DNS hostname or IP address of the Physical Host you wish to take an I(action) on.
+        required: true
+        aliases: ip_address
+        default: null
+    fileset:
+        description:
+            - The name of the Fileset to associate with the Host. Required if I(action=manage_protection)
+        required: false
+        default: null
+    sla_domain_name:
+        description:
+            - The name of the SLA Domain to associate with the I(Fileset). Required if I(action=manage_protection)
+        required: false
+        aliases: sla
+        default: null
+    action:
+        description:
+            - Whether to add, delete, or manage protection on the Physical Host.
+        required: true
+        choices: [add, delete, manage_protection]
+        default: add
+'''
+
+EXAMPLES = '''
+- name: Add a Physical Host to the Rubrik Cluster
+  rubrik_host:
+    provider={{ credentials }}
+    hostname={{ hostname }}
+    action=add
+
+- name: Remove a Physical Host from the Rubrik Cluster
+  rubrik_host:
+    provider={{ credentials }}
+    hostname={{ hostname }}
+    action=delete
+
+- name: Manage Protection of a Physical Host
+  rubrik_host:
+    provider={{ credentials }}
+    hostname={{ hostname }}
+    fileset={{ fileset }}
+    sla_domain_name={{ sla_domain_name }}
+    action=manage_protection
+'''
+
+RETURN = '''
+response:
+    description: Human readable description of the results of the module execution.
+    returned: success
+    type: dict
+    sample: {"response": "'Linux-Physical' has successfully added to the Rubrik Cluster.}
+'''
 
 
 def current_hosts(rubrik, hostname):
