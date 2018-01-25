@@ -2,6 +2,9 @@
 # Copyright: Rubrik
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'community'}
@@ -10,6 +13,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = '''
 ---
 module: rubrik_on_demand_snapshot
+requirements: pyRubrik
 extends_documentation_fragment: rubrik
 version_added: "2.5"
 short_description: Take an On Demand Snapshot.
