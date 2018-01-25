@@ -1,4 +1,49 @@
-#!/usr/bin/python
+ANSIBLE_METADATA = {'metadata_version': '1.1',
+                    'status': ['stableinterface'],
+                    'supported_by': 'community'}
+
+
+DOCUMENTATION = '''
+---
+module: rubrik_on_demand_snapshot
+extends_documentation_fragment: rubrik
+version_added: "2.5"
+short_description: Take an On Demand Snapshot.
+description:
+    - Take an On Demand Snapshot of a vSphere VM and assign an SLA Domain.
+author:
+    - Drew Russell (t. @drusse11)
+options:
+    sla_domain_name:
+        description:
+            - Then name of the SLA Domain to assign to Snapshot.
+        required: true
+        aliases: sla
+        default: null
+    vsphere_vm_name:
+        description:
+            - The name of the VM to take a Snapshot of.
+        required: true
+        aliases: vm
+        default: null
+
+'''
+
+EXAMPLES = '''
+- name: Take a On Demand vSphere VM Snapshot
+  rubrik_on_demand_snapshot:
+    provider={{ credentials }}
+    sla_domain_name={{ sla_domain_name }}
+    vsphere_vm_name={{ vsphere_vm_name }}
+'''
+
+RETURN = '''
+response:
+    description: Human readable description of the results of the module execution.
+    returned: success
+    type: dict
+    sample: {"response": "Successfully created a On Demand Snapshot for 'Ansible-Tower'}
+'''
 
 
 def get_vsphere_vm_id(rubrik, vsphere_vm_name, module):
@@ -47,7 +92,7 @@ def main():
     argument_spec.update(
         dict(
             sla_domain_name=dict(required=True, aliases=['sla']),
-            vsphere_vm_name=dict(required=True, aliases=['vsphere_vm_name']),
+            vsphere_vm_name=dict(required=True, aliases=['vm']),
 
         )
     )
