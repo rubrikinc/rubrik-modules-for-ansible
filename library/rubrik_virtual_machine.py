@@ -61,6 +61,14 @@ EXAMPLES = '''
     provider={{ credentials }}
     sla_domain_name={{ sla_domain_name }}
     vsphere_vm_name={{ vsphere_vm_name }}
+
+- name: Instantly Recovery a vSphere VM
+  rubrik_on_demand_snapshot:
+    provider={{ credentials }}
+    vsphere_vm_name={{ vsphere_vm_name }}
+    snapshot_date={{ snapshot_date }}
+    snapshot_time={{ snapshot_time }}
+    action=instant_recovery
 '''
 
 RETURN = '''
