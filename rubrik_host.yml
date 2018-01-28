@@ -1,0 +1,16 @@
+---
+
+- name: Validate the Rubrik Modules
+  hosts: local
+  connection: local
+  vars_files:
+    - ./variables.yml
+
+  tasks:
+
+    - name: Add or Delete a Rubrik Host
+      rubrik_host:
+        provider={{ credentials }}
+        hostname={{ hostname }}
+        action=delete
+        
