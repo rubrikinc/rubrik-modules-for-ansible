@@ -18,7 +18,7 @@ extends_documentation_fragment: rubrik
 version_added: "2.5"
 short_description: Manage a Physical Host.
 description:
-    - Add or Delet a Physical Host from Rubrik Cluster.
+    - Add or Delete a Physical Host from Rubrik Cluster.
 author:
     - Drew Russell (t. @drusse11)
 options:
@@ -111,18 +111,11 @@ def main():
     argument_spec.update(
         dict(
             hostname=dict(required=True, aliases=['ip_address']),
-            fileset=dict(required=False),
-            sla_domain_name=dict(required=False, aliases=['sla']),
-            action=dict(required=False, default='add',
-                        choices=['add', 'delete', 'manage_protection']),
+            action=dict(required=True, default='add', choices=['add', 'delete']),
         )
     )
 
-    required_if = [('action', 'manage_protection', [
-                    'fileset', 'sla_domain_name'])]
-
     module = AnsibleModule(argument_spec=argument_spec,
-                           required_if=required_if,
                            supports_check_mode=False)
 
     results = {}
