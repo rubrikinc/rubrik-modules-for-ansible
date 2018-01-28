@@ -57,13 +57,13 @@ options:
 
 EXAMPLES = '''
 - name: Take a On Demand vSphere VM Snapshot
-  rubrik_on_demand_snapshot:
+  rubrik_snapshot:
     provider={{ credentials }}
     sla_domain_name={{ sla_domain_name }}
     vsphere_vm_name={{ vsphere_vm_name }}
 
 - name: Instantly Recovery a vSphere VM
-  rubrik_on_demand_snapshot:
+  rubrik_snapshot:
     provider={{ credentials }}
     vsphere_vm_name={{ vsphere_vm_name }}
     snapshot_date={{ snapshot_date }}
