@@ -111,7 +111,7 @@ def main():
     argument_spec.update(
         dict(
             hostname=dict(required=True, aliases=['ip_address']),
-            action=dict(required=True, default='add', choices=['add', 'delete']),
+            action=dict(required=True, choices=['add', 'delete']),
         )
     )
 
