@@ -14,7 +14,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = '''
 ---
-module: rubrik_virtual_machine
+module: rubrik_snapshot
 requirements: pyRubrik, pytz
 extends_documentation_fragment: rubrik
 version_added: "2.5"
