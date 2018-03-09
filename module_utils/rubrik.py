@@ -26,13 +26,11 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+import json
 from ansible.module_utils.six import iteritems
+from ansible.module_utils.urls import open_url, basic_auth_header
+from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError  # isort:skip
 
-try:
-    from pyRubrik import RubrikClient
-    HAS_RUBRIK_CLIENT = True
-except ImportError:
-    HAS_RUBRIK_CLIENT = False
 
 login_credentials_spec = {
     'node': dict(),
@@ -56,20 +54,106 @@ def load_provider_variables(module):
                 module.params[key] = value
 
 
-def connect_to_cluster(node, username, password, module):
+def rubrik_get(module, api_version, endpoint, timeout=20):
+    ''' '''
 
-    node = module.params['node']
-    username = module.params['username']
-    password = module.params['password']
+    # Ansible Specific Variables
+    ansible = module.params
 
-    if not HAS_RUBRIK_CLIENT:
-        module.fail_json(
-            msg='The required pyRubrik library is missing. Please install. ')
+    url = 'https://{}/api/{}{}'.format(ansible['node'], api_version, endpoint)
+
+    headers = {
+        'Accept': "application/json",
+        'Authorization': basic_auth_header(ansible['username'], ansible['password'])
+    }
 
     try:
-        create_connection = RubrikClient.create(node, username, password)
-    except:
-        module.fail_json(
-            msg="We are unable to connect to the Rubrik Cluster. Please verify the provided credentials.")
+        response = open_url(url=url, method='GET', headers=headers, validate_certs=False)
 
-    return create_connection
+        response_body = json.loads(response.read())
+
+        # total_number_of_results = int(response_body['total'])
+
+        # if total_number_of_results == 0:
+        #     module.fail_json(msg='The Rubrik Cluster does not contain a VM named "{}"'.format(
+        #         ansible['vsphere_vm_name']))
+        # elif total_number_of_results != 1:
+        #     module.fail_json(msg='The search for a VM "{}" returned multiple results. Please verify the VM name.'.format(
+        #         ansible['vsphere_vm_name']))
+
+        # vm_id = response_body['data'][0]['id']
+
+    except HTTPError as error:
+        response_body = error.read()
+        module.fail_json(msg=str(response_body))
+    except URLError:
+        module.fail_json(msg='Connection to the Node IP timed out.')
+
+    return response_body
+
+
+def rubrik_post(module, api_version, endpoint, data, timeout=20):
+    ''' '''
+
+    # Ansible Specific Variables
+    ansible = module.params
+
+    url = 'https://{}/api/{}{}'.format(ansible['node'], api_version, endpoint)
+
+    headers = {
+        'Accept': "application/json",
+        'Authorization': basic_auth_header(ansible['username'], ansible['password']),
+
+    }
+
+    try:
+
+        response = open_url(url=url, method='POST', data=data, headers=headers, validate_certs=False)
+
+        response_body = json.loads(response.read())
+
+    except HTTPError as error:
+        response_body = error.read()
+        module.fail_json(msg=str(response_body))
+    except URLError:
+        module.fail_json(msg='Connection to the Node IP timed out.')
+
+    return response_body
+
+
+def rubrik_job_status(module, url, timeout=20):
+    ''' '''
+
+    # Ansible Specific Variables
+    ansible = module.params
+
+    url = url
+
+    headers = {
+        'Accept': "application/json",
+        'Authorization': basic_auth_header(ansible['username'], ansible['password'])
+    }
+
+    try:
+        response = open_url(url=url, method='GET', headers=headers, validate_certs=False)
+
+        response_body = json.loads(response.read())
+
+        # total_number_of_results = int(response_body['total'])
+
+        # if total_number_of_results == 0:
+        #     module.fail_json(msg='The Rubrik Cluster does not contain a VM named "{}"'.format(
+        #         ansible['vsphere_vm_name']))
+        # elif total_number_of_results != 1:
+        #     module.fail_json(msg='The search for a VM "{}" returned multiple results. Please verify the VM name.'.format(
+        #         ansible['vsphere_vm_name']))
+
+        # vm_id = response_body['data'][0]['id']
+
+    except HTTPError as error:
+        response_body = error.read()
+        module.fail_json(msg=str(response_body))
+    except URLError:
+        module.fail_json(msg='Connection to the Node IP timed out.')
+
+    return response_body
