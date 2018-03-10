@@ -1,0 +1,14 @@
+---
+
+- name: Validate the Rubrik Modules
+  hosts: local
+  connection: local
+  vars_files:
+    - ./variables.yml
+
+  tasks:
+
+    - name: Rubrik Job Status
+      rubrik_job_status:
+        provider: "{{ credentials }}"
+        job_status_link: "https://172.17.28.18/api/v1/vmware/vm/request/MOUNT_SNAPSHOT_f4f2ab0e-022a-433c-92c2-711920ca729e_0be32d9a-2abd-4e0a-b650-97a0857609cf:::0"
