@@ -68,7 +68,7 @@ def rubrik_get(module, api_version, endpoint, timeout=20):
     }
 
     try:
-        response = open_url(url=url, method='GET', headers=headers, validate_certs=False)
+        response = open_url(url=url, method='GET', headers=headers, timeout=timeout, validate_certs=False)
 
         response_body = json.loads(response.read())
 
@@ -108,7 +108,7 @@ def rubrik_post(module, api_version, endpoint, data, timeout=20):
 
     try:
 
-        response = open_url(url=url, method='POST', data=data, headers=headers, validate_certs=False)
+        response = open_url(url=url, method='POST', data=data, headers=headers, timeout=timeout, validate_certs=False)
 
         response_body = json.loads(response.read())
 
@@ -135,7 +135,7 @@ def rubrik_job_status(module, url, timeout=20):
     }
 
     try:
-        response = open_url(url=url, method='GET', headers=headers, validate_certs=False)
+        response = open_url(url=url, method='GET', headers=headers, timeout=timeout, validate_certs=False)
 
         response_body = json.loads(response.read())
 
