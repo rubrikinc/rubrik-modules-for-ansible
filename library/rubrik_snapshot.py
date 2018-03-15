@@ -5,8 +5,6 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-import pytz
-
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'community'}
@@ -15,7 +13,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = '''
 ---
 module: rubrik_snapshot
-requirements: pyRubrik, pytz
+requirements: dateutil
 extends_documentation_fragment: rubrik
 version_added: "2.5"
 short_description: Take an On Demand Snapshot or initiate an Instant Recovery of a VM.
@@ -80,100 +78,109 @@ response:
 '''
 
 
-def get_vsphere_vm_id(rubrik, vsphere_vm_name, module):
+def get_vsphere_vm_id(module, vsphere_vm_name):
 
-    name = vsphere_vm_name
+    api_version = 'v1' #v1 or internal
+    endpoint = '/vmware/vm?primary_cluster_id=local&is_relic=false&name={}'.format(vsphere_vm_name)
 
-    query_vm = rubrik.query_vm(
-        primary_cluster_id='local', name=name, is_relic=False)
+    response_body = rubrik_get(module, api_version, endpoint)
 
     # Check if any results are returned
-    if not query_vm.data:
+    if not response_body['data']:
         module.fail_json(
-            msg=("There is no vSphere VM named {} on the Rubrik Cluster.".format(name)))
+            msg=("There is no vSphere VM named {} on the Rubrik Cluster.".format(vsphere_vm_name)))
     else:
-        for vm in query_vm.data:
-            if vm.name == name:
-                vm_id = vm.id
+        for vm in response_body['data']:
+            if vm['name'] == vsphere_vm_name:
+                vm_id = vm['id']
+
+    try:
+        vm_id
+    except NameError:
+        module.fail_json(
+            msg=("There is no vSphere VM named {} on the Rubrik Cluster.".format(vsphere_vm_name)))
 
     return vm_id
 
 
-def get_sla_domain_id(rubrik,  sla_domain_name, module):
+def get_sla_domain_id(module, sla_domain_name):
 
-    name = sla_domain_name
+    api_version = 'v1' #v1 or internal
+    endpoint = '/sla_domain?primary_cluster_id=local&name={}'.format(sla_domain_name)
 
-    query_sla_domain = rubrik.query_sla_domain(primary_cluster_id='local', name=name, is_relic=False)
+    response_body = rubrik_get(module, api_version, endpoint)
 
     # Check if any results are returned
-    if not query_sla_domain.data:
-        module.fail_json(msg=("There is no SLA Domain named {} on the Rubrik Cluster.".format(name)))
+    if not response_body['data']:
+        module.fail_json(msg=("There is no SLA Domain named {} on the Rubrik Cluster.".format(sla_domain_name)))
     else:
-        for sla_domain in query_sla_domain.data:
-            if sla_domain.name == name:
-                sla_id = sla_domain.id
+        for sla_domain in response_body['data']:
+            if sla_domain['name'] == sla_domain_name:
+                sla_id = sla_domain['id']
 
     return sla_id
 
 
 def convert_timezone(utc_time, cluster_timezone):
 
-    # Snapshot Datetime data in UTC
-    datetime_in_utc = utc_time
+    from_zone = tz.gettz('UTC')
+    to_zone = tz.gettz(cluster_timezone)
 
-    # Define the configured Cluster Timezone
-    current_cluster_timezone = pytz.timezone(cluster_timezone)
+    time_in_utz = parser.parse(utc_time)
 
-    # Update the Datatime object with the configured Cluster Timezone
-    converted_date_time = datetime_in_utc.astimezone(current_cluster_timezone)
-
-    # Pull the Data and Time values from the Datatime object to preserve formating
+    converted_date_time = time_in_utz.replace(tzinfo=to_zone)
     converted_date = converted_date_time.date().strftime('%m-%d-%Y')
     converted_time = converted_date_time.time().strftime("%I:%M %p")
 
-    # Remove a leading 0 if it is present in the time
+    # # Remove a leading 0 if it is present in the time
     if converted_time[:1] == "0":
         converted_time = converted_time[1:]
 
     return converted_date, converted_time
 
 
-def get_vm_snapshot_id(rubrik, vm_id, snapshot_date, snapshot_time, module):
+def get_vm_snapshot_id(module, vm_id, snapshot_date, snapshot_time):
 
     snapshot_data = {}
     snapshot_present = False
 
-    cluster_timezone = rubrik.get_cluster_timezone().__dict__['timezone']
+    # Get the Current Cluster Timezone
+    api_version = 'internal' #v1 or internal
+    endpoint = '/cluster/me/timezone'
 
-    get_vm = rubrik.get_vm(vm_id).__dict__
+    response_body = rubrik_get(module, api_version, endpoint)
 
-    # Pull the Snapshot related values from the get_vm call
-    for key, value in get_vm.items():
-        if key == "snapshots":
-            snapshots = value
+    cluster_timezone = response_body['timezone']
 
-    for data in snapshots:
+    #Get VMs
+    api_version = 'v1' #v1 or internal
+    endpoint = '/vmware/vm/{}'.format(vm_id)
+
+    response_body = rubrik_get(module, api_version, endpoint)
+
+    snapshots = response_body['snapshots']
+
+    for snapshot in snapshots:
         # Convert the Snapshot Data to a Dictionary for processing
-        snapshot = data.__dict__
-
         snapshot_id = snapshot['id']
+
         # Convert the Datetime UTC data into the current Cluster Timezone
-        snapshot_date, snapshot_time = convert_timezone(snapshot['date_property'], cluster_timezone)
+        snapshot_date, snapshot_time = convert_timezone(snapshot['date'], cluster_timezone)
 
         # Populate the snapshot_data dictionary with a "id: [date, time]" format
         snapshot_data.setdefault(snapshot_id, [])
         snapshot_data[snapshot_id].append(snapshot_date)
         snapshot_data[snapshot_id].append(snapshot_time)
 
-    for snapshot_id, snapshot_datetime in snapshot_data.items():
-        if snapshot_datetime[0] == snapshot_date and snapshot_datetime[1] == snapshot_time:
-            vm_snapshot_id = snapshot_id
-            snapshot_present = True
-            break
+        for snapshot_id, snapshot_datetime in snapshot_data.items():
+            if snapshot_datetime[0] == snapshot_date and snapshot_datetime[1] == snapshot_time:
+                vm_snapshot_id = snapshot_id
+                snapshot_present = True
+                break
 
-    if snapshot_present == False:
-        module.fail_json(
-            msg=("No Snapshot found that was taken on {} at {} on the VM.".format(snapshot_date, snapshot_time)))
+        if snapshot_present == False:
+            module.fail_json(
+                msg=("No Snapshot found that was taken on {} at {} on the VM.".format(snapshot_date, snapshot_time)))
 
     return vm_snapshot_id
 
@@ -213,47 +220,58 @@ def main():
     action = ansible['action']
     vsphere_vm_name = ansible['vsphere_vm_name']
 
-    rubrik = connect_to_cluster(node, username, password, module)
-
-    vm_id = get_vsphere_vm_id(rubrik, vsphere_vm_name, module)
+    vm_id = get_vsphere_vm_id(module, vsphere_vm_name)
+    results['vm'] = vm_id
 
     if action == "on_demand_snapshot":
 
         sla_domain_name = ansible['sla_domain_name']
 
-        sla_id = get_sla_domain_id(rubrik, sla_domain_name, module)
+        sla_id = get_sla_domain_id(module, sla_domain_name)
 
-        create_on_demand_snapshot_data_model = {
-            "slaId": sla_id
-        }
+        create_on_demand_snapshot_data_model = {}
+        create_on_demand_snapshot_data_model['slaId'] = sla_id
 
-        rubrik.create_on_demand_backup(vm_id, config=create_on_demand_snapshot_data_model)
+        api_version = 'v1' #v1 or internal
+        endpoint = '/vmware/vm/{}/snapshot'.format(vm_id)
 
-        results['response'] = "Successfully created a On Demand Snapshot for '{}'.".format(vsphere_vm_name)
+        response_body = rubrik_post(module, api_version, endpoint, create_on_demand_snapshot_data_model)
+
+        results['changed'] = True
+        results['response_body'] = response_body
+        results['status'] = "Successfully created a On Demand Snapshot for '{}'.".format(vsphere_vm_name)
 
     if action == "instant_recovery":
+
+        try:
+            from pyRubrik import RubrikClient
+        except ImportError:
+            module.fail_json(
+                msg='Missing the required dateutil Python Module. Please install (pip install python-dateutil).')
 
         snapshot_date = ansible['snapshot_date']
         snapshot_time = ansible['snapshot_time']
 
-        vm_snapshot_id = get_vm_snapshot_id(rubrik, vm_id, snapshot_date, snapshot_time, module)
+        vm_snapshot_id = get_vm_snapshot_id(module, vm_id, snapshot_date, snapshot_time)
 
-        instant_recovery_data_model = {
-            "removeNetworkDevices": False,
-            "preserveMoid": False
-        }
+        instant_recovery_data_model = {}
+        instant_recovery_data_model['removeNetworkDevices'] = False
+        instant_recovery_data_model['preserveMoid'] = False
 
-        rubrik.create_instant_recovery(vm_snapshot_id, config=instant_recovery_data_model)
+        api_version = 'v1' #v1 or internal
+        endpoint = '/vmware/vm/snapshot/{}/instant_recover'.format(vm_snapshot_id)
 
-        results['response'] = "Successfully initiated a Instant Restore for the {} Snapshot taken on {} at {}.".format(
+        response_body = rubrik_post(module, api_version, endpoint, instant_recovery_data_model)
+
+        results['response_body'] = response_body
+        results['status'] = "Successfully initiated a Instant Restore for the {} Snapshot taken on {} at {}.".format(
             vsphere_vm_name, snapshot_date, snapshot_time)
 
     module.exit_json(**results)
 
 
-from ansible.module_utils.basic import AnsibleModule  # isort:skip
-from ansible.module_utils.rubrik import (
-    connect_to_cluster, load_provider_variables, rubrik_argument_spec)  # isort:skip
+from ansible.module_utils.basic import AnsibleModule # isort:skip
+from ansible.module_utils.rubrik import load_provider_variables, rubrik_argument_spec, rubrik_get, rubrik_post  # isort:skip
 
 
 if __name__ == "__main__":
