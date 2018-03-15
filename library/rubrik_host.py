@@ -59,45 +59,64 @@ response:
 '''
 
 
-def current_hosts(rubrik, hostname):
+def current_hosts(module, hostname):
+
+    api_version = 'v1' #v1 or internal
+    endpoint = '/host'
+
+    response_body = rubrik_get(module, api_version, endpoint)
 
     host_present = False
-    hosts = rubrik.query_host()
-    for host in hosts.data:
-        if host.hostname == hostname:
+
+    for host in response_body['data']:
+        if host['hostname'] == hostname:
             host_present = True
             break
 
     return host_present
 
 
-def add_host(rubrik, hostname):
+def add_host(module, hostname):
 
-    add_host_data_model = {
-        "hostname": hostname,
-        "hasAgent": "true"
-    }
+    add_host_data_model = {}
+    add_host_data_model['hostname'] = hostname
+    add_host_data_model['hasAgent'] = True
 
-    rubrik.register_host(add_host_data_model)
+    api_version = 'v1' #v1 or internal
+    endpoint = '/host'
+
+    response_body = rubrik_post(module, api_version, endpoint, add_host_data_model)
+
+    return response_body
 
 
-def delete_host(rubrik, hostname):
+def delete_host(module, hostname):
 
-    hosts = rubrik.query_host()
-    for host in hosts.data:
-        if host.hostname == hostname:
-            host_id = host.id
+    api_version = 'v1' #v1 or internal
+    endpoint = '/host'
+
+    response_body = rubrik_get(module, api_version, endpoint)
+
+    for host in response_body['data']:
+        if host['hostname'] == hostname:
+            host_id = host['id']
             break
 
-    rubrik.delete_host(host_id)
+    endpoint = '/host/{}'.format(host_id)
+
+    rubrik_delete(module, api_version, endpoint)
 
 
-def get_host_id(rubrik, hostname):
+def get_host_id(module, hostname):
 
-    hosts = rubrik.query_host()
-    for host in hosts.data:
-        if host.hostname == hostname:
-            host_id = host.id
+    api_version = 'v1' #v1 or internal
+    endpoint = '/host'
+
+    response_body = rubrik_get(module, api_version, endpoint)
+
+    for host in response_body['data']:
+        if host['hostname'] == hostname:
+            host_id = host['id']
             break
 
     return host_id
@@ -128,22 +147,19 @@ def main():
     hostname = ansible['hostname']
     action = ansible['action']
 
-    rubrik = connect_to_cluster(node, username, password, module)
-
-    host_present = current_hosts(rubrik, hostname)
+    host_present = current_hosts(module, hostname)
 
     # Add a new host to the Rubrik Cluster
     if host_present is False and action == 'add':
-        add_host(rubrik, hostname)
+        response_body = add_host(module, hostname)
         results['changed'] = True
-        results['response'] = "'{}' has successfully been added to the Rubrik Cluster.".format(
-            hostname)
+        results['response'] = response_body
     elif host_present is True and action == 'add':
         results['changed'] = False
         results['response'] = "'{}' is already connected to the Rubrik Cluster.".format(
             hostname)
     elif host_present is True and action == 'delete':
-        delete_host(rubrik, hostname)
+        delete_host(module, hostname)
         results['changed'] = True
         results['response'] = "'{}' has successfully been deleted from the Rubrik Cluster.".format(
             hostname)
@@ -155,9 +171,8 @@ def main():
     module.exit_json(**results)
 
 
-from ansible.module_utils.basic import AnsibleModule  # isort:skip
-from ansible.module_utils.rubrik import (
-    connect_to_cluster, load_provider_variables, rubrik_argument_spec)  # isort:skip
+from ansible.module_utils.basic import AnsibleModule # isort:skip
+from ansible.module_utils.rubrik import load_provider_variables, rubrik_argument_spec, rubrik_get, rubrik_post, rubrik_delete  # isort:skip
 
 
 if __name__ == "__main__":
