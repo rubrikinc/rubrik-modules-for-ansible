@@ -142,7 +142,7 @@ def main():
     module.exit_json(**results)
 
 
-from ansible.module_utils.basic import AnsibleModule, jsonify # isort:skip
+from ansible.module_utils.basic import AnsibleModule # isort:skip
 from ansible.module_utils.rubrik import load_provider_variables, rubrik_argument_spec, rubrik_get, rubrik_post, rubrik_patch  # isort:skip
 
 
