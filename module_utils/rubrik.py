@@ -144,6 +144,31 @@ def rubrik_patch(module, api_version, endpoint, data, timeout=20):
     return response_body
 
 
+def rubrik_delete(module, api_version, endpoint, timeout=20):
+    ''' '''
+
+    # Ansible Specific Variables
+    ansible = module.params
+
+    url = 'https://{}/api/{}{}'.format(ansible['node'], api_version, endpoint)
+
+    headers = {
+        'Accept': "application/json",
+        'Authorization': basic_auth_header(ansible['username'], ansible['password']),
+
+    }
+
+    try:
+
+        response = open_url(url=url, method='DELETE', headers=headers, timeout=timeout, validate_certs=False)
+
+    except HTTPError as error:
+        response_body = error.read()
+        module.fail_json(msg=str(response_body))
+    except URLError:
+        module.fail_json(msg='Connection to the Node IP timed out.')
+
+
 def rubrik_job_status(module, url, timeout=20):
     ''' '''
 
