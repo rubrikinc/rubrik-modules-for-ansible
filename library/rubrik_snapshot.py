@@ -78,6 +78,24 @@ response:
 '''
 
 
+def get_host_id(module):
+    ''' '''
+
+    # Ansible Specific Variables
+    ansible = module.params
+
+    api_version = 'v1' #v1 or internal
+    endpoint = '/vmware/host'
+
+    response_body = rubrik_get(module, api_version, endpoint)
+
+    for data in response_body['data']:
+        if data['name'] == ansible['restore_host']:
+            host_id = data['id']
+
+    return host_id
+
+
 def get_vsphere_vm_id(module, vsphere_vm_name):
 
     api_version = 'v1' #v1 or internal
@@ -244,7 +262,7 @@ def main():
     if action == "instant_recovery":
 
         try:
-            from pyRubrik import RubrikClient
+            from dateutil import parser, tz
         except ImportError:
             module.fail_json(
                 msg='Missing the required dateutil Python Module. Please install (pip install python-dateutil).')
