@@ -329,8 +329,6 @@ def main():
             module.fail_json(
                 msg='Missing the required dateutil Python Module. Please install (pip install python-dateutil).')
 
-        dateutil_check(module)
-
         snapshot_date = ansible['snapshot_date']
         snapshot_time = ansible['snapshot_time']
 
