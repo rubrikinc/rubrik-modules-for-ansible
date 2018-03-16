@@ -5,6 +5,12 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
+HAS_DATEUTIL = True
+try:
+    from dateutil import parser, tz
+except ImportError:
+    HAS_DATEUTIL = False
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['stableinterface'],
                     'supported_by': 'community'}
@@ -203,6 +209,33 @@ def get_vm_snapshot_id(module, vm_id, snapshot_date, snapshot_time):
     return vm_snapshot_id
 
 
+def live_mount(module, snapshot_id, host_id):
+    ''' '''
+
+    # Ansible Specific Variables
+    ansible = module.params
+    results = {}
+
+    api_version = 'v1' #v1 or internal
+    endpoint = '/vmware/vm/snapshot/{}/mount'.format(snapshot_id)
+
+    data = {}
+    data['vmName'] = '{} Ansible'.format(ansible['vsphere_vm_name'])
+    data['disableNetwork'] = ansible['disable_network']
+    data['removeNetworkDevices'] = ansible['remove_network_devices']
+    data['powerOn'] = ansible['power_on']
+    data['keepMacAddresses'] = ansible['keep_mac_addresses']
+    data['hostId'] = host_id
+
+    response_body = rubrik_post(module, api_version, endpoint, data)
+
+    results['changed'] = True
+    results['response_body'] = response_body
+    results['status'] = response_body['links'][0]['href']
+
+    return results
+
+
 def main():
     '''Ansible main. '''
 
@@ -214,14 +247,21 @@ def main():
             vsphere_vm_name=dict(required=True, aliases=['vm']),
             snapshot_date=dict(required=False, aliases=['date']),
             snapshot_time=dict(required=False, aliases=['time']),
-            action=dict(required=True, choices=['on_demand_snapshot', 'instant_recovery']),
+            action=dict(required=True, choices=['on_demand_snapshot', 'instant_recovery', 'live_mount']),
+            restore_host=dict(required=True, aliases=['host']),
+            disable_network=dict(required=False, default=False, type='bool'),
+            remove_network_devices=dict(required=False, default=False, type='bool'),
+            power_on=dict(required=False, default=True, type='bool'),
+            keep_mac_addresses=dict(required=False, default=False, type='bool'),
 
         )
     )
 
     required_if = [
         ('action', 'on_demand_snapshot', ['sla_domain_name', 'vsphere_vm_name']),
-        ('action', 'instant_recovery', ['snapshot_date', 'snapshot_time', 'vsphere_vm_name'])
+        ('action', 'instant_recovery', ['snapshot_date', 'snapshot_time', 'vsphere_vm_name']),
+        ('action', 'live_mount', ['snapshot_date', 'snapshot_time', 'vsphere_vm_name', 'restore_host',
+                                  'disable_network', 'remove_network_devices', 'power_on', 'keep_mac_addresses'])
     ]
 
     module = AnsibleModule(argument_spec=argument_spec,
@@ -261,9 +301,7 @@ def main():
 
     if action == "instant_recovery":
 
-        try:
-            from dateutil import parser, tz
-        except ImportError:
+        if HAS_DATEUTIL == False:
             module.fail_json(
                 msg='Missing the required dateutil Python Module. Please install (pip install python-dateutil).')
 
@@ -285,11 +323,27 @@ def main():
         results['status'] = "Successfully initiated a Instant Restore for the {} Snapshot taken on {} at {}.".format(
             vsphere_vm_name, snapshot_date, snapshot_time)
 
+    if action == "live_mount":
+
+        if HAS_DATEUTIL == False:
+            module.fail_json(
+                msg='Missing the required dateutil Python Module. Please install (pip install python-dateutil).')
+
+        dateutil_check(module)
+
+        snapshot_date = ansible['snapshot_date']
+        snapshot_time = ansible['snapshot_time']
+
+        host_id = get_host_id(module)
+        vm_snapshot_id = get_vm_snapshot_id(module, vm_id, snapshot_date, snapshot_time)
+
+        results = live_mount(module, vm_snapshot_id, host_id)
+
     module.exit_json(**results)
 
 
 from ansible.module_utils.basic import AnsibleModule # isort:skip
-from ansible.module_utils.rubrik import load_provider_variables, rubrik_argument_spec, rubrik_get, rubrik_post  # isort:skip
+from ansible.module_utils.rubrik import load_provider_variables, rubrik_argument_spec, rubrik_get, rubrik_post, dateutil_check  # isort:skip
 
 
 if __name__ == "__main__":
