@@ -343,7 +343,7 @@ def main():
 
 
 from ansible.module_utils.basic import AnsibleModule # isort:skip
-from ansible.module_utils.rubrik import load_provider_variables, rubrik_argument_spec, rubrik_get, rubrik_post, dateutil_check  # isort:skip
+from ansible.module_utils.rubrik import load_provider_variables, rubrik_argument_spec, rubrik_get, rubrik_post  # isort:skip
 
 
 if __name__ == "__main__":
