@@ -66,24 +66,20 @@ def main():
     username = ansible['username']
     password = ansible['password']
 
-    rubrik = connect_to_cluster(node, username, password, module)
+    api_version = 'v1' #v1 or internal
+    endpoint = '/cluster/me'
 
-    public_cluster_information = rubrik.get_public_cluster_info()
+    response_body = rubrik_get(module, api_version, endpoint)
 
-    version = public_cluster_information.version
-    cluster_id = public_cluster_information.id
-    api_version = public_cluster_information.api_version
-
-    results['version'] = version
-    results['id'] = cluster_id
-    results['api_version'] = api_version
+    results['version'] = response_body['version']
+    results['id'] = response_body['id']
+    results['api_version'] = response_body['apiVersion']
 
     module.exit_json(**results)
 
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrik import (
-    connect_to_cluster, load_provider_variables, rubrik_argument_spec)
+from ansible.module_utils.basic import AnsibleModule # isort:skip
+from ansible.module_utils.rubrik import load_provider_variables, rubrik_argument_spec, rubrik_get  # isort:skip
 
 
 if __name__ == "__main__":
