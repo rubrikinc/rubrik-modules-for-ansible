@@ -10,24 +10,24 @@ _All Modules are contained in the `library` folder_
 
 #### Rubrik Assign SLA
 
-Assign and SLA Domain to a vSphere Virtulal Machine
+- Assign and SLA Domain to a vSphere Virtulal Machine
 
 #### Rubrik Cluster Information
 
-Retrieve public information about the Rubrik Cluster
+- Retrieve public information about the Rubrik Cluster
 
 #### Rubrik Connector
 
-Install the Rubrik Connector on a Linux (Red Hat and Debian) or Windows Machine. See [Ansible Galaxy](https://galaxy.ansible.com/rubrik-devops/rubrik-connector/) or more details.
+- Install the Rubrik Connector on a Linux (Red Hat and Debian) or Windows Machine. See [Ansible Galaxy](https://galaxy.ansible.com/rubrik-devops/rubrik-connector/) or more details.
 
 
 #### Rubrik Fileset
 
-Add, Delete, or Manage Protection of a Physical Host
+- Add, Delete, or Manage Protection of a Physical Host
 
 #### Rubrik Host
 
-Add or Delete a Physical Host.
+- Add or Delete a Physical Host.
 
 #### Rubrik Snapshot
 
