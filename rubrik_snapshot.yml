@@ -1,0 +1,36 @@
+---
+
+- name: Validate the Rubrik Modules
+  hosts: local
+  connection: local
+  vars_files:
+    - ./variables.yml
+
+  tasks:
+
+    # - name: Instantly Restore a vSphere VM Snapshot
+    #   rubrik_snapshot:
+    #     provider={{ credentials }}
+    #     vsphere_vm_name={{ vsphere_vm_name }}
+    #     snapshot_date={{ snapshot_date }}
+    #     snapshot_time={{ snapshot_time }}
+    #     action=instant_recovery
+
+    - name: Take a On Demand vSphere VM Snapshot
+      rubrik_snapshot:
+        provider={{ credentials }}
+        vsphere_vm_name={{ vsphere_vm_name }}
+        sla_domain_name={{ sla_domain_name }}
+        action=on_demand_snapshot
+
+    # - name: Instantly Restore a vSphere VM Snapshot
+    #   rubrik_snapshot:
+    #     provider={{ credentials }}
+    #     vsphere_vm_name={{ vsphere_vm_name }}
+    #     snapshot_date={{ snapshot_date }}
+    #     snapshot_time={{ snapshot_time }}
+    #     vsphere_vm_name="{{ vsphere_vm_name }}"
+    #     restore_host="{{ restore_host }}"
+    #     power_on="{{ power_on }}"
+    #     action=live_mount
+

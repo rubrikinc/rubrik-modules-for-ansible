@@ -87,7 +87,7 @@ def live_mount(module, snapshot_id, host_id):
     data['keepMacAddresses'] = ansible['keep_mac_addresses']
     data['hostId'] = host_id
 
-    response_body = rubrik_post(module, api_version, endpoint, jsonify(data))
+    response_body = rubrik_post(module, api_version, endpoint, data)
 
     results['changed'] = True
     results['response_body'] = response_body
@@ -126,7 +126,7 @@ def main():
     module.exit_json(**results)
 
 
-from ansible.module_utils.basic import AnsibleModule, jsonify # isort:skip
+from ansible.module_utils.basic import AnsibleModule # isort:skip
 from ansible.module_utils.rubrik import load_provider_variables, rubrik_argument_spec, rubrik_get, rubrik_post  # isort:skip
 
 
