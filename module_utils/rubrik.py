@@ -27,11 +27,22 @@
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 import json
-from ansible.module_utils.basic import jsonify
 from ansible.module_utils.six import iteritems
 from ansible.module_utils.urls import open_url, basic_auth_header
-from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError  # isort:skip
+from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
 
+# Add baclwards compatability check for Ansible v3.x.x
+HAS_JSONIFY = True
+try:
+    from ansible.module_utils.basic import jsonify
+except ImportError:
+    HAS_JSONIFY = False
+
+HAS_DATEUTIL = True
+try:
+    from dateutil import parser, tz
+except ImportError:
+    HAS_DATEUTIL = False
 
 login_credentials_spec = {
     'node': dict(),
@@ -96,7 +107,10 @@ def rubrik_post(module, api_version, endpoint, data, timeout=20):
 
     }
 
-    data = jsonify(data)
+    if HAS_JSONIFY == True:
+        data = jsonify(data)
+    else:
+        data = module.jsonify(data)
 
     try:
 
@@ -127,7 +141,10 @@ def rubrik_patch(module, api_version, endpoint, data, timeout=20):
 
     }
 
-    data = jsonify(data)
+    if HAS_JSONIFY == True:
+        data = jsonify(data)
+    else:
+        data = module.jsonify(data)
 
     try:
 
@@ -194,3 +211,11 @@ def rubrik_job_status(module, url, timeout=20):
         module.fail_json(msg='Connection to the Node IP timed out.')
 
     return response_body
+
+
+def dateutil_check(module):
+
+    try:
+        import dateutil
+    except:
+        sys.exit()
