@@ -156,7 +156,7 @@ def main():
         results['response'] = response_body
     elif host_present is True and action == 'add':
         results['changed'] = False
-        results['response'] = "'{}' is already connected to the Rubrik Cluster.".format(
+        results['response'] = "The host '{}' is already connected to the Rubrik Cluster.".format(
             hostname)
     elif host_present is True and action == 'delete':
         delete_host(module, hostname)
