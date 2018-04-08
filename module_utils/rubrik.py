@@ -87,8 +87,9 @@ def rubrik_get(module, api_version, endpoint, timeout=20):
         response_body = json.loads(response.read())
 
     except HTTPError as error:
-        response_body = error.read()
-        module.fail_json(msg=str(response_body))
+        response_body = json.loads(error.read())
+        response_body = response_body['message']
+        module.fail_json(msg=response_body)
     except URLError:
         module.fail_json(msg='Connection to the Node IP timed out.')
 
@@ -121,8 +122,9 @@ def rubrik_post(module, api_version, endpoint, data, timeout=20):
         response_body = json.loads(response.read())
 
     except HTTPError as error:
-        response_body = error.read()
-        module.fail_json(msg=str(response_body))
+        response_body = json.loads(error.read())
+        response_body = response_body['message']
+        module.fail_json(msg=response_body)
     except URLError:
         module.fail_json(msg='Connection to the Node IP timed out.')
 
@@ -156,8 +158,9 @@ def rubrik_patch(module, api_version, endpoint, data, timeout=20):
         response_body = json.loads(response.read())
 
     except HTTPError as error:
-        response_body = error.read()
-        module.fail_json(msg=str(response_body))
+        response_body = json.loads(error.read())
+        response_body = response_body['message']
+        module.fail_json(msg=response_body)
     except URLError:
         module.fail_json(msg='Connection to the Node IP timed out.')
 
@@ -183,8 +186,9 @@ def rubrik_delete(module, api_version, endpoint, timeout=20):
         response = open_url(url=url, method='DELETE', headers=headers, timeout=timeout, validate_certs=False)
 
     except HTTPError as error:
-        response_body = error.read()
-        module.fail_json(msg=str(response_body))
+        response_body = json.loads(error.read())
+        response_body = response_body['message']
+        module.fail_json(msg=response_body)
     except URLError:
         module.fail_json(msg='Connection to the Node IP timed out.')
 
@@ -208,8 +212,9 @@ def rubrik_job_status(module, url, timeout=20):
         response_body = json.loads(response.read())
 
     except HTTPError as error:
-        response_body = error.read()
-        module.fail_json(msg=str(response_body))
+        response_body = json.loads(error.read())
+        response_body = response_body['message']
+        module.fail_json(msg=response_body)
     except URLError:
         module.fail_json(msg='Connection to the Node IP timed out.')
 
