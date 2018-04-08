@@ -57,19 +57,25 @@ response:
 def get_vsphere_vm_data(module, vsphere_vm_name):
 
     api_version = 'v1' #v1 or internal
-    endpoint = '/vmware/vm?name={}'.format(vsphere_vm_name)
+    endpoint = '/vmware/vm?primary_cluster_id=local&is_relic=false&name={}'.format(vsphere_vm_name)
 
     response_body = rubrik_get(module, api_version, endpoint)
 
     # Check if any results are returned
     if not response_body['data']:
-        module.fail_json(msg=("There is no vSphere VM named '{}' on the Rubrik Cluster.".format(vsphere_vm_name)))
+        module.fail_json(
+            msg=("There is no vSphere VM named '{}' on the Rubrik Cluster.".format(vsphere_vm_name)))
     else:
         for vm in response_body['data']:
             if vm['name'] == vsphere_vm_name:
                 vm_id = vm['id']
                 sla_domain_id = vm['effectiveSlaDomainId']
-                break
+
+    try:
+        vm_id
+    except NameError:
+        module.fail_json(
+            msg=("There is no vSphere VM named '{}' on the Rubrik Cluster.".format(vsphere_vm_name)))
 
     return vm_id, sla_domain_id
 
@@ -77,7 +83,8 @@ def get_vsphere_vm_data(module, vsphere_vm_name):
 def get_sla_domain_id(module, sla_domain_name):
 
     api_version = 'v1' #v1 or internal
-    endpoint = '/sla_domain?name={}'.format(sla_domain_name)
+    endpoint = '/sla_domain?primary_cluster_id=local&name={}'.format(sla_domain_name)
+    # endpoint = '/sla_domain?primary_cluster_id=local&name=Instant%20Recovery%20Demo'
 
     response_body = rubrik_get(module, api_version, endpoint)
 
@@ -88,6 +95,11 @@ def get_sla_domain_id(module, sla_domain_name):
         for sla_domain in response_body['data']:
             if sla_domain['name'] == sla_domain_name:
                 sla_id = sla_domain['id']
+
+    try:
+        sla_id
+    except NameError:
+        module.fail_json(msg=("There is no SLA Domain named '{}' on the Rubrik Cluster.".format(sla_domain_name)))
 
     return sla_id
 
