@@ -30,7 +30,7 @@ import json
 from ansible.module_utils.six import iteritems
 from ansible.module_utils.urls import open_url, basic_auth_header
 from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
-
+from ansible.module_utils.six.moves.urllib.parse import quote
 # Add baclwards compatability check for Ansible v3.x.x
 HAS_JSONIFY = True
 try:
@@ -73,6 +73,8 @@ def rubrik_get(module, api_version, endpoint, timeout=20):
     ansible = module.params
 
     url = 'https://{}/api/{}{}'.format(ansible['node'], api_version, endpoint)
+    # Convert String to URL Safe Values
+    url = quote(url, '://?=&')
 
     headers = {
         'Accept': "application/json",
@@ -134,6 +136,7 @@ def rubrik_patch(module, api_version, endpoint, data, timeout=20):
     ansible = module.params
 
     url = 'https://{}/api/{}{}'.format(ansible['node'], api_version, endpoint)
+    # Convert String to URL Safe Values
 
     headers = {
         'Accept': "application/json",
@@ -211,11 +214,3 @@ def rubrik_job_status(module, url, timeout=20):
         module.fail_json(msg='Connection to the Node IP timed out.')
 
     return response_body
-
-
-def dateutil_check(module):
-
-    try:
-        import dateutil
-    except:
-        sys.exit()
