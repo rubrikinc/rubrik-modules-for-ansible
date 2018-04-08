@@ -5,7 +5,6 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-HAS_DATEUTIL = True
 try:
     from dateutil import parser, tz
 except ImportError:
@@ -248,7 +247,7 @@ def main():
             snapshot_date=dict(required=False, aliases=['date']),
             snapshot_time=dict(required=False, aliases=['time']),
             action=dict(required=True, choices=['on_demand_snapshot', 'instant_recovery', 'live_mount']),
-            restore_host=dict(required=True, aliases=['host']),
+            restore_host=dict(required=False, aliases=['host']),
             disable_network=dict(required=False, default=False, type='bool'),
             remove_network_devices=dict(required=False, default=False, type='bool'),
             power_on=dict(required=False, default=True, type='bool'),
