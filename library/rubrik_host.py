@@ -161,11 +161,11 @@ def main():
     elif host_present is True and action == 'delete':
         delete_host(module, hostname)
         results['changed'] = True
-        results['response'] = "'{}' has successfully been deleted from the Rubrik Cluster.".format(
+        results['response'] = "The host '{}' has successfully been deleted from the Rubrik Cluster.".format(
             hostname)
     elif host_present is False and action == 'delete':
         results['changed'] = False
-        results['response'] = "'{}' is not present on the Rubrik Cluster.".format(
+        results['response'] = "The host '{}' is not present on the Rubrik Cluster.".format(
             hostname)
 
     module.exit_json(**results)
