@@ -1,5 +1,9 @@
 ## Rubrik Ansible Modules
 
+### System Requirements
+Python 2.7.x
+Ansible 2.4.x
+
 ### Repository Description
 
 Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud Data Management Platform.
