@@ -58,6 +58,28 @@ def get_vm_id(module):
     return vm_id
 
 
+def get_end_user_authorization(module, username_id, vm_id):
+    ''' '''
+
+    # Ansible Specific Variables
+    ansible = module.params
+    results = {}
+
+    api_version = 'internal' #v1 or internal
+    endpoint = '/authorization/role/end_user?principals={}'.format(username_id)
+
+    response_body = rubrik_get(module, api_version, endpoint)
+
+    assigned_vms = response_body['data'][0]['privileges']['restore']
+
+    if vm_id in assigned_vms:
+        vm_assigned = True
+    else:
+        vm_assigned = False
+
+    return vm_assigned
+
+
 def end_user_authorization(module, username_id, vm_id):
     ''' '''
 
@@ -100,7 +122,16 @@ def main():
     username_id = get_username_id(module)
     vm_id = get_vm_id(module)
 
-    results = end_user_authorization(module, username_id, vm_id)
+    current_vms_assigned = get_end_user_authorization(module, username_id, vm_id)
+
+    if current_vms_assigned == True:
+        ansible = module.params
+        results = {}
+        results['changed'] = False
+        results['status'] = 'The End User "{}" is already authorized to interact with the "{}" VM.'.format(
+            ansible['end_user'], ansible['vsphere_vm_name'])
+    else:
+        results = end_user_authorization(module, username_id, vm_id)
 
     module.exit_json(**results)
 
