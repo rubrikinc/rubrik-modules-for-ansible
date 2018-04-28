@@ -10,50 +10,6 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'supported_by': 'community'}
 
 
-DOCUMENTATION = '''
----
-module: rubrik_assign_sla
-requirements: pyRubrik
-extends_documentation_fragment: rubrik
-version_added: "2.5"
-short_description: Assign an SLA to a vSphere VM.
-description:
-    - Assign an SLA to a vSphere VM.
-author:
-    - Drew Russell (t. @drusse11)
-options:
-    sla_domain_name:
-        description:
-            - Then name of the SLA Domain to assign to the VM.
-        required: true
-        aliases: sla
-        default: null
-    vsphere_vm_name:
-        description:
-            - The name of the VM that the SLA Domain should be assigned to.
-        required: true
-        aliases: vm
-        default: null
-
-'''
-
-EXAMPLES = '''
-- name: Assign a SLA Domain to a vSphere VM
-  rubrik_assign_sla:
-    provider={{ credentials }}
-    sla_domain_name={{ sla_domain_name }}
-    vsphere_vm_name={{ vsphere_vm_name }}
-'''
-
-RETURN = '''
-response:
-    description: Human readable description of the results of the module execution.
-    returned: success
-    type: dict
-    sample: {"response": "Successfully configured the vSphere VM 'Ansible-Tower' with the 'Gold' SLA Domain."}
-'''
-
-
 def get_vsphere_vm_data(module, vsphere_vm_name):
 
     api_version = 'v1' #v1 or internal

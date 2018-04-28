@@ -10,55 +10,6 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'supported_by': 'community'}
 
 
-DOCUMENTATION = '''
----
-module: rubrik_fileset
-requirements: pyRubrik
-extends_documentation_fragment: rubrik
-version_added: "2.5"
-short_description: Manage a Physical Host Fileset.
-description:
-    - Manage Protection of a Physical Host.
-author:
-    - Drew Russell (t. @drusse11)
-options:
-    hostname:
-        description:
-            - The DNS hostname or IP address of the Physical Host.
-        required: true
-        aliases: ip_address
-        default: null
-    fileset:
-        description:
-            - The name of the Fileset to associate with the Host.
-        required: false
-        default: null
-    sla_domain_name:
-        description:
-            - The name of the SLA Domain to associate with the I(Fileset).
-        required: false
-        aliases: sla
-        default: null
-'''
-
-EXAMPLES = '''
-- name: Configure a Hosts Fileset
-  rubrik_fileset:
-    provider={{ credentials }}
-    hostname={{ hostname }}
-    fileset={{ fileset }}
-    sla_domain_name={{ sla_domain_name }}
-'''
-
-RETURN = '''
-response:
-    description: Human readable description of the results of the module execution.
-    returned: success
-    type: dict
-    sample: {"response": "'Linux-Physical' has successfully added to the Rubrik Cluster.}
-'''
-
-
 def current_hosts(module, hostname):
 
     api_version = 'v1' #v1 or internal

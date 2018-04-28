@@ -10,46 +10,6 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'supported_by': 'community'}
 
 
-DOCUMENTATION = '''
----
-module: rubrik_cluster_information
-requirements: pyRubrik
-extends_documentation_fragment: rubrik
-version_added: "2.5"
-short_description: Retrieve public information about the Rubrik Cluster.
-description:
-    - Retrieve the Rubrik Cluster Version, ID, and API Version
-author:
-    - Drew Russell (t. @drusse11)
-'''
-
-EXAMPLES = '''
-- name: Retrieve public information about the Rubrik cluster
-  rubrik_cluster_information:
-    provider={{ credentials }}
-'''
-
-RETURN = '''
-version:
-    description: Software version running on the Rubrik Cluster
-    returned: always
-    type: dict
-    sample: {"version": "4.0.4-568",}
-id:
-    description:
-        - ID of the Rubrik Cluster
-    returned: always
-    type: dict
-    sample: {"id": "89qc0e87-6f2c-4652-a2fa-3797baOe6229",}
-api_version:
-    description: API version of the Rubrik cluster
-    returned: always
-    type: dict
-    sample: {"version": "1"}
-
-'''
-
-
 def main():
     '''Ansible main. '''
 

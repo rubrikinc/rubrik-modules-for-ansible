@@ -10,55 +10,6 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'supported_by': 'community'}
 
 
-DOCUMENTATION = '''
----
-module: rubrik_host
-requirements: pyRubrik
-extends_documentation_fragment: rubrik
-version_added: "2.5"
-short_description: Manage a Physical Host.
-description:
-    - Add or Delete a Physical Host from Rubrik Cluster.
-author:
-    - Drew Russell (t. @drusse11)
-options:
-    hostname:
-        description:
-            - The DNS hostname or IP address of the Physical Host you wish to take an I(action) on.
-        required: true
-        aliases: ip_address
-        default: null
-    action:
-        description:
-            - Whether to add or delete the Physical Host.
-        required: true
-        choices: [add, delete]
-        default: add
-'''
-
-EXAMPLES = '''
-- name: Add a Physical Host to the Rubrik Cluster
-  rubrik_host:
-    provider={{ credentials }}
-    hostname={{ hostname }}
-    action=add
-
-- name: Delete a Physical Host from the Rubrik Cluster
-  rubrik_host:
-    provider={{ credentials }}
-    hostname={{ hostname }}
-    action=delete
-'''
-
-RETURN = '''
-response:
-    description: Human readable description of the results of the module execution.
-    returned: success
-    type: dict
-    sample: {"response": "'Linux-Physical' has successfully added to the Rubrik Cluster.}
-'''
-
-
 def current_hosts(module, hostname):
 
     api_version = 'v1' #v1 or internal
