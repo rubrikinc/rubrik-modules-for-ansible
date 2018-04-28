@@ -6,6 +6,26 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
+def get_username_id(module):
+    ''' '''
+
+    # Ansible Specific Variables
+    ansible = module.params
+
+    api_version = 'internal' #v1 or internal
+    endpoint = '/user?username={}'.format(ansible['end_user'])
+
+    response_body = rubrik_get(module, api_version, endpoint)
+
+    if not response_body:
+        module.fail_json(msg='The Rubrik Cluster does not contain a End User Account named "{}"'.format(
+            ansible['end_user']))
+    else:
+        username_id = response_body[0]['id']
+
+    return username_id
+
+
 def get_vm_id(module):
     ''' '''
 
@@ -38,60 +58,46 @@ def get_vm_id(module):
     return vm_id
 
 
-def get_snapshot_id(module, vm_id):
-    ''' '''
-
-    api_version = 'v1' #v1 or internal
-    endpoint = '/vmware/vm/{}/snapshot?sort_by=date'.format(vm_id)
-
-    response_body = rubrik_get(module, api_version, endpoint)
-
-    snapshot_id = response_body['data'][0]['id']
-
-    return snapshot_id
-
-
-def get_host_id(module):
-    ''' '''
-
-    # Ansible Specific Variables
-    ansible = module.params
-
-    api_version = 'v1' #v1 or internal
-    endpoint = '/vmware/host'
-
-    response_body = rubrik_get(module, api_version, endpoint)
-
-    for data in response_body['data']:
-        if data['name'] == ansible['restore_host']:
-            host_id = data['id']
-
-    return host_id
-
-
-def live_mount(module, snapshot_id, host_id):
+def get_end_user_authorization(module, username_id, vm_id):
     ''' '''
 
     # Ansible Specific Variables
     ansible = module.params
     results = {}
 
-    api_version = 'v1' #v1 or internal
-    endpoint = '/vmware/vm/snapshot/{}/mount'.format(snapshot_id)
+    api_version = 'internal' #v1 or internal
+    endpoint = '/authorization/role/end_user?principals={}'.format(username_id)
+
+    response_body = rubrik_get(module, api_version, endpoint)
+
+    assigned_vms = response_body['data'][0]['privileges']['restore']
+
+    if vm_id in assigned_vms:
+        vm_assigned = True
+    else:
+        vm_assigned = False
+
+    return vm_assigned
+
+
+def end_user_authorization(module, username_id, vm_id):
+    ''' '''
+
+    # Ansible Specific Variables
+    ansible = module.params
+    results = {}
+
+    api_version = 'internal' #v1 or internal
+    endpoint = '/authorization/role/end_user'
 
     data = {}
-    data['vmName'] = '{} Ansible'.format(ansible['vsphere_vm_name'])
-    data['disableNetwork'] = ansible['disable_network']
-    data['removeNetworkDevices'] = ansible['remove_network_devices']
-    data['powerOn'] = ansible['power_on']
-    data['keepMacAddresses'] = ansible['keep_mac_addresses']
-    data['hostId'] = host_id
+    data['principals'] = [username_id]
+    data['privileges'] = {"restore": [vm_id]}
 
-    response_body = rubrik_post(module, api_version, endpoint, jsonify(data))
+    response_body = rubrik_post(module, api_version, endpoint, data)
 
     results['changed'] = True
-    results['response_body'] = response_body
-    results['status'] = response_body['links'][0]['href']
+    results['response_body'] = response_body['data']
 
     return results
 
@@ -104,11 +110,7 @@ def main():
     argument_spec.update(
         dict(
             vsphere_vm_name=dict(required=True, aliases=['vm']),
-            restore_host=dict(required=True, aliases=['host']),
-            disable_network=dict(required=False, default=False, type='bool'),
-            remove_network_devices=dict(required=False, default=False, type='bool'),
-            power_on=dict(required=False, default=True, type='bool'),
-            keep_mac_addresses=dict(required=False, default=False, type='bool'),
+            end_user=dict(required=True),
         )
     )
 
@@ -117,16 +119,24 @@ def main():
 
     load_provider_variables(module)
 
+    username_id = get_username_id(module)
     vm_id = get_vm_id(module)
-    host_id = get_host_id(module)
-    snapshot_id = get_snapshot_id(module, vm_id)
 
-    results = live_mount(module, snapshot_id, host_id)
+    current_vms_assigned = get_end_user_authorization(module, username_id, vm_id)
+
+    if current_vms_assigned == True:
+        ansible = module.params
+        results = {}
+        results['changed'] = False
+        results['status'] = 'The End User "{}" is already authorized to interact with the "{}" VM.'.format(
+            ansible['end_user'], ansible['vsphere_vm_name'])
+    else:
+        results = end_user_authorization(module, username_id, vm_id)
 
     module.exit_json(**results)
 
 
-from ansible.module_utils.basic import AnsibleModule, jsonify # isort:skip
+from ansible.module_utils.basic import AnsibleModule # isort:skip
 from ansible.module_utils.rubrik import load_provider_variables, rubrik_argument_spec, rubrik_get, rubrik_post  # isort:skip
 
 

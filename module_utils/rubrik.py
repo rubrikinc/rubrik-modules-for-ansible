@@ -27,11 +27,22 @@
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 import json
-from ansible.module_utils.basic import jsonify
 from ansible.module_utils.six import iteritems
 from ansible.module_utils.urls import open_url, basic_auth_header
-from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError  # isort:skip
+from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
+from ansible.module_utils.six.moves.urllib.parse import quote
+# Add baclwards compatability check for Ansible v3.x.x
+HAS_JSONIFY = True
+try:
+    from ansible.module_utils.basic import jsonify
+except ImportError:
+    HAS_JSONIFY = False
 
+HAS_DATEUTIL = True
+try:
+    from dateutil import parser, tz
+except ImportError:
+    HAS_DATEUTIL = False
 
 login_credentials_spec = {
     'node': dict(),
@@ -62,6 +73,8 @@ def rubrik_get(module, api_version, endpoint, timeout=20):
     ansible = module.params
 
     url = 'https://{}/api/{}{}'.format(ansible['node'], api_version, endpoint)
+    # Convert String to URL Safe Values
+    url = quote(url, '://?=&')
 
     headers = {
         'Accept': "application/json",
@@ -74,8 +87,9 @@ def rubrik_get(module, api_version, endpoint, timeout=20):
         response_body = json.loads(response.read())
 
     except HTTPError as error:
-        response_body = error.read()
-        module.fail_json(msg=str(response_body))
+        response_body = json.loads(error.read())
+        response_body = response_body['message']
+        module.fail_json(msg=response_body)
     except URLError:
         module.fail_json(msg='Connection to the Node IP timed out.')
 
@@ -96,7 +110,10 @@ def rubrik_post(module, api_version, endpoint, data, timeout=20):
 
     }
 
-    data = jsonify(data)
+    if HAS_JSONIFY == True:
+        data = jsonify(data)
+    else:
+        data = module.jsonify(data)
 
     try:
 
@@ -105,8 +122,9 @@ def rubrik_post(module, api_version, endpoint, data, timeout=20):
         response_body = json.loads(response.read())
 
     except HTTPError as error:
-        response_body = error.read()
-        module.fail_json(msg=str(response_body))
+        response_body = json.loads(error.read())
+        response_body = response_body['message']
+        module.fail_json(msg=response_body)
     except URLError:
         module.fail_json(msg='Connection to the Node IP timed out.')
 
@@ -120,6 +138,7 @@ def rubrik_patch(module, api_version, endpoint, data, timeout=20):
     ansible = module.params
 
     url = 'https://{}/api/{}{}'.format(ansible['node'], api_version, endpoint)
+    # Convert String to URL Safe Values
 
     headers = {
         'Accept': "application/json",
@@ -127,7 +146,10 @@ def rubrik_patch(module, api_version, endpoint, data, timeout=20):
 
     }
 
-    data = jsonify(data)
+    if HAS_JSONIFY == True:
+        data = jsonify(data)
+    else:
+        data = module.jsonify(data)
 
     try:
 
@@ -136,8 +158,9 @@ def rubrik_patch(module, api_version, endpoint, data, timeout=20):
         response_body = json.loads(response.read())
 
     except HTTPError as error:
-        response_body = error.read()
-        module.fail_json(msg=str(response_body))
+        response_body = json.loads(error.read())
+        response_body = response_body['message']
+        module.fail_json(msg=response_body)
     except URLError:
         module.fail_json(msg='Connection to the Node IP timed out.')
 
@@ -163,8 +186,9 @@ def rubrik_delete(module, api_version, endpoint, timeout=20):
         response = open_url(url=url, method='DELETE', headers=headers, timeout=timeout, validate_certs=False)
 
     except HTTPError as error:
-        response_body = error.read()
-        module.fail_json(msg=str(response_body))
+        response_body = json.loads(error.read())
+        response_body = response_body['message']
+        module.fail_json(msg=response_body)
     except URLError:
         module.fail_json(msg='Connection to the Node IP timed out.')
 
@@ -188,8 +212,9 @@ def rubrik_job_status(module, url, timeout=20):
         response_body = json.loads(response.read())
 
     except HTTPError as error:
-        response_body = error.read()
-        module.fail_json(msg=str(response_body))
+        response_body = json.loads(error.read())
+        response_body = response_body['message']
+        module.fail_json(msg=response_body)
     except URLError:
         module.fail_json(msg='Connection to the Node IP timed out.')
 

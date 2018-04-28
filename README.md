@@ -1,42 +1,24 @@
-## Rubrik Ansible Modules
-
-### Repository Description
-
+# Rubrik Ansible Modules
 Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud Data Management Platform.
 
-### Module Description
-
-_All Modules are contained in the `library` folder_
-
-#### Rubrik Assign SLA
-
-- Assign and SLA Domain to a vSphere Virtulal Machine
-
-#### Rubrik Cluster Information
-
-- Retrieve public information about the Rubrik Cluster
-
-#### Rubrik Connector
-
-- Install the Rubrik Connector on a Linux (Red Hat and Debian) or Windows Machine. See [Ansible Galaxy](https://galaxy.ansible.com/rubrik-devops/rubrik-connector/) or more details.
+Please visit the [full documentation](https://rubrik.gitbook.io/rubrik-ansible/) for more details.
 
 
-#### Rubrik Fileset
+## System Requirements
 
-- Add, Delete, or Manage Protection of a Physical Host
+### Rubrik CDM
 
-#### Rubrik Host
+* 4.1
 
-- Add or Delete a Physical Host.
+### Python
 
-#### Rubrik Snapshot
+* 3.6.4
+* 2.7.6
 
-- Take an On Demand Snapshot of a vSphere VM and assign an SLA Domain or 
-- Initiate an Instant Recovery or Live Mount of a VM.
+### Ansible
 
-
-
-
+* 2.5.0
+* 2.4.2.0
 
 
 #### Created and Maintained by the Rubrik Ranger Team
