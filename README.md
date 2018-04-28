@@ -18,10 +18,7 @@ Please visit the [full documentation](https://rubrik.gitbook.io/rubrik-ansible/)
 ### Ansible
 
 * 2.5.0
-* 2.4.20
-
-
-
+* 2.4.2.0
 
 
 #### Created and Maintained by the Rubrik Ranger Team
