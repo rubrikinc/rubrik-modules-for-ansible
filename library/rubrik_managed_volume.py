@@ -8,7 +8,7 @@ EXAMPLES = '''
     provider: "{{ credentials }}"
     name: MV1
     action: begin
-    
+
 # End the managed volume snapshot
 - rubrik_managed_volume:
     provider: "{{ credentials }}"
@@ -17,7 +17,7 @@ EXAMPLES = '''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrikcdm import HAS_RUBRIKCDM, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrikcdm import sdk_validation, load_provider_variables, rubrik_argument_spec
 
 import rubrik_cdm
 
@@ -45,7 +45,9 @@ def main():
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
-    if HAS_RUBRIKCDM is False:
+    sdk_present, rubrik_cdm = sdk_validation()
+
+    if sdk_present is False:
         module.fail_json(msg="The Rubrik Python SDK is required for this module (pip install rubrik_cdm).")
 
     results = {}
@@ -62,6 +64,7 @@ def main():
             results["changed"] = False
         else:
             results["changed"] = True
+
         results["response"] = api_request
 
     else:
@@ -72,6 +75,7 @@ def main():
             results["changed"] = False
         else:
             results["changed"] = True
+
         results["response"] = api_request
 
     module.exit_json(**results)

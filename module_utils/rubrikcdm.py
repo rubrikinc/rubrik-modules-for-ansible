@@ -30,11 +30,22 @@ import urllib3
 urllib3.disable_warnings()
 
 
-try:
-    import rubrik_cdm
-    HAS_RUBRIKCDM = True
-except:
-    HAS_RUBRIKCDM = False
+def sdk_validation(module):
+    """Verify that the rubrik_cdm SDK is present.
+
+    Returns:
+        bool -- Flag that determines whether or not the SDK is present.
+        class -- The rubrik_cdm module class.
+    """
+
+    try:
+        import rubrik_cdm
+        sdk_present = True
+    except:
+        sdk_present = False
+
+    return sdk_present, rubrik_cdm
+
 
 login_credentials_spec = {
     'node': dict(),
@@ -48,8 +59,9 @@ rubrik_argument_spec = {
 
 
 def load_provider_variables(module):
-    '''Pull the node, username, and password arguments from the provider
-    variable '''
+    """Pull the node, username, and password arguments from the provider
+    variable
+    """
 
     provider = module.params.get('provider') or dict()
     for key, value in iteritems(provider):
