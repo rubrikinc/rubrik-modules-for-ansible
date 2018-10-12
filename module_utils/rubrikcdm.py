@@ -78,7 +78,7 @@ rubrik_argument_spec = {
 
 
 def load_provider_variables(module):
-    """Pull the node, username, and password arguments from the provider
+    """Pull the node_ip, username, and password arguments from the provider
     variable
     """
 
