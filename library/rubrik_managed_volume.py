@@ -41,7 +41,7 @@ def main():
         ('action', 'end', ['sla_name'])
     ]
 
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
+    module = AnsibleModule(argument_spec=argument_spec, required_if=required_if, supports_check_mode=False)
 
     sdk_present, rubrik_cdm = sdk_validation()
 
