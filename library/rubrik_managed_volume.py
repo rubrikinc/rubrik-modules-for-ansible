@@ -58,23 +58,16 @@ def main():
     if ansible["action"] == "begin":
         api_request = rubrik.begin_managed_volume_snapshot(ansible["managed_volume_name"], ansible["timeout"])
 
-        if "No change required" in api_request:
-            results["changed"] = False
-        else:
-            results["changed"] = True
-
-        results["response"] = api_request
-
     else:
         api_request = rubrik.end_managed_volume_snapshot(
             ansible["managed_volume_name"], ansible["sla_name"], ansible["timeout"])
 
-        if "No change required" in api_request:
-            results["changed"] = False
-        else:
-            results["changed"] = True
+    if "No change required" in api_request:
+        results["changed"] = False
+    else:
+        results["changed"] = True
 
-        results["response"] = api_request
+    results["response"] = api_request
 
     module.exit_json(**results)
 
