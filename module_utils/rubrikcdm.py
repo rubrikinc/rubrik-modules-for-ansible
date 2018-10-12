@@ -30,7 +30,7 @@ import urllib3
 urllib3.disable_warnings()
 
 
-def sdk_validation(module):
+def sdk_validation():
     """Verify that the rubrik_cdm SDK is present.
 
     Returns:
