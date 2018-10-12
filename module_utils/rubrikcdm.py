@@ -47,8 +47,27 @@ def sdk_validation():
     return sdk_present, rubrik_cdm
 
 
+def connect(rubrik_cdm, module):
+    ansible = module.params
+
+    try:
+        rubrik = rubrik_cdm.Connect()
+        return rubrik
+    except SystemExit as error:
+        if "has not been provided" in str(error):
+            try:
+                ansible["node_ip"]
+                ansible["username"]
+                ansible["password"]
+            except KeyError:
+                return "Error: The Rubrik login credentials (node_ip, username, password) have not been provided. Please verify the correct environment variables are present or manually provided the credentials through the `provider` variable."
+
+            rubrik = rubrik_cdm.Connect(ansible['node_ip'], ansible['username'], ansible['password'])
+            return rubrik
+
+
 login_credentials_spec = {
-    'node': dict(),
+    'node_ip': dict(),
     'username': dict(),
     'password': dict(no_log=True),
 }

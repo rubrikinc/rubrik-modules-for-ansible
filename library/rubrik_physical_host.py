@@ -15,7 +15,7 @@ EXAMPLES = '''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrikcdm import sdk_validation, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrikcdm import sdk_validation, connect, load_provider_variables, rubrik_argument_spec
 
 
 def main():
@@ -45,7 +45,9 @@ def main():
     load_provider_variables(module)
     ansible = module.params
 
-    rubrik = rubrik_cdm.Connect(ansible['node'], ansible['username'], ansible['password'])
+    rubrik = connect(rubrik_cdm, module)
+    if isinstance(rubrik, str):
+        module.fail_json(msg=rubrik)
 
     if ansible["action"] == "add":
         api_request = rubrik.add_physical_host(ansible["hostname"], ansible["timeout"])
