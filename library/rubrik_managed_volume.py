@@ -34,8 +34,6 @@ def main():
             sla_name=dict(required=False, type='str', default="current"),
             action=dict(required=True, choices=['begin', 'end']),
             timeout=dict(required=False, type='int', default=15),
-
-
         )
     )
 
