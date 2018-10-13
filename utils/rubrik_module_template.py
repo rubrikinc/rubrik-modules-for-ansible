@@ -43,7 +43,10 @@ def main():
     ##################################
     ##################################
 
-    api_request = rubrik.
+    try:
+        api_request = rubrik.
+    except SystemExit as error:
+        module.fail_json(msg=error)
 
     if "No change required" in api_request:
         results["changed"] = False
