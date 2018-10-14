@@ -61,8 +61,14 @@ def connect(rubrik_cdm, module):
                 ansible["password"]
             except KeyError:
                 return "Error: The Rubrik login credentials (node_ip, username, password) have not been provided. Please verify the correct environment variables are present or manually provided the credentials through the `provider` variable."
+        else:
+            return str(error)
 
+        try:
             rubrik = rubrik_cdm.Connect(ansible['node_ip'], ansible['username'], ansible['password'])
+        except SystemExit as error:
+            return str(error)
+
             return rubrik
 
 
