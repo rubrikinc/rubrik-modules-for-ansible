@@ -18,6 +18,7 @@ def main():
 
     argument_spec.update(
         dict(
+            timeout=dict(required=False, type='int', default=15),
 
         )
     )
