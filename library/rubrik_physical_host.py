@@ -50,9 +50,15 @@ def main():
         module.fail_json(msg=rubrik)
 
     if ansible["action"] == "add":
-        api_request = rubrik.add_physical_host(ansible["hostname"], ansible["timeout"])
+        try:
+            api_request = rubrik.add_physical_host(ansible["hostname"], ansible["timeout"])
+        except SystemExit as error:
+            module.fail_json(msg=str(error))
     else:
-        api_request = rubrik.delete_physical_host(ansible["hostname"], ansible["timeout"])
+        try:
+            api_request = rubrik.delete_physical_host(ansible["hostname"], ansible["timeout"])
+        except SystemExit as error:
+            module.fail_json(msg=str(error))
 
     if "No change required" in api_request:
         results["changed"] = False

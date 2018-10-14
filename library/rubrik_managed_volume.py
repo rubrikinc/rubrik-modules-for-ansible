@@ -58,11 +58,18 @@ def main():
         module.fail_json(msg=rubrik)
 
     if ansible["action"] == "begin":
-        api_request = rubrik.begin_managed_volume_snapshot(ansible["managed_volume_name"], ansible["timeout"])
+        try:
+            api_request = rubrik.begin_managed_volume_snapshot(ansible["managed_volume_name"], ansible["timeout"])
+        except SystemExit as error:
+            module.fail_json(msg=str(error))
 
     else:
-        api_request = rubrik.end_managed_volume_snapshot(
-            ansible["managed_volume_name"], ansible["sla_name"], ansible["timeout"])
+        try:
+            api_request = rubrik.end_managed_volume_snapshot(
+                ansible["managed_volume_name"], ansible["sla_name"], ansible["timeout"])
+
+        except SystemExit as error:
+            module.fail_json(msg=str(error))
 
     if "No change required" in api_request:
         results["changed"] = False

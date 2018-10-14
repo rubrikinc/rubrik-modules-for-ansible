@@ -47,7 +47,7 @@ def main():
     try:
         api_request = rubrik.
     except SystemExit as error:
-        module.fail_json(msg=error)
+        module.fail_json(msg=str(error))
 
     if "No change required" in api_request:
         results["changed"] = False

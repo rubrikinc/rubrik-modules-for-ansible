@@ -55,7 +55,7 @@ def main():
             ansible["object_name"], ansible["object_type"], ansible["sla_name"], ansible["fileset"], ansible["host_os"])
 
     except SystemExit as error:
-        module.fail_json(msg=error)
+        module.fail_json(msg=str(error))
 
     results["changed"] = True
 

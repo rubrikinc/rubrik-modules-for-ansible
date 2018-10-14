@@ -44,7 +44,7 @@ def main():
     try:
         api_request = rubrik.job_status(ansible["url"], ansible["wait_for_completion"], ansible["timeout"])
     except SystemExit as error:
-        module.fail_json(msg=error)
+        module.fail_json(msg=str(error))
 
     results["changed"] = False
 

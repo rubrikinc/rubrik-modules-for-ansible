@@ -59,11 +59,20 @@ def main():
 
     # If there are multiple Filesets on the cluster with the same name the end use will need to provide more specific information. That only occurs when includes != None
     if bool(ansible['include']) is False:
-        api_request = rubrik.assign_physical_host_fileset(
-            ansible['hostname'], ansible['fileset_name'], ansible['operating_system'], ansible['sla_name'], timeout=ansible["timeout"])
+
+        try:
+            api_request = rubrik.assign_physical_host_fileset(
+                ansible['hostname'], ansible['fileset_name'], ansible['operating_system'], ansible['sla_name'], timeout=ansible["timeout"])
+        except SystemExit as error:
+            module.fail_json(msg=str(error))
+
     else:
-        api_request = rubrik.assign_physical_host_fileset(ansible['hostname'], ansible['fileset_name'], ansible['operating_system'], ansible['sla_name'], ansible["include"],
-                                                          ansible["exclude"], ansible["exclude_exception"], ansible["follow_network_shares"], ansible["backup_hidden_folders"], ansible["timeout"])
+
+        try:
+            api_request = rubrik.assign_physical_host_fileset(ansible['hostname'], ansible['fileset_name'], ansible['operating_system'], ansible['sla_name'], ansible[
+                "include"], ansible["exclude"], ansible["exclude_exception"], ansible["follow_network_shares"], ansible["backup_hidden_folders"], ansible["timeout"])
+        except SystemExit as error:
+            module.fail_json(msg=str(error))
 
     if "No change required" in api_request:
         results["changed"] = False

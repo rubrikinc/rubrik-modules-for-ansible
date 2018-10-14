@@ -48,7 +48,7 @@ def main():
         api_request = rubrik.assign_sla(ansible["object_name"], ansible["sla_name"],
                                         ansible["object_type"], ansible["timeout"])
     except SystemExit as error:
-        module.fail_json(msg=error)
+        module.fail_json(msg=str(error))
 
     if "No change required" in api_request:
         results["changed"] = False

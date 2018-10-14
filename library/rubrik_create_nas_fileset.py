@@ -53,8 +53,12 @@ def main():
     if isinstance(rubrik, str):
         module.fail_json(msg=rubrik)
 
-    api_request = rubrik.create_nas_fileset(ansible["fileset_name"], ansible["share_type"], ansible["include"],
-                                            ansible["exclude"], ansible["exclude_exception"], ansible["follow_network_shares"], ansible["timeout"])
+    try:
+        api_request = rubrik.create_nas_fileset(ansible["fileset_name"], ansible["share_type"], ansible["include"],
+                                                ansible["exclude"], ansible["exclude_exception"], ansible["follow_network_shares"], ansible["timeout"])
+
+    except SystemExit as error:
+        module.fail_json(msg=str(error))
 
     if "No change required" in api_request:
         results["changed"] = False

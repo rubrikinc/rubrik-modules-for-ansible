@@ -53,8 +53,12 @@ def main():
     if isinstance(rubrik, str):
         module.fail_json(msg=rubrik)
 
-    api_request = rubrik.create_physical_fileset(ansible["fileset_name"], ansible["operating_system"], ansible["include"], ansible["exclude"],
-                                                 ansible["exclude_exception"], ansible["follow_network_shares"], ansible["backup_hidden_folders"], ansible["timeout"])
+    try:
+        api_request = rubrik.create_physical_fileset(ansible["fileset_name"], ansible["operating_system"], ansible["include"], ansible["exclude"],
+                                                     ansible["exclude_exception"], ansible["follow_network_shares"], ansible["backup_hidden_folders"], ansible["timeout"])
+
+    except SystemExit as error:
+        module.fail_json(msg=str(error))
 
     if "No change required" in api_request:
         results["changed"] = False
