@@ -21,10 +21,10 @@ def main():
     argument_spec.update(
         dict(
             object_name=dict(required=True, type='str'),
-            object_type=dict(required=False, default="vmware"),
+            object_type=dict(required=False, type='str', default="vmware", choices=["vmware", "physical_host"]),
             sla_name=dict(required=False, type='str', default='current'),
             fileset=dict(required=False, type='str', default='None'),
-            host_os=dict(required=False, type='str', default='None'),
+            host_os=dict(required=False, type='str', default='None', choices=["None", "Linux", "Windows"]),
         )
     )
 
