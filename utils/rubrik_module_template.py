@@ -2,6 +2,33 @@
 # Copyright: Rubrik
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'status': ['preview'],
+    'supported_by': 'community'
+}
+
+DOCUMENTATION = '''
+module:
+short_description:
+description:
+    -
+version_added: '2.7'
+author: 'Rubrik Ranger Team'
+options:
+
+
+ timeout:
+    description:
+      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+    required: False
+    default: 30
+    type: int
+
+extends_documentation_fragment:
+    - rubrik_cdm
+requirements: [rubrik_cdm]
+
 EXAMPLES = '''
 - rubrik_module_name
 '''
