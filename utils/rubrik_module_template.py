@@ -9,10 +9,10 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module:
-short_description:
+module: 
+short_description: 
 description:
-    -
+    - 
 version_added: '2.7'
 author: 'Rubrik Ranger Team'
 options:
@@ -28,10 +28,29 @@ options:
 extends_documentation_fragment:
     - rubrik_cdm
 requirements: [rubrik_cdm]
+'''
 
 EXAMPLES = '''
-- rubrik_module_name
+- rubrik_module_name:
 '''
+
+RETURN = '''
+response:
+    description: The full API response for .
+    returned: on success
+    type: dict
+    sample: 
+      {
+    
+    }
+
+response:
+    description: A "No changed required" message when 
+    returned: When the module idempotent check is succesful.
+    type: str
+    sample: 
+'''
+
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.rubrikcdm import sdk_validation, connect, load_provider_variables, rubrik_argument_spec

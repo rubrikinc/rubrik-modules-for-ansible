@@ -106,6 +106,31 @@ EXAMPLES = '''
     backup_hidden_folders: true
 '''
 
+RETURN = '''
+response:
+    description: The full API response for POST /v1/host.
+    returned: on success
+    type: dict
+    sample: 
+      {
+        "id": "string",
+        "hostname": "string",
+        "primaryClusterId": "string",
+        "operatingSystem": "string",
+        "operatingSystemType": "string",
+        "status": "string",
+        "agentId": "string",
+        "compressionEnabled": true
+    }
+
+response:
+    description: A "No changed require" message when the physical host is already connected to the Rubrik cluster.
+    returned: When the module idempotent check is succesful.
+    type: str
+    sample: No change requird. The host 'hostname' is already connected to the Rubrik cluster.
+'''
+
+
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.rubrikcdm import sdk_validation, connect, load_provider_variables, rubrik_argument_spec
 
@@ -173,8 +198,6 @@ def main():
         results["changed"] = False
     else:
         results["changed"] = True
-
-    results["response"] = api_request
 
     results["response"] = api_request
 

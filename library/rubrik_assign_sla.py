@@ -54,6 +54,22 @@ EXAMPLES = '''
     sla_name: "Gold"
 '''
 
+RETURN = '''
+response:
+    description: The full API reponse for POST /internal/sla_domain/{sla_id}/assign.
+    returned: on success
+    type: dict
+    sample: 
+      {
+        "status_code": "204"
+
+response:
+    description: A "No changed required" message when the Rubrik object is already assigned to the SLA Domain.
+    returned: When the module idempotent check is succesful.
+    type: str
+    sample: No change required. The vSphere VM 'object_name' is already assigned to the 'sla_name' SLA Domain.
+'''
+
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.rubrikcdm import sdk_validation, connect, load_provider_variables, rubrik_argument_spec
 
