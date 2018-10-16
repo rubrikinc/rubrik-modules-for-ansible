@@ -62,6 +62,32 @@ EXAMPLES = '''
     action: end
 '''
 
+RETURN = '''
+response:
+    description: The full API response for POST /internal/managed_volume/{id}/begin_snapshot
+    returned: on success when action is begin
+    type: dict
+    sample: {"status_code": "204"}
+
+response:
+    description: The full API response for POST /internal/managed_volume/{id}/end_snapshot
+    returned: on success when action is end
+    type: dict
+    sample: {"status_code": "204"}
+
+response:
+    description: A "No changed require" message when the managed volume is already in a writable state.
+    returned: When the module idempotent check is succesful and action is begin.
+    type: str
+    sample: No change required. The Managed Volume 'I(managed_volume_name)' is already assigned in a writeable state.
+
+response:
+    description: A "No changed required" message when the managed volume is already in a read only state.
+    returned: When the module idempotent check is succesful and action is begin.
+    type: str
+    sample: No change required. The Managed Volume 'I(managed_volume_name)' is already assigned in a read only state.
+'''
+
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.rubrikcdm import sdk_validation, connect, load_provider_variables, rubrik_argument_spec
 

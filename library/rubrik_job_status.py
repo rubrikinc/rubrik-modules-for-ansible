@@ -46,6 +46,14 @@ EXAMPLES = '''
     url: "https://192.168.1.100/api/v1/vmware/vm/request/CREATE_VMWARE_SNAPSHOT_fbcb1d87-9872-4227-a68c-6fe145982f48-vm-289386_e83783ab-a04c-4327-915b-7698d2c5ecf48:::0"
 '''
 
+RETURN = '''
+response:
+    description: The full API response for the API call.
+    returned: on success
+    type: dict
+    sample: differs depending on the object_type being monitored.
+'''
+
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.rubrikcdm import sdk_validation, connect, load_provider_variables, rubrik_argument_spec
 

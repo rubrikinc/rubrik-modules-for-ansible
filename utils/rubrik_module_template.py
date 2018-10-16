@@ -9,25 +9,7 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: 
-short_description: 
-description:
-    - 
-version_added: '2.7'
-author: 'Rubrik Ranger Team'
-options:
-
-
- timeout:
-    description:
-      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
-    required: False
-    default: 30
-    type: int
-
-extends_documentation_fragment:
-    - rubrik_cdm
-requirements: [rubrik_cdm]
+# Should be auto-generated and pasted here.
 '''
 
 EXAMPLES = '''
@@ -62,12 +44,14 @@ def main():
 
     argument_spec = rubrik_argument_spec
 
+    # Start Parameters
     argument_spec.update(
         dict(
             timeout=dict(required=False, type='int', default=15),
 
         )
     )
+    # End Parameters
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 

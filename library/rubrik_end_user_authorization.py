@@ -57,6 +57,41 @@ EXAMPLES = '''
     sla_name: "Gold"
 '''
 
+RETURN = '''
+response:
+    description: The full API response for POST /internal/authorization/role/end_user
+    returned: on success
+    type: dict
+    sample: 
+      {
+        "hasMore": true,
+        "data": [
+            {
+            "principal": "string",
+            "privileges": {
+                "destructiveRestore": [
+                "string"
+                ],
+                "restore": [
+                "string"
+                ],
+                "provisionOnInfra": [
+                "string"
+                ]
+            },
+            "organizationId": "string"
+            }
+        ],
+        "total": 0
+      }
+
+response:
+    description: A "No changed required" message when the end user is already authorized to interface with provided I(objec_name).
+    returned: When the module idempotent check is succesful.
+    type: str
+    sample: No change required. The End User "end_user" is already authorized to interact with the "object_name" VM.
+'''
+
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.rubrikcdm import sdk_validation, connect, load_provider_variables, rubrik_argument_spec
 

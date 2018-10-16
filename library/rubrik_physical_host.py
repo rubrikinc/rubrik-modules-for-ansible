@@ -54,6 +54,42 @@ EXAMPLES = '''
     action: 'delete'
 '''
 
+RETURN = '''
+response:
+    description: The full API response for POST /v1/host
+    returned: on success when action is add
+    type: dict
+    sample: 
+        {
+            "id": "string",
+            "hostname": "string",
+            "primaryClusterId": "string",
+            "operatingSystem": "string",
+            "operatingSystemType": "string",
+            "status": "string",
+            "agentId": "string",
+            "compressionEnabled": true
+        }
+
+response:
+    description: The full API response for DELETE /v1/host/{id}
+    returned: on success when action is delete
+    type: dict
+    sample: {"status_code": 204}
+
+response:
+    description: A "No changed required" message when the host has already been added to the Rubrik cluster.
+    returned: When the module idempotent check is succesful and action is add.
+    type: str
+    sample: No change requird. The host 'hostname' is already connected to the Rubrik cluster.
+
+response:
+    description: A "No changed required" message when the host is not present on the Rubrik cluster.
+    returned: When the module idempotent check is succesful and action is delete.
+    type: str
+    sample: No change required. The host 'hostname' is not connected to the Rubrik cluster.
+'''
+
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.rubrikcdm import sdk_validation, connect, load_provider_variables, rubrik_argument_spec
 

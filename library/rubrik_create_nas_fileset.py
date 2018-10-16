@@ -80,8 +80,51 @@ EXAMPLES = '''
     follow_network_shares: False
 '''
 
-RETURNS = """
-"""
+RETURN = '''
+response:
+    description: The full response for the POST /internal/fileset_template/bulk API endpoint.
+    returned: on success
+    type: dict
+    sample: 
+    {
+        "hasMore": true,
+        "data": [
+          {
+            "allowBackupNetworkMounts": true,
+            "allowBackupHiddenFoldersInNetworkMounts": true,
+            "useWindowsVss": true,
+            "name": "string",
+            "includes": [
+              "string"
+            ],
+            "excludes": [
+              "string"
+            ],
+            "exceptions": [
+              "string"
+            ],
+            "operatingSystemType": "Linux",
+            "shareType": "NFS",
+            "preBackupScript": "string",
+            "postBackupScript": "string",
+            "backupScriptTimeout": 0,
+            "backupScriptErrorHandling": "string",
+            "id": "string",
+            "primaryClusterId": "string",
+            "isArchived": true,
+            "hostCount": 0,
+            "shareCount": 0
+          }
+        ],
+        "total": 0
+   }
+
+response:
+    description: A "No changed required" message when the NAS Fileset is already present on the Rubrik cluster.
+    returned: When the module idempotent check is succesful.
+    type: str
+    sample: No change required. The Rubrik cluster already has a NAS Fileset named 'name' configured with the provided variables.
+'''
 
 
 from ansible.module_utils.basic import AnsibleModule
