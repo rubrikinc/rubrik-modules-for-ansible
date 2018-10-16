@@ -13,8 +13,7 @@ module: rubrik_assign_physical_host_fileset
 short_description: Assign a Rubrik fileset to a Linux or Windows machine.
 description:
     - Assign a fileset to a Linux or Windows machine. If you have multiple filesets with identical names, you will 
-      need to populate the filesets properties (i.e this functions keyword arguments) to find a specific match. 
-      Filesets with identical names and properties are not supported.
+      need to populate the filesets properties to find a specific match. Filesets with identical names and properties are not supported.
 version_added: '2.7'
 author: 'Rubrik Ranger Team'
 options:
@@ -34,7 +33,7 @@ options:
 
   sla_name:
     description:
-      - The name of the Fileset you wish to assign to the Linux or Windows host.
+      - The name of the SLA Domain to associate with the Fileset.
     required: true
     aliases: sla
     type: str
@@ -140,7 +139,7 @@ def main():
     """
 
     argument_spec = rubrik_argument_spec
-
+    # Start Parameters
     argument_spec.update(
         dict(
             hostname=dict(required=True, type='str', aliases=['ip_address']),
@@ -156,6 +155,7 @@ def main():
 
         )
     )
+    # End Parameters
 
     required_together = [
         ["include", "exclude", "exclude_exception", "follow_network_shares", "backup_hidden_folders"]

@@ -1,6 +1,52 @@
 #!/usr/bin/python
 # Copyright: Rubrik
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'status': ['preview'],
+    'supported_by': 'community'
+}
+
+DOCUMENTATION = '''
+module: rubrik_managed_volume
+short_description: Begin or end snapshots on a Rubrik Managed Volume.
+description:
+    - Begin or end snapshots on a Rubrik Managed Volume.
+version_added: 2.7
+author: Rubrik Ranger Team
+options:
+
+  managed_volume_name:
+    description:
+      - The name of the Managed Volume to begin or end the snapshot on.
+    required = True
+    aliases = name
+
+  sla_name:
+    description:
+      - The SLA Domain name you want to assign the snapshot to. By default, the currently assigned SLA Domain will be used. This parameter is only required when the I(action) is end.
+    required = False
+    type = str
+    default = current
+
+  action:
+    description:
+      - Specify whether or not you wish to begin or end a snapshot.
+    required = True
+    choices = [begin, end]
+
+  timeout:
+    description:
+      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+    required = False
+    type = int
+    default = 15
+
+
+extends_documentation_fragment:
+    - rubrik_cdm
+requirements: [rubrik_cdm]
+'''
 
 EXAMPLES = '''
 # Begin a new managed volume snapshot.
@@ -28,6 +74,7 @@ def main():
 
     argument_spec = rubrik_argument_spec
 
+    # Start Parameters
     argument_spec.update(
         dict(
             managed_volume_name=dict(required=True, aliases=['name']),
@@ -36,6 +83,7 @@ def main():
             timeout=dict(required=False, type='int', default=15),
         )
     )
+    # End Parameters
 
     required_if = [
         ('action', 'end', ['sla_name'])

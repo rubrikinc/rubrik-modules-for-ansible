@@ -2,6 +2,81 @@
 # Copyright: Rubrik
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'status': ['preview'],
+    'supported_by': 'community'
+}
+
+DOCUMENTATION = '''
+module: rubrik_create_physical_fileset
+short_description: Create a Rubrik fileset for a Linux or Windows machine.
+description:
+    - Create a Fileset for a Linux or Windows machine.
+version_added: 2.7
+author: Rubrik Ranger Team
+options:
+
+  fileset_name:
+    description:
+      - The name of the Fileset you wish to create.
+    required = False
+    aliases = name
+
+  operating_system:
+    description:
+      - The operating system type of the Fileset you are creating.
+    required = False
+    choices = [Linux, Windows]
+
+  include:
+    description:
+      - The full paths or wildcards that define the objects to include in the Fileset backup (ex: ['/usr/local', '*.pdf']).
+    required = False
+    type = list
+
+  exclude:
+    description:
+      - The full paths or wildcards that define the objects to exclude from the Fileset backup (ex: ['/user/local/temp', '.mov', '.mp3']).
+    required = False
+    type = list
+    default = []
+
+  exclude_exception:
+    description:
+      - The full paths or wildcards that define the objects that are exempt from the excludes variables. (ex. ['/company/*.mp4').
+    required = False
+    type = list
+    default = []
+
+  follow_network_shares:
+    description:
+      - Include or exclude locally-mounted remote file systems from backups.
+    required = False
+    type = bool
+    default = False
+
+  backup_hidden_folders:
+    description:
+      - Include or exclude hidden folders inside locally-mounted remote file systems from backups.
+    required = False
+    type = bool
+    default = False
+
+  timeout:
+    description:
+      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+    required = False
+    type = int
+    default = 15
+
+
+extends_documentation_fragment:
+    - rubrik_cdm
+requirements: [rubrik_cdm]
+'''
+
+
 EXAMPLES = '''
 - rubrik_create_physical_fileset:
     provider: "{{ credentials }}"
@@ -24,6 +99,7 @@ def main():
 
     argument_spec = rubrik_argument_spec
 
+    # Start Parameters
     argument_spec.update(
         dict(
             fileset_name=dict(required=False, aliases=['name']),
@@ -36,6 +112,7 @@ def main():
             timeout=dict(required=False, type='int', default=15),
         )
     )
+    # End Parameters
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 

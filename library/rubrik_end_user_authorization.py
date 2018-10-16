@@ -2,6 +2,55 @@
 # Copyright: Rubrik
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'status': ['preview'],
+    'supported_by': 'community'
+}
+
+DOCUMENTATION = '''
+module: rubrik_end_user_authorization
+short_description: Grant an Rubrik End User authorization to the provided object.
+description:
+    - Grant an End User authorization to the provided object.
+version_added: 2.7
+author: Rubrik Ranger Team
+options:
+
+  object_name:
+    description:
+      - The name of the object you wish to grant the I(end_user) authorization to.
+    required = True
+    type = str
+
+  end_user:
+    description:
+      - The name of the end user you wish to grant authorization to.
+    required = True
+    type = str
+
+  object_type:
+    description:
+      - The Rubrik object type you wish to backup.
+    required = False
+    type = str
+    default = vmware
+    choices = [vmware]
+
+  timeout:
+    description:
+      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+    required = False
+    type = int
+    default = 15
+
+
+extends_documentation_fragment:
+    - rubrik_cdm
+requirements: [rubrik_cdm]
+'''
+
+
 EXAMPLES = '''
 - rubrik_assign_sla:
     object_name: "ansible-tower"
@@ -18,6 +67,7 @@ def main():
 
     argument_spec = rubrik_argument_spec
 
+    # Start Parameters
     argument_spec.update(
         dict(
             object_name=dict(required=True, type='str'),
@@ -27,6 +77,7 @@ def main():
 
         )
     )
+    # End Parameters
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 

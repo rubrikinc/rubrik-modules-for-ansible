@@ -43,11 +43,13 @@ def main():
 
     argument_spec = rubrik_argument_spec
 
+    # Start Parameters
     argument_spec.update(
         dict(
 
         )
     )
+    # End Parameters
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 

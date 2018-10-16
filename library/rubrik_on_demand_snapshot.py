@@ -2,6 +2,63 @@
 # Copyright: Rubrik
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'status': ['preview'],
+    'supported_by': 'community'
+}
+
+DOCUMENTATION = '''
+module: rubrik_on_demand_snapshot
+short_description:
+description:
+    -
+version_added: 2.7
+author: Rubrik Ranger Team
+options:
+
+  object_name:
+    description:
+      - The name of the Rubrik object to take a on-demand snapshot of.
+    required = True
+    type = str
+
+  object_type:
+    description:
+      - The Rubrik object type you want to backup.
+    required = False
+    type = str
+    default = vmware
+    choices = [vmware, physical_host]
+
+  sla_name:
+    description:
+      - The SLA Domain name you want to assign the on-demand snapshot to. By default, the currently assigned SLA Domain will be used.
+    required = False
+    type = str
+    default = current
+
+  fileset:
+    description:
+      - The name of the Fileset you wish to backup. Only required when taking a on-demand snapshot of a physical host.
+    required = False
+    type = str
+    default = None
+
+  host_os:
+    description:
+      - The operating system for the physical host. Only required when taking a on-demand snapshot of a physical host.
+    required = False
+    type = str
+    default = None
+    choices = [None, Linux, Windows]
+
+
+extends_documentation_fragment:
+    - rubrik_cdm
+requirements: [rubrik_cdm]
+'''
+
 EXAMPLES = '''
 - rubrik_on_demand_snapshot:
     object_name: 'ansible-node01'
@@ -18,6 +75,7 @@ def main():
 
     argument_spec = rubrik_argument_spec
 
+    # Start Parameters
     argument_spec.update(
         dict(
             object_name=dict(required=True, type='str'),
@@ -27,6 +85,7 @@ def main():
             host_os=dict(required=False, type='str', default='None', choices=["None", "Linux", "Windows"]),
         )
     )
+    # End Parameters
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 

@@ -10,8 +10,8 @@ ANSIBLE_METADATA = {
 DOCUMENTATION = '''
 module: rubrik_assign_sla
 short_description: Assign a Rubrik object to an SLA Domain.
-description: Assign a Rubrik object to an SLA Domain.
-    - 
+description: 
+    - Assign a Rubrik object to an SLA Domain.
 version_added: '2.7'
 author: 'Rubrik Ranger Team'
 options:
@@ -59,9 +59,7 @@ response:
     description: The full API reponse for POST /internal/sla_domain/{sla_id}/assign.
     returned: on success
     type: dict
-    sample: 
-      {
-        "status_code": "204"
+    sample: {"status_code": "204"}
 
 response:
     description: A "No changed required" message when the Rubrik object is already assigned to the SLA Domain.
@@ -79,7 +77,7 @@ def main():
     """
 
     argument_spec = rubrik_argument_spec
-
+    # Start Parameters
     argument_spec.update(
         dict(
             object_name=dict(required=True, type='str'),
@@ -89,6 +87,7 @@ def main():
 
         )
     )
+    # End Parameters
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 

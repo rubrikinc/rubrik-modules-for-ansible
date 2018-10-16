@@ -2,6 +2,46 @@
 # Copyright: Rubrik
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'status': ['preview'],
+    'supported_by': 'community'
+}
+
+DOCUMENTATION = '''
+module: rubrik_physical_host
+short_description: Add or delete a physical host from a Rubrik cluster.
+description: Add or delete a physical host from a Rubrik cluster.
+    -
+version_added: 2.7
+author: Rubrik Ranger Team
+options:
+
+  hostname:
+    description:
+      - The hostname or IP Address of the physical host you want to add or delete from the Rubrik cluster.
+    required = True
+    aliases = ip_address
+
+  action:
+    description:
+      - Specify whether or not you wish to add or delete the physical host from the Rubrik cluster.
+    required = True
+    choices = [add, delete]
+
+  timeout:
+    description:
+      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+    required = False
+    type = int
+    default = 120
+
+
+extends_documentation_fragment:
+    - rubrik_cdm
+requirements: [rubrik_cdm]
+'''
+
 EXAMPLES = '''
 - rubrik_physical_host:
     provider: "{{ credentials }}"
@@ -24,6 +64,7 @@ def main():
 
     argument_spec = rubrik_argument_spec
 
+    # Start Parameters
     argument_spec.update(
         dict(
             hostname=dict(required=True, aliases=['ip_address']),
@@ -32,6 +73,7 @@ def main():
 
         )
     )
+    # End Parameters
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 

@@ -1,6 +1,45 @@
 #!/usr/bin/python
 # Copyright: Rubrik
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'status': ['preview'],
+    'supported_by': 'community'
+}
+
+DOCUMENTATION = '''
+module: rubrik_job_status
+short_description:
+description:
+    -
+version_added: 2.7
+author: Rubrik Ranger Team
+options:
+
+  url:
+    description:
+      - The job status URL provided by a previous API call.
+    required = True
+
+  wait_for_completion:
+    description:
+      - Flag that determines if the method should wait for the job to complete before exiting.
+    required = False
+    type = bool
+    default = True
+
+  timeout:
+    description:
+      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+    required = False
+    type = int
+    default = 15
+
+
+extends_documentation_fragment:
+    - rubrik_cdm
+requirements: [rubrik_cdm]
+'''
 
 EXAMPLES = '''
 - rubrik_job_status:
@@ -17,6 +56,7 @@ def main():
 
     argument_spec = rubrik_argument_spec
 
+    # Start Parameters
     argument_spec.update(
         dict(
             url=dict(required=True),
@@ -24,6 +64,7 @@ def main():
             timeout=dict(required=False, type='int', default=15)
         )
     )
+    # End Parameters
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 

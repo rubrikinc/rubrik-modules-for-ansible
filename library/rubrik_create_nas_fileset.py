@@ -2,6 +2,73 @@
 # Copyright: Rubrik
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'status': ['preview'],
+    'supported_by': 'community'
+}
+
+DOCUMENTATION = '''
+module: rubrik_create_nas_fileset
+short_description: Create a Rubrik NAS Fileset.
+description:
+    - Create a Rubrik NAS Fileset.
+version_added: 2.7
+author: Rubrik Ranger Team
+options:
+
+  fileset_name:
+    description:
+      - The name of the Fileset you wish to create.
+    required = False
+    aliases = name
+
+  share_type:
+    description:
+      - The type of NAS Share you wish to backup.
+    required = False
+    choices = [NFS, SMB]
+
+  include:
+    description:
+      - The full paths or wildcards that define the objects to include in the Fileset backup.
+    required = False
+    type = list
+
+  exclude:
+    description:
+      - The full paths or wildcards that define the objects to exclude from the Fileset backup.
+    required = False
+    type = list
+    default = []
+
+  exclude_exception:
+    description:
+      - The full paths or wildcards that define the objects that are exempt from the excludes variables.
+    required = False
+    type = list
+    default = []
+
+  follow_network_shares:
+    description:
+      - Include or exclude locally-mounted remote file systems from backups.
+    required = False
+    type = bool
+    default = False
+
+  timeout:
+    description:
+      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+    required = False
+    type = int
+    default = 15
+
+
+extends_documentation_fragment:
+    - rubrik_cdm
+requirements: [rubrik_cdm]
+'''
+
 EXAMPLES = '''
 - rubrik_create_nas_fileset:
     provider: "{{ credentials }}"
@@ -12,6 +79,9 @@ EXAMPLES = '''
     exclude_exception: '/company*.mp4'
     follow_network_shares: False
 '''
+
+RETURNS = """
+"""
 
 
 from ansible.module_utils.basic import AnsibleModule
@@ -24,6 +94,7 @@ def main():
 
     argument_spec = rubrik_argument_spec
 
+    # Start Parameters
     argument_spec.update(
         dict(
             fileset_name=dict(required=False, aliases=['name']),
@@ -36,6 +107,7 @@ def main():
 
         )
     )
+    # End Parameters
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
