@@ -63,6 +63,66 @@ EXAMPLES = '''
 - rubrik_on_demand_snapshot:
     object_name: 'ansible-node01'
     object_type: "vmware"
+
+- rubrik_on_demand_snapshot:
+        object_name: "ansible-demo"
+        object_type: "physical_host"
+        fileset: "Python SDK"
+        host_os: "Linux"
+'''
+
+RETURN = '''
+response:
+    description: The full API response for POST /v1/vmware/vm/{id}/snapshot.
+    returned: on success when action is vmware
+    type: dict
+    sample: 
+        {
+            "id": "string",
+            "status": "string",
+            "progress": 0,
+            "startTime": "2018-10-16T03:48:59.118Z",
+            "endTime": "2018-10-16T03:48:59.118Z",
+            "nodeId": "string",
+            "error": {
+                "message": "string"
+            },
+            "links": [
+                {
+                "href": "string",
+                "rel": "string"
+                }
+            ]
+        }
+
+response:
+    description: The full API response for POST /v1/fileset/{id}/snapshot.
+    returned: on success when object_type is physical_host
+    type: dict
+    sample: 
+        {
+            "id": "string",
+            "status": "string",
+            "progress": 0,
+            "startTime": "2018-10-16T03:48:58.625Z",
+            "endTime": "2018-10-16T03:48:58.625Z",
+            "nodeId": "string",
+            "error": {
+                "message": "string"
+            },
+            "links": [
+                {
+                "href": "string",
+                "rel": "string"
+                }
+            ]
+        }
+
+job_status_url:
+    description: The job staturs url retuend by the full API response which can be passed into the rubrik_job_status module for monitoring.
+    returned: on success
+    type: str
+    sample: https://192.168.8.19/api/v1/fileset/request/CREATE_FILESET_SNAPSHOT_a2f6161c-33a4-3123-efaw-de7d1bef284e_dc0983bf-1c47-45ce-9ce0-b8df3c93b5fa:::0
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -110,7 +170,7 @@ def main():
         ansible["host_os"] = None
 
     try:
-        api_request = rubrik.on_demand_snapshot(
+        api_request, job_status_url = rubrik.on_demand_snapshot(
             ansible["object_name"], ansible["object_type"], ansible["sla_name"], ansible["fileset"], ansible["host_os"])
 
     except SystemExit as error:
@@ -119,6 +179,7 @@ def main():
     results["changed"] = True
 
     results["response"] = api_request
+    results["job_status_url"] = job_status_url
 
     module.exit_json(**results)
 
