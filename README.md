@@ -1,8 +1,6 @@
 # Rubrik Ansible Modules
 Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud Data Management Platform.
 
-Please visit the [full documentation](https://rubrik.gitbook.io/rubrik-ansible/) for more details.
-
 
 ## System Requirements
 
