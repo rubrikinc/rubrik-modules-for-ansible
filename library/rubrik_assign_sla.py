@@ -15,30 +15,26 @@ description:
 version_added: '2.7'
 author: 'Rubrik Ranger Team'
 options:
-
   object_name:
     description:
       - The name of the Rubrik object you wish to assign to an SLA Domain. 
     required: true
     type: str
-
   sla_name:
     description:
       - The name of the SLA Domain you wish to assign an object to. To exclude the object from all SLA assignments use do not protect as the sla_name. To assign the selected object to the SLA of the next higher level object use clear as the sla_name
     required: true
     type: str
-
   object_type:
     description:
       - The Rubrik object type you want to assign to the SLA Domain. 
     required: false
     default: vmware
-    choices: ['vmware]
+    choices: [vmware]
     type: str
-    
- timeout:
+  timeout:
     description:
-      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+    - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
     required: False
     default: 30
     type: int

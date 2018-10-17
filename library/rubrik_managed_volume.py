@@ -15,32 +15,28 @@ description:
 version_added: 2.7
 author: Rubrik Ranger Team
 options:
-
   managed_volume_name:
     description:
       - The name of the Managed Volume to begin or end the snapshot on.
-    required = True
-    aliases = name
-
+    required: True
+    aliases: name
   sla_name:
     description:
       - The SLA Domain name you want to assign the snapshot to. By default, the currently assigned SLA Domain will be used. This parameter is only required when the I(action) is end.
-    required = False
-    type = str
-    default = current
-
+    required: False
+    type: str
+    default: current
   action:
     description:
       - Specify whether or not you wish to begin or end a snapshot.
-    required = True
-    choices = [begin, end]
-
+    required: True
+    choices: [begin, end]
   timeout:
     description:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
-    required = False
-    type = int
-    default = 15
+    required: False
+    type: int
+    default: 15
 
 
 extends_documentation_fragment:

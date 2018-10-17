@@ -17,75 +17,65 @@ description:
 version_added: '2.7'
 author: 'Rubrik Ranger Team'
 options:
-
   hostname:
     description:
       - The hostname or IP Address of the physical host you wish to associate to the Fileset.
     required: true
     aliases: ip_address
     type: str
-
   fileset_name:
     description:
       - The name of the Fileset you wish to assign to the Linux or Windows host.
     required: true
     type: str
-
   sla_name:
     description:
       - The name of the SLA Domain to associate with the Fileset.
     required: true
     aliases: sla
     type: str
-
   operating_system:
     description:
       - The operating system of the physical host you are assigning a Fileset to.
     required: true
     choices: ['Linux', 'Windows']
     type: str
-
   include:
     description:
-      - The full paths or wildcards that define the objects to include in the Fileset backup (ex: ['/usr/local', '*.pdf']).
+      - The full paths or wildcards that define the objects to include in the Fileset backup.
     required: False
     default: []
     type: list
-
   exclude:
     description:
-      - The full paths or wildcards that define the objects to exclude from the Fileset backup (ex: ['/user/local/temp', '.mov', '.mp3']).
+      - The full paths or wildcards that define the objects to exclude from the Fileset backup.
     required: False
     default: []
     type: list
-
   exclude_exception:
     description:
-      - The full paths or wildcards that define the objects that are exempt from the excludes variables. (ex: ['/company/*.mp4']).
+      - The full paths or wildcards that define the objects that are exempt from the excludes variables.
     required: False
     default: []
     type: list
-
   follow_network_shares:
     description:
       - Include or exclude locally-mounted remote file systems from backups.
     required: False
     default: False
     type: bool
-
   backup_hidden_folders:
     description:
       - Include or exclude hidden folders inside locally-mounted remote file systems from backups.
     required: False
     default: False
     type: bool
-
- timeout:
-    description:
-      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
-    required: False
-    default: 30
-    type: int
+  timeout:
+      description:
+        - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+      required: False
+      default: 30
+      type: int
 
 extends_documentation_fragment:
     - rubrik_cdm

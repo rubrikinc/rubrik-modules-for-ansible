@@ -9,31 +9,30 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 module: rubrik_job_status
-short_description:
+short_description: Monitor the progress of a Rubrik job.
 description:
-    -
+    - Certain Rubrik operations may not instantaneously complete. In those cases we have the ability to monitor the status of the job through a job status 
+      link provided in the actions API response body. In those cases the Ansible Module will return a "job_status_link" which can then be registered 
+      and used as a variable in the rubrik_job_status module. The rubrik_job_status will check on the status of the job every 20 seconds until the job has successfully completed for failed.
 version_added: 2.7
 author: Rubrik Ranger Team
 options:
-
   url:
     description:
       - The job status URL provided by a previous API call.
-    required = True
-
+    required: True
   wait_for_completion:
     description:
       - Flag that determines if the method should wait for the job to complete before exiting.
-    required = False
-    type = bool
-    default = True
-
+    required: False
+    type: bool
+    default: True
   timeout:
     description:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
-    required = False
-    type = int
-    default = 15
+    required: False
+    type: int
+    default: 15
 
 
 extends_documentation_fragment:

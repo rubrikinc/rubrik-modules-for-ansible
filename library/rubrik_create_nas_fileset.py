@@ -16,52 +16,45 @@ description:
 version_added: 2.7
 author: Rubrik Ranger Team
 options:
-
   fileset_name:
     description:
       - The name of the Fileset you wish to create.
-    required = False
-    aliases = name
-
+    required: False
+    aliases: name
   share_type:
     description:
       - The type of NAS Share you wish to backup.
-    required = False
-    choices = [NFS, SMB]
-
+    required: False
+    choices: [NFS, SMB]
   include:
     description:
       - The full paths or wildcards that define the objects to include in the Fileset backup.
-    required = False
-    type = list
-
+    required: False
+    type: list
   exclude:
     description:
       - The full paths or wildcards that define the objects to exclude from the Fileset backup.
-    required = False
-    type = list
-    default = []
-
+    required: False
+    type: list
+    default: []
   exclude_exception:
     description:
       - The full paths or wildcards that define the objects that are exempt from the excludes variables.
-    required = False
-    type = list
-    default = []
-
+    required: False
+    type: list
+    default: []
   follow_network_shares:
     description:
       - Include or exclude locally-mounted remote file systems from backups.
-    required = False
-    type = bool
-    default = False
-
+    required: False
+    type: bool
+    default: False
   timeout:
     description:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
-    required = False
-    type = int
-    default = 15
+    required: False
+    type: int
+    default: 15
 
 
 extends_documentation_fragment:

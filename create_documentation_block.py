@@ -1,5 +1,5 @@
 
-filename = "rubrik_physical_host.py"
+filename = ""
 
 
 with open("./library/{}".format(filename)) as fp:
@@ -34,7 +34,7 @@ print("description:")
 print("    -")
 print("version_added: 2.7")
 print("author: Rubrik Ranger Team")
-print("options: \n")
+print("options:")
 
 for param in module_parameters:
     indivdual_param = param[:-2].split("=dict(")
@@ -49,10 +49,10 @@ for param in module_parameters:
     for param in indivdual_param[1].split(" "):
         if "aliases" in param:
             print("    " + param.replace(",", "").replace("'", "").replace("=",
-                                                                           " = ").replace('"', '').replace("[", "").replace("]", ""))
+                                                                           " = ").replace('"', '').replace("[", "").replace("]", "").replace(' = ', ": "))
         else:
-            print("    " + param.replace(",", "").replace("'", "").replace("=", " = ").replace('"', ''))
-    print()
+            print("    " + param.replace(",", "").replace("'", "").replace("=", " = ").replace('"', '').replace(' = ', ": "))
+
 
 print("\nextends_documentation_fragment:")
 print("    - rubrik_cdm")

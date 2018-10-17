@@ -10,9 +10,9 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 module: rubrik_on_demand_snapshot
-short_description:
+short_description: Take an on-demand snapshot of a Rubrik object.
 description:
-    -
+    - Take an on-demand snapshot of a Rubrik object.
 version_added: 2.7
 author: Rubrik Ranger Team
 options:
@@ -20,38 +20,38 @@ options:
   object_name:
     description:
       - The name of the Rubrik object to take a on-demand snapshot of.
-    required = True
-    type = str
+    required: True
+    type: str
 
   object_type:
     description:
       - The Rubrik object type you want to backup.
-    required = False
-    type = str
-    default = vmware
-    choices = [vmware, physical_host]
+    required: False
+    type: str
+    default: vmware
+    choices: [vmware, physical_host]
 
   sla_name:
     description:
       - The SLA Domain name you want to assign the on-demand snapshot to. By default, the currently assigned SLA Domain will be used.
-    required = False
-    type = str
-    default = current
+    required: False
+    type: str
+    default: current
 
   fileset:
     description:
       - The name of the Fileset you wish to backup. Only required when taking a on-demand snapshot of a physical host.
-    required = False
-    type = str
-    default = None
+    required: False
+    type: str
+    default: None
 
   host_os:
     description:
       - The operating system for the physical host. Only required when taking a on-demand snapshot of a physical host.
-    required = False
-    type = str
-    default = None
-    choices = [None, Linux, Windows]
+    required: False
+    type: str
+    default: None
+    choices: [None, Linux, Windows]
 
 
 extends_documentation_fragment:

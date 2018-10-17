@@ -16,33 +16,29 @@ description:
 version_added: 2.7
 author: Rubrik Ranger Team
 options:
-
   object_name:
     description:
       - The name of the object you wish to grant the I(end_user) authorization to.
-    required = True
-    type = str
-
+    required: True
+    type: str
   end_user:
     description:
       - The name of the end user you wish to grant authorization to.
-    required = True
-    type = str
-
+    required: True
+    type: str
   object_type:
     description:
       - The Rubrik object type you wish to backup.
-    required = False
-    type = str
-    default = vmware
-    choices = [vmware]
-
+    required: False
+    type: str
+    default: vmware
+    choices: [vmware]
   timeout:
     description:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
-    required = False
-    type = int
-    default = 15
+    required: False
+    type: int
+    default: 15
 
 
 extends_documentation_fragment:
