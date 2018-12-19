@@ -1,8 +1,9 @@
 
-filename = ""
+directory = "/Users/drew_russell/Google Drive/Development/Ansible/ansible/lib/ansible/modules/cloud/rubrik/"
+filename = "rubrik_configure_dns_servers.py"
 
 
-with open("./library/{}".format(filename)) as fp:
+with open("{}{}".format(directory, filename)) as fp:
     line = fp.readline()
     cnt = 1
     while line:
@@ -16,7 +17,7 @@ with open("./library/{}".format(filename)) as fp:
 
 
 module_parameters = []
-with open("./library/{}".format(filename)) as fp:
+with open("{}{}".format(directory, filename)) as fp:
     line = fp.readline()
     cnt = 1
     while line:
@@ -32,7 +33,7 @@ print("module: {}".format(filename.replace(".py", "")))
 print("short_description: ")
 print("description:")
 print("    -")
-print("version_added: 2.7")
+print("version_added: 2.8")
 print("author: Rubrik Ranger Team")
 print("options:")
 
@@ -48,10 +49,37 @@ for param in module_parameters:
     # print(indivdual_param[1])
     for param in indivdual_param[1].split(" "):
         if "aliases" in param:
-            print("    " + param.replace(",", "").replace("'", "").replace("=",
-                                                                           " = ").replace('"', '').replace("[", "").replace("]", "").replace(' = ', ": "))
+            print(
+                "    " +
+                param.replace(
+                    ",",
+                    "").replace(
+                    "'",
+                    "").replace(
+                    "=",
+                    " = ").replace(
+                    '"',
+                    '').replace(
+                        "[",
+                        "").replace(
+                            "]",
+                            "").replace(
+                                ' = ',
+                    ": "))
         else:
-            print("    " + param.replace(",", "").replace("'", "").replace("=", " = ").replace('"', '').replace(' = ', ": "))
+            print(
+                "    " +
+                param.replace(
+                    ",",
+                    "").replace(
+                    "'",
+                    "").replace(
+                    "=",
+                    " = ").replace(
+                    '"',
+                    '').replace(
+                        ' = ',
+                    ": "))
 
 
 print("\nextends_documentation_fragment:")

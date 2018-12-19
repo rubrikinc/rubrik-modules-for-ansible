@@ -1,4 +1,9 @@
-# Rubrik Ansible Modules
+# DEPRECIATED -- Rubrik Ansible Modules
+
+**As we merge the Rubrik Ansible modules into the main Ansible devel branch this repo will be deprecated.**
+
+
+ 
 Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud Data Management Platform.
 
 

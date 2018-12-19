@@ -1,6 +1,9 @@
 #!/usr/bin/python
-# Copyright: Rubrik
+# (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -12,16 +15,16 @@ DOCUMENTATION = '''
 module: rubrik_assign_physical_host_fileset
 short_description: Assign a Rubrik fileset to a Linux or Windows machine.
 description:
-    - Assign a fileset to a Linux or Windows machine. If you have multiple filesets with identical names, you will 
+    - Assign a fileset to a Linux or Windows machine. If you have multiple filesets with identical names, you will
       need to populate the filesets properties to find a specific match. Filesets with identical names and properties are not supported.
-version_added: '2.7'
+version_added: 2.8
 author: 'Rubrik Ranger Team'
 options:
   hostname:
     description:
       - The hostname or IP Address of the physical host you wish to associate to the Fileset.
     required: true
-    aliases: ip_address
+    aliases: ["ip_address"]
     type: str
   fileset_name:
     description:
@@ -32,7 +35,7 @@ options:
     description:
       - The name of the SLA Domain to associate with the Fileset.
     required: true
-    aliases: sla
+    aliases: ["sla"]
     type: str
   operating_system:
     description:
@@ -79,7 +82,7 @@ options:
 
 extends_documentation_fragment:
     - rubrik_cdm
-requirements: [rubrik_cdm]
+requirements: ["rubrik_cdm"]
 '''
 
 EXAMPLES = '''
@@ -100,7 +103,7 @@ response:
     description: The full API response for POST /v1/host.
     returned: on success
     type: dict
-    sample: 
+    sample:
       {
         "id": "string",
         "hostname": "string",
@@ -121,14 +124,23 @@ response:
 
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrikcdm import sdk_validation, connect, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrik_cdm import load_provider_variables, rubrik_argument_spec
+
+try:
+    import rubrik_cdm
+    sdk_present = True
+except BaseException:
+    sdk_present = False
 
 
 def main():
     """ Main entry point for Ansible module execution.
     """
 
+    results = {}
+
     argument_spec = rubrik_argument_spec
+
     # Start Parameters
     argument_spec.update(
         dict(
@@ -151,23 +163,36 @@ def main():
         ["include", "exclude", "exclude_exception", "follow_network_shares", "backup_hidden_folders"]
     ]
 
-    module = AnsibleModule(argument_spec=argument_spec, required_together=required_together, supports_check_mode=False)
-
-    sdk_present, rubrik_cdm = sdk_validation()
+    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
     if sdk_present is False:
         module.fail_json(msg="The Rubrik Python SDK is required for this module (pip install rubrik_cdm).")
 
-    results = {}
-
     load_provider_variables(module)
     ansible = module.params
 
-    rubrik = connect(rubrik_cdm, module)
-    if isinstance(rubrik, str):
-        module.fail_json(msg=rubrik)
+    try:
+        rubrik = rubrik_cdm.Connect()
+    except SystemExit as error:
+        if "has not been provided" in str(error):
+            try:
+                ansible["node_ip"]
+                ansible["username"]
+                ansible["password"]
+            except KeyError:
+                module.fail_json(
+                    msg="Error: The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the provider param.")
+        else:
+            module.fail_json(msg=str(error))
 
-    # If there are multiple Filesets on the cluster with the same name the end use will need to provide more specific information. That only occurs when includes != None
+        try:
+            rubrik = rubrik_cdm.Connect(ansible['node_ip'], ansible['username'], ansible['password'])
+        except SystemExit as error:
+            module.fail_json(msg=str(error))
+
+    # If there are multiple Filesets on the cluster with the same name the end
+    # use will need to provide more specific information. That only occurs
+    # when includes != None
     if bool(ansible['include']) is False:
 
         try:
@@ -179,8 +204,17 @@ def main():
     else:
 
         try:
-            api_request = rubrik.assign_physical_host_fileset(ansible['hostname'], ansible['fileset_name'], ansible['operating_system'], ansible['sla_name'], ansible[
-                "include"], ansible["exclude"], ansible["exclude_exception"], ansible["follow_network_shares"], ansible["backup_hidden_folders"], ansible["timeout"])
+            api_request = rubrik.assign_physical_host_fileset(
+                ansible['hostname'],
+                ansible['fileset_name'],
+                ansible['operating_system'],
+                ansible['sla_name'],
+                ansible["include"],
+                ansible["exclude"],
+                ansible["exclude_exception"],
+                ansible["follow_network_shares"],
+                ansible["backup_hidden_folders"],
+                ansible["timeout"])
         except SystemExit as error:
             module.fail_json(msg=str(error))
 
