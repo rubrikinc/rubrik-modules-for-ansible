@@ -1,11 +1,12 @@
+#
 # This code is part of Ansible, but is an independent component.
+#
 # This particular file snippet, and this file snippet only, is BSD licensed.
 # Modules you write using this snippet, which is embedded dynamically by Ansible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
-# (c) 2017 Rubrik Inc.
-# Author: Drew Russell (@drusse11)
+# (c) 2018 Rubrik, Inc.
 #
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
@@ -25,51 +26,15 @@
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
 from ansible.module_utils.six import iteritems
-import urllib3
-urllib3.disable_warnings()
 
-
-def sdk_validation():
-    """Verify that the rubrik_cdm SDK is present.
-
-    Returns:
-        bool -- Flag that determines whether or not the SDK is present.
-        class -- The rubrik_cdm module class.
-    """
-
-    try:
-        import rubrik_cdm
-        sdk_present = True
-    except:
-        sdk_present = False
-
-    return sdk_present, rubrik_cdm
-
-
-def connect(rubrik_cdm, module):
-    ansible = module.params
-
-    try:
-        rubrik = rubrik_cdm.Connect()
-        return rubrik
-    except SystemExit as error:
-        if "has not been provided" in str(error):
-            try:
-                ansible["node_ip"]
-                ansible["username"]
-                ansible["password"]
-            except KeyError:
-                return "Error: The Rubrik login credentials (node_ip, username, password) have not been provided. Please verify the correct environment variables are present or manually provided the credentials through the `provider` variable."
-        else:
-            return str(error)
-
-        try:
-            rubrik = rubrik_cdm.Connect(ansible['node_ip'], ansible['username'], ansible['password'])
-        except SystemExit as error:
-            return str(error)
-
-            return rubrik
+try:
+    import urllib3
+    urllib3.disable_warnings()
+except ImportError:
+    pass
 
 
 login_credentials_spec = {

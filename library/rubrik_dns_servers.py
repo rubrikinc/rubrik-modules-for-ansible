@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# (c) 2018 Rubrik, Inc
+# Copyright: Rubrik
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -12,12 +12,24 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_cluster_version
-short_description: Retrieves the software version of the Rubrik cluster.
+module: rubrik_dns_servers
+short_description: Configure the DNS Servers on the Rubrik cluster.
 description:
-    - Retrieves the software version of the Rubrik cluster.
+    - Configure the DNS Servers on the Rubrik cluster.
 version_added: 2.8
 author: Rubrik Ranger Team
+options:
+  server_ip:
+    description:
+      - The DNS Server IPs you wish to add to the Rubrik cluster.
+    required: True
+    type: list
+  timeout:
+    description:
+      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+    required: False
+    type: int
+    default: 15
 
 extends_documentation_fragment:
     - rubrik_cdm
@@ -25,19 +37,28 @@ requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
-- rubrik_cluster_version:
-
-- rubrik_cluster_version:
-    provider: "{{ credentials }}"
+- rubrik_configure_dns_servers:
+    server_ip: ["192.168.100.20", "192.168.100.21"]
 '''
+
 
 RETURN = '''
-version:
-    description: The version of the Rubrik cluster.
-    returned: success
-    type: string
-    sample: 4.1.3-2510
+response:
+    description: The full API response for POST /internal/cluster/me/dns_nameserver.
+    returned: on success
+    type: dict
+    sample:
+      {
+
+    }
+
+response:
+    description: A "No changed required" message when
+    returned: When the module idempotent check is succesful.
+    type: str
+    sample: No change required. The Rubrik cluster is already configured with the provided DNS servers.
 '''
+
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.rubrik_cdm import load_provider_variables, rubrik_argument_spec
@@ -60,6 +81,8 @@ def main():
     # Start Parameters
     argument_spec.update(
         dict(
+            server_ip=dict(required=True, type='list'),
+            timeout=dict(required=False, type='int', default=15),
 
         )
     )
@@ -71,7 +94,6 @@ def main():
         module.fail_json(msg="The Rubrik Python SDK is required for this module (pip install rubrik_cdm).")
 
     load_provider_variables(module)
-
     ansible = module.params
 
     try:
@@ -94,11 +116,16 @@ def main():
             module.fail_json(msg=str(error))
 
     try:
-        api_request = rubrik.cluster_version()
+        api_request = rubrik.configure_dns_servers(ansible["server_ip"], ansible["timeout"])
     except SystemExit as error:
         module.fail_json(msg=str(error))
 
-    results["version"] = api_request
+    if "No change required" in api_request:
+        results["changed"] = False
+    else:
+        results["changed"] = True
+
+    results["response"] = api_request
 
     module.exit_json(**results)
 

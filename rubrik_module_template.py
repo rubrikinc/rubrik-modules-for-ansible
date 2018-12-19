@@ -1,6 +1,7 @@
 #!/usr/bin/python
-# (c) 2018 Rubrik, Inc
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Copyright: Rubrik
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
@@ -12,32 +13,30 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_cluster_version
-short_description: Retrieves the software version of the Rubrik cluster.
-description:
-    - Retrieves the software version of the Rubrik cluster.
-version_added: 2.8
-author: Rubrik Ranger Team
-
-extends_documentation_fragment:
-    - rubrik_cdm
-requirements: [rubrik_cdm]
+# Should be auto-generated and pasted here.
 '''
 
 EXAMPLES = '''
-- rubrik_cluster_version:
-
-- rubrik_cluster_version:
-    provider: "{{ credentials }}"
+- rubrik_module_name:
 '''
 
 RETURN = '''
-version:
-    description: The version of the Rubrik cluster.
-    returned: success
-    type: string
-    sample: 4.1.3-2510
+response:
+    description: The full API response for .
+    returned: on success
+    type: dict
+    sample:
+      {
+
+    }
+
+response:
+    description: A "No changed required" message when
+    returned: When the module idempotent check is succesful.
+    type: str
+    sample:
 '''
+
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.rubrik_cdm import load_provider_variables, rubrik_argument_spec
@@ -55,23 +54,26 @@ def main():
 
     results = {}
 
-    argument_spec = rubrik_argument_spec
+    argument_spec = rubrik_argument_spece
 
     # Start Parameters
     argument_spec.update(
         dict(
+            timeout=dict(required=False, type='int', default=15),
 
         )
     )
     # End Parameters
 
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
+    module = AnsibleModule(
+        argument_spec=argument_spec,
+        supports_check_mode=False)
 
     if sdk_present is False:
-        module.fail_json(msg="The Rubrik Python SDK is required for this module (pip install rubrik_cdm).")
+        module.fail_json(
+            msg="The Rubrik Python SDK is required for this module (pip install rubrik_cdm).")
 
     load_provider_variables(module)
-
     ansible = module.params
 
     try:
@@ -89,16 +91,29 @@ def main():
             module.fail_json(msg=str(error))
 
         try:
-            rubrik = rubrik_cdm.Connect(ansible['node_ip'], ansible['username'], ansible['password'])
+            rubrik = rubrik_cdm.Connect(
+                ansible['node_ip'],
+                ansible['username'],
+                ansible['password'])
         except SystemExit as error:
             module.fail_json(msg=str(error))
 
+    ##################################
+    ######### Code Block #############
+    ##################################
+    ##################################
+
     try:
-        api_request = rubrik.cluster_version()
+        api_request = rubrik.
     except SystemExit as error:
         module.fail_json(msg=str(error))
 
-    results["version"] = api_request
+    if "No change required" in api_request:
+        results["changed"] = False
+    else:
+        results["changed"] = True
+
+    results["response"] = api_request
 
     module.exit_json(**results)
 

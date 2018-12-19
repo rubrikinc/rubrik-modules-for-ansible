@@ -1,6 +1,10 @@
 #!/usr/bin/python
-# Copyright: Rubrik
+# (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'status': ['preview'],
@@ -12,17 +16,18 @@ module: rubrik_managed_volume
 short_description: Begin or end snapshots on a Rubrik Managed Volume.
 description:
     - Begin or end snapshots on a Rubrik Managed Volume.
-version_added: 2.7
+version_added: 2.8
 author: Rubrik Ranger Team
 options:
   managed_volume_name:
     description:
       - The name of the Managed Volume to begin or end the snapshot on.
     required: True
-    aliases: name
+    aliases: ["name"]
   sla_name:
     description:
-      - The SLA Domain name you want to assign the snapshot to. By default, the currently assigned SLA Domain will be used. This parameter is only required when the I(action) is end.
+      - The SLA Domain name you want to assign the snapshot to. By default, the currently assigned SLA Domain will be used.
+        This parameter is only required when the I(action) is end.
     required: False
     type: str
     default: current
@@ -47,7 +52,6 @@ requirements: [rubrik_cdm]
 EXAMPLES = '''
 # Begin a new managed volume snapshot.
 - rubrik_managed_volume:
-    provider: "{{ credentials }}"
     name: MV1
     action: begin
 
@@ -85,14 +89,20 @@ response:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrikcdm import sdk_validation, connect, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrik_cdm import load_provider_variables, rubrik_argument_spec
 
-import rubrik_cdm
+try:
+    import rubrik_cdm
+    sdk_present = True
+except BaseException:
+    sdk_present = False
 
 
 def main():
     """ Main entry point for Ansible module execution.
     """
+
+    results = {}
 
     argument_spec = rubrik_argument_spec
 
@@ -113,19 +123,30 @@ def main():
 
     module = AnsibleModule(argument_spec=argument_spec, required_if=required_if, supports_check_mode=False)
 
-    sdk_present, rubrik_cdm = sdk_validation()
-
     if sdk_present is False:
         module.fail_json(msg="The Rubrik Python SDK is required for this module (pip install rubrik_cdm).")
-
-    results = {}
 
     load_provider_variables(module)
     ansible = module.params
 
-    rubrik = connect(rubrik_cdm, module)
-    if isinstance(rubrik, str):
-        module.fail_json(msg=rubrik)
+    try:
+        rubrik = rubrik_cdm.Connect()
+    except SystemExit as error:
+        if "has not been provided" in str(error):
+            try:
+                ansible["node_ip"]
+                ansible["username"]
+                ansible["password"]
+            except KeyError:
+                module.fail_json(
+                    msg="Error: The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the provider param.")
+        else:
+            module.fail_json(msg=str(error))
+
+        try:
+            rubrik = rubrik_cdm.Connect(ansible['node_ip'], ansible['username'], ansible['password'])
+        except SystemExit as error:
+            module.fail_json(msg=str(error))
 
     if ansible["action"] == "begin":
         try:
