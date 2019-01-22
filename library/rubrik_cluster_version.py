@@ -40,15 +40,7 @@ version:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-# from ansible.module_utils.rubrik_cdm import load_provider_variables, rubrik_argument_spec, connect
-from ansible.module_utils.rubrik_cdm import sdk_validation, connect, load_provider_variables, rubrik_argument_spec
-
-
-try:
-    import rubrik_cdm
-    sdk_present = True
-except BaseException:
-    sdk_present = False
+from ansible.module_utils.rubrik_cdm import connect, load_provider_variables, rubrik_argument_spec
 
 
 def main():
@@ -68,17 +60,11 @@ def main():
     module = AnsibleModule(argument_spec=argument_spec,
                            supports_check_mode=False)
 
-    sdk_present, rubrik_cdm = sdk_validation()
-
-    if sdk_present is False:
-        module.fail_json(
-            msg="The Rubrik Python SDK is required for this module (pip install rubrik_cdm ).")
-
     results = {}
 
     load_provider_variables(module)
 
-    rubrik = connect(rubrik_cdm, module)
+    rubrik = connect(module)
 
     try:
         api_request = rubrik.cluster_version()
