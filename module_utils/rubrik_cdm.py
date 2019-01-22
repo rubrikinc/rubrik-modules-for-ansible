@@ -39,7 +39,6 @@ def connect(module):
     the values through supplied parameters.
 
     Arguments:
-        rubrik_cdm {class} -- The rubrik_cdm module class.
         module {class} -- Ansible module helper class.
 
     Returns:
