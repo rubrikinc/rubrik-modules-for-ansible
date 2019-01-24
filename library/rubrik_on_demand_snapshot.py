@@ -129,20 +129,18 @@ job_status_url:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrik_cdm import load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 
 try:
     import rubrik_cdm
-    sdk_present = True
-except BaseException:
-    sdk_present = False
+    HAS_RUBRIK_SDK = True
+except ImportError:
+    HAS_RUBRIK_SDK = False
 
 
 def main():
     """ Main entry point for Ansible module execution.
     """
-
-    results = {}
 
     argument_spec = rubrik_argument_spec
 
@@ -150,40 +148,35 @@ def main():
     argument_spec.update(
         dict(
             object_name=dict(required=True, type='str'),
-            object_type=dict(required=False, type='str', default="vmware", choices=["vmware", "physical_host"]),
+            object_type=dict(required=False, type='str', default="vmware", choices=[
+                             "vmware", "physical_host"]),
             sla_name=dict(required=False, type='str', default='current'),
             fileset=dict(required=False, type='str', default='None'),
-            host_os=dict(required=False, type='str', default='None', choices=["None", "Linux", "Windows"]),
+            host_os=dict(required=False, type='str', default='None',
+                         choices=["None", "Linux", "Windows"]),
         )
     )
     # End Parameters
 
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
+    module = AnsibleModule(argument_spec=argument_spec,
+                           supports_check_mode=False)
 
-    if sdk_present is False:
-        module.fail_json(msg="The Rubrik Python SDK is required for this module (pip install rubrik_cdm).")
+    results = {}
 
-    load_provider_variables(module)
     ansible = module.params
 
-    try:
-        rubrik = rubrik_cdm.Connect()
-    except SystemExit as error:
-        if "has not been provided" in str(error):
-            try:
-                ansible["node_ip"]
-                ansible["username"]
-                ansible["password"]
-            except KeyError:
-                module.fail_json(
-                    msg="Error: The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the provider param.")
-        else:
-            module.fail_json(msg=str(error))
+    load_provider_variables(module)
 
-        try:
-            rubrik = rubrik_cdm.Connect(ansible['node_ip'], ansible['username'], ansible['password'])
-        except SystemExit as error:
-            module.fail_json(msg=str(error))
+    if not HAS_RUBRIK_SDK:
+        module.fail_json(
+            msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
+
+    try:
+        node_ip, username, password = credentials(module)
+    except ValueError:
+        module.fail_json(msg="Missing")
+
+    rubrik = rubrik_cdm.Connect(node_ip, username, password)
 
     if ansible["fileset"] == "None":
         ansible["fileset"] = None

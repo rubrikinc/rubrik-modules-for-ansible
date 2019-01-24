@@ -124,13 +124,13 @@ response:
 
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrik_cdm import load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 
 try:
     import rubrik_cdm
-    sdk_present = True
-except BaseException:
-    sdk_present = False
+    HAS_RUBRIK_SDK = True
+except ImportError:
+    HAS_RUBRIK_SDK = False
 
 
 def main():
@@ -160,35 +160,27 @@ def main():
     # End Parameters
 
     required_together = [
-        ["include", "exclude", "exclude_exception", "follow_network_shares", "backup_hidden_folders"]
+        [
+            "include", "exclude", "exclude_exception",
+            "follow_network_shares", "backup_hidden_folders"
+            ]
     ]
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
-    if sdk_present is False:
-        module.fail_json(msg="The Rubrik Python SDK is required for this module (pip install rubrik_cdm).")
-
-    load_provider_variables(module)
     ansible = module.params
 
-    try:
-        rubrik = rubrik_cdm.Connect()
-    except SystemExit as error:
-        if "has not been provided" in str(error):
-            try:
-                ansible["node_ip"]
-                ansible["username"]
-                ansible["password"]
-            except KeyError:
-                module.fail_json(
-                    msg="Error: The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the provider param.")
-        else:
-            module.fail_json(msg=str(error))
+    load_provider_variables(module)
 
-        try:
-            rubrik = rubrik_cdm.Connect(ansible['node_ip'], ansible['username'], ansible['password'])
-        except SystemExit as error:
-            module.fail_json(msg=str(error))
+    if not HAS_RUBRIK_SDK:
+        module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
+
+    try:
+        node_ip, username, password = credentials(module)
+    except ValueError:
+        module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
+
+    rubrik = rubrik_cdm.Connect(node_ip, username, password)
 
     # If there are multiple Filesets on the cluster with the same name the end
     # use will need to provide more specific information. That only occurs
@@ -196,25 +188,14 @@ def main():
     if bool(ansible['include']) is False:
 
         try:
-            api_request = rubrik.assign_physical_host_fileset(
-                ansible['hostname'], ansible['fileset_name'], ansible['operating_system'], ansible['sla_name'], timeout=ansible["timeout"])
+            api_request = rubrik.assign_physical_host_fileset(ansible['hostname'], ansible['fileset_name'], ansible['operating_system'], ansible['sla_name'], timeout=ansible["timeout"])
         except SystemExit as error:
             module.fail_json(msg=str(error))
 
     else:
 
         try:
-            api_request = rubrik.assign_physical_host_fileset(
-                ansible['hostname'],
-                ansible['fileset_name'],
-                ansible['operating_system'],
-                ansible['sla_name'],
-                ansible["include"],
-                ansible["exclude"],
-                ansible["exclude_exception"],
-                ansible["follow_network_shares"],
-                ansible["backup_hidden_folders"],
-                ansible["timeout"])
+            api_request = rubrik.assign_physical_host_fileset(ansible['hostname'], ansible['fileset_name'], ansible['operating_system'], ansible['sla_name'], ansible["include"], ansible["exclude"], ansible["exclude_exception"], ansible["follow_network_shares"], ansible["backup_hidden_folders"], ansible["timeout"])
         except SystemExit as error:
             module.fail_json(msg=str(error))
 

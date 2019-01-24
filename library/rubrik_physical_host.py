@@ -89,13 +89,13 @@ response:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrik_cdm import load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 
 try:
     import rubrik_cdm
-    sdk_present = True
-except BaseException:
-    sdk_present = False
+    HAS_RUBRIK_SDK = True
+except ImportError:
+    HAS_RUBRIK_SDK = False
 
 
 def main():
@@ -119,30 +119,22 @@ def main():
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
-    if sdk_present is False:
-        module.fail_json(msg="The Rubrik Python SDK is required for this module (pip install rubrik_cdm).")
-
-    load_provider_variables(module)
     ansible = module.params
 
-    try:
-        rubrik = rubrik_cdm.Connect()
-    except SystemExit as error:
-        if "has not been provided" in str(error):
-            try:
-                ansible["node_ip"]
-                ansible["username"]
-                ansible["password"]
-            except KeyError:
-                module.fail_json(
-                    msg="Error: The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the provider param.")
-        else:
-            module.fail_json(msg=str(error))
+    load_provider_variables(module)
 
-        try:
-            rubrik = rubrik_cdm.Connect(ansible['node_ip'], ansible['username'], ansible['password'])
-        except SystemExit as error:
-            module.fail_json(msg=str(error))
+    if not HAS_RUBRIK_SDK:
+        module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
+
+    try:
+        node_ip, username, password = credentials(module)
+    except ValueError:
+        module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
+
+    try:
+        rubrik = rubrik_cdm.Connect(node_ip, username, password)
+    except SystemExit as error:
+        module.fail_json(msg=str(error))
 
     if ansible["action"] == "add":
         try:

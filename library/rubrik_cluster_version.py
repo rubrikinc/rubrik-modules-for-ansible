@@ -39,13 +39,22 @@ version:
     sample: 4.1.3-2510
 '''
 
+
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrik_cdm import connect, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+
+try:
+    import rubrik_cdm
+    HAS_RUBRIK_SDK = True
+except ImportError:
+    HAS_RUBRIK_SDK = False
 
 
 def main():
     """ Main entry point for Ansible module execution.
     """
+
+    results = {}
 
     argument_spec = rubrik_argument_spec
 
@@ -57,15 +66,25 @@ def main():
     )
     # End Parameters
 
-    module = AnsibleModule(argument_spec=argument_spec,
-                           supports_check_mode=False)
+    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
-    results = {}
+    ansible = module.params
 
     load_provider_variables(module)
 
-    rubrik = connect(module)
+    if not HAS_RUBRIK_SDK:
+        module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
+    try:
+        node_ip, username, password = credentials(module)
+    except ValueError:
+        module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
+
+    try:
+        rubrik = rubrik_cdm.Connect(node_ip, username, password)
+    except SystemExit as error:
+        module.fail_json(msg=str(error))
+        
     try:
         api_request = rubrik.cluster_version()
     except SystemExit as error:
