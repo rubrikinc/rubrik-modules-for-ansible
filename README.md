@@ -2,28 +2,31 @@
  
 Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud Data Management Platform.
 
+## Installation
 
-## System Requirements
+**Install the Rubrik SDK for Python.**
 
-### Rubrik CDM
+`pip install rubrik_cdm`
 
-* 4.1
+**Clone the GitHub repository to a local directory**
 
-### Python
+`git clone https://github.com/rubrikinc/rubrik-modules-for-ansible.git`
 
-* 3.6.4
-* 2.7.6
+## Quick Start
 
-### Ansible
-
-* 2.5.0
-* 2.4.2.0
+[Quick Start Guide](https://github.com/rubrikinc/rubrik-modules-for-ansible/blob/master/docs/quick-start.md)
 
 
-#### Created and Maintained by the Rubrik Ranger Team
+## Documentation
 
-<p></p>
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/8610203/37415009-6f9cf416-2778-11e8-8b56-052a8e41c3c8.png" alt="Rubrik Ranger Logo"/>
-</p>
+[Module Documentation](https://rubrik.gitbook.io/rubrik-modules-for-ansible/)
+
+## Example
+
+```yaml
+- rubrik_on_demand_snapshot:
+    object_name: 'ansible-node01'
+    object_type: "vmware"
+```
+
 
