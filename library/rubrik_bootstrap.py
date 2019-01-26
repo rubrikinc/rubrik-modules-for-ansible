@@ -13,28 +13,104 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-# Should be auto-generated and pasted here.
+module: rubrik_bootstrap
+short_description: Issues a bootstrap request to a specified Rubrik cluster
+description:
+    - Issues a bootstrap request to a specified Rubrik cluster
+version_added: 2.8
+author: Rubrik Ranger Team
+options:
+  cluster_name:
+    description:
+      - Unique name to assign to the Rubrik cluster.
+    required: True
+    type: str
+  admin_email:
+    description:
+      - The Rubrik cluster sends messages for the admin account to this email address.
+    required: True
+    type: str
+  admin_password:
+    description:
+      - Password for the admin account.
+    required: True
+    type: str
+    no_log: True
+  management_gateway:
+    description:
+      - IP address assigned to the management network gateway
+    required: True
+    type: str
+  management_subnet_mask:
+    description:
+      - Subnet mask assigned to the management network.
+    required: True
+    type: str
+  node_config:
+    description:
+      - The Node Name and IP formatted as a dictionary
+    required: True
+    type: dict
+  enable_encryption:
+    description:
+      - Enable software data encryption at rest. When bootstraping a Cloud Cluster this value needs to be False.
+    required: False
+    type: bool
+    default: True
+  dns_search_domains:
+    description:
+      - The search domain that the DNS Service will use to resolve hostnames that are not fully qualified.
+    required: False
+    type: list
+    default: []
+  dns_nameservers:
+    description:
+      - IPv4 addresses of DNS servers
+    required: False
+    type: list
+    default: [8.8.8.8]
+  ntp_servers:
+    description:
+      - FQDN or IPv4 address of a network time protocol (NTP) server.
+    required: False
+    type: list
+    default: [pool.ntp.org]
+  wait_for_completion:
+    description:
+      - Flag to determine if the function should wait for the bootstrap process to complete.
+    required: False
+    type: bool
+    default: True
+  timeout:
+    description:
+      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+    required: False
+    type: int
+    default: 30
+
+extends_documentation_fragment:
+    - rubrik_cdm
+requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
-- rubrik_module_name:
+- rubrik_bootstrap:
+    cluster_name: "Ansible Demo"
+    admin_email: "ansiblebuild@rubrik.com"
+    admin_password: "AnsibleAndRubrikPassword"
+    management_gateway: "10.255.1.1"
+    management_subnet_mask: "255.255.255.0"
+    enable_encryption: True
+    dns_search_domains: ["rubrikansible.com"]
+    wait_for_completion: True
+    node_config: "{{ node_config }}"
 '''
 
 RETURN = '''
 response:
-    description: The full API response for .
+    description: The full API response for POST /internal/cluster/me/bootstrap.
     returned: on success
     type: dict
-    sample:
-      {
-
-    }
-
-response:
-    description: A "No changed required" message when
-    returned: When the module idempotent check is succesful.
-    type: str
-    sample:
 '''
 
 
@@ -59,11 +135,11 @@ def main():
     # Start Parameters
     argument_spec.update(
         dict(
-            cluster_name=dict(required=False, type='str'),
-            admin_email=dict(required=False, type='str'),
-            admin_password=dict(required=False, type='str', no_log=True),
-            management_gateway=dict(required=False, type='str'),
-            management_subnet_mask=dict(required=False, type='str'),
+            cluster_name=dict(required=True, type='str'),
+            admin_email=dict(required=True, type='str'),
+            admin_password=dict(required=True, type='str', no_log=True),
+            management_gateway=dict(required=True, type='str'),
+            management_subnet_mask=dict(required=True, type='str'),
             node_config=dict(required=True, type='dict'),
             enable_encryption=dict(required=False, type='bool', default=True),
             dns_search_domains=dict(required=False, type='list', default=[]),
@@ -89,7 +165,7 @@ def main():
     except ValueError:
         module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
 
-     try:
+    try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
     except SystemExit as error:
         module.fail_json(msg=str(error))
