@@ -7,6 +7,10 @@ Issues a bootstrap request to a specified Rubrik cluster
 # Example
 
 ```yaml
+vars:
+  node_config:
+    1: 10.255.1.5
+
 rubrik_bootstrap:
   cluster_name: "Ansible Demo"
   admin_email: "ansiblebuild@rubrik.com"
