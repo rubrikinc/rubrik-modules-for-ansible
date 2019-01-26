@@ -22,18 +22,19 @@ options:
   fileset_name:
     description:
       - The name of the Fileset you wish to create.
-    required: False
+    required: True
     aliases: ["name"]
   operating_system:
     description:
       - The operating system type of the Fileset you are creating.
-    required: False
+    required: True
     choices: [Linux, Windows]
   include:
     description:
       - The full paths or wildcards that define the objects to include in the Fileset backup.
     required: False
     type: list
+    default = []
   exclude:
     description:
       - The full paths or wildcards that define the objects to exclude from the Fileset backup.
@@ -149,9 +150,9 @@ def main():
     # Start Parameters
     argument_spec.update(
         dict(
-            fileset_name=dict(required=False, aliases=['name']),
-            operating_system=dict(required=False, choices=['Linux', 'Windows']),
-            include=dict(required=False, type='list'),
+            fileset_name=dict(required=True, aliases=['name']),
+            operating_system=dict(required=True, choices=['Linux', 'Windows']),
+            include=dict(required=False, type='list', default=[]),
             exclude=dict(required=False, type='list', default=[]),
             exclude_exception=dict(required=False, type='list', default=[]),
             follow_network_shares=dict(required=False, type='bool', default=False),

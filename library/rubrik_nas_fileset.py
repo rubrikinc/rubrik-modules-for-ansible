@@ -22,18 +22,19 @@ options:
   fileset_name:
     description:
       - The name of the Fileset you wish to create.
-    required: False
+    required: True
     aliases: ["name"]
   share_type:
     description:
       - The type of NAS Share you wish to backup.
-    required: False
+    required: True
     choices: [NFS, SMB]
   include:
     description:
       - The full paths or wildcards that define the objects to include in the Fileset backup.
     required: False
     type: list
+    default: []
   exclude:
     description:
       - The full paths or wildcards that define the objects to exclude from the Fileset backup.
@@ -142,9 +143,9 @@ def main():
     # Start Parameters
     argument_spec.update(
         dict(
-            fileset_name=dict(required=False, aliases=['name']),
-            share_type=dict(required=False, choices=['NFS', 'SMB']),
-            include=dict(required=False, type='list'),
+            fileset_name=dict(required=True, aliases=['name']),
+            share_type=dict(required=True, choices=['NFS', 'SMB']),
+            include=dict(required=False, type='list', default=[]),
             exclude=dict(required=False, type='list', default=[]),
             exclude_exception=dict(required=False, type='list', default=[]),
             follow_network_shares=dict(required=False, type='bool', default=False),
