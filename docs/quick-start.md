@@ -114,7 +114,6 @@ Create a file named `rubrik.yml` in your working directory and copy in the follo
     - name: On-Demand Snapshot
       rubrik_on_demand_snapshot:
         object_name: "{{ vm_name }}"
-        object_type: "vmware"
 
 ```
 
@@ -230,7 +229,7 @@ api_request = rubrik.cluster_version()
 
 Once the module has been fully coded you can use the following script to automatically generate the module `DOCUMENTATION` block:
 
-``/rubrik-modules-for-ansible/docs/create_documentation_block.py`
+`/rubrik-modules-for-ansible/docs/create_documentation_block.py`
 
 To use the script, update the `filename = ` variable and then run `python create_documentation_block.py`
 
