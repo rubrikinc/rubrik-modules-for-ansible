@@ -1,6 +1,6 @@
 
-directory = "/Users/drew_russell/Google Drive/Development/Ansible/ansible/lib/ansible/modules/cloud/rubrik/"
-filename = "rubrik_configure_dns_servers.py"
+directory = "../library/"
+filename = "rubrik_bootstrap.py"
 
 
 with open("{}{}".format(directory, filename)) as fp:
