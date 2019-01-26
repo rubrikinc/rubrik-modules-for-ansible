@@ -4,6 +4,7 @@ Take an on-demand snapshot of a Rubrik object.
 
 `Requirement: Rubrik Python SDK (pip install rubri-cdm)`
 
+# Example
 
 ```yaml
 - rubrik_on_demand_snapshot:

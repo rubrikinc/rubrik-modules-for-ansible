@@ -4,6 +4,7 @@ Begin or end snapshots on a Rubrik Managed Volume.
 
 `Requirement: Rubrik Python SDK (pip install rubri-cdm)`
 
+# Example
 
 ```yaml
 # Begin a new managed volume snapshot.

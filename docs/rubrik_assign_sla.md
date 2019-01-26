@@ -4,6 +4,7 @@
 
 `Requirement: Rubrik Python SDK (pip install rubri-cdm)`
 
+# Example
 
 ```yaml
 - rubrik_assign_sla:

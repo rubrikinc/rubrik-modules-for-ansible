@@ -4,6 +4,7 @@ Grant an End User authorization to the provided object.
 
 `Requirement: Rubrik Python SDK (pip install rubri-cdm)`
 
+# Example
 
 ```yaml
 - rubrik_assign_sla:

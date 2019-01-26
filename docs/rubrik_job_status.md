@@ -4,6 +4,7 @@ Certain Rubrik operations may not instantaneously complete. In those cases we ha
 
 `Requirement: Rubrik Python SDK (pip install rubri-cdm)`
 
+# Example
 
 ```yaml
 - rubrik_job_status:

@@ -4,6 +4,7 @@ Retrieves the software version of the Rubrik cluster.
 
 `Requirement: Rubrik Python SDK (pip install rubri-cdm)`
 
+# Example
 
 ```yaml
 - rubrik_cluster_version:

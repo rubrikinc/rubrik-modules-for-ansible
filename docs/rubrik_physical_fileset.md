@@ -4,6 +4,7 @@ Create a Fileset for a Linux or Windows machine.
 
 `Requirement: Rubrik Python SDK (pip install rubri-cdm)`
 
+# Example
 
 ```yaml
 - rubrik_create_physical_fileset:

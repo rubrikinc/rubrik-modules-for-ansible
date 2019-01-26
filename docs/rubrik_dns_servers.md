@@ -4,6 +4,8 @@ Configure the DNS Servers on the Rubrik cluster.
 
 `Requirement: Rubrik Python SDK (pip install rubri-cdm)`
 
+# Example
+
 ```yaml
 - rubrik_configure_dns_servers:
     server_ip: ["192.168.100.20", "192.168.100.21"]

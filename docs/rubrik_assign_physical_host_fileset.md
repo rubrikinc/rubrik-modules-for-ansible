@@ -4,6 +4,8 @@ Assign a fileset to a Linux or Windows machine. If you have multiple filesets wi
 
 `Requirement: Rubrik Python SDK (pip install rubri-cdm)`
 
+# Example
+
 ```yaml
 - rubrik_assign_physical_host_fileset:
     hostname: 'python-physical-demo'
