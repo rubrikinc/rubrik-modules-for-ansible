@@ -189,7 +189,7 @@ git checkout devel
 ```
 
 
-### New module Development
+### New Module Development
 
 The `/rubrik-modules-for-ansible/library` directory contains all of the Rubrik Ansible modules. You can also utilize the following file as a template for all new modules:
 
