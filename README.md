@@ -18,12 +18,3 @@ Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud D
 
 * 2.5.0
 * 2.4.2.0
-
-
-#### Created and Maintained by the Rubrik Ranger Team
-
-<p></p>
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/8610203/37415009-6f9cf416-2778-11e8-8b56-052a8e41c3c8.png" alt="Rubrik Ranger Logo"/>
-</p>
-
