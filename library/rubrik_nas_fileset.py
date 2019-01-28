@@ -67,7 +67,7 @@ requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
-- rubrik_create_nas_fileset:
+- rubrik_nas_fileset:
     name: 'AnsibleDemo'
     include: '/usr/local'
     share_type: 'NFS'

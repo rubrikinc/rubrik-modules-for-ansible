@@ -7,7 +7,7 @@ Create a Rubrik NAS Fileset.
 # Example
 
 ```yaml
-- rubrik_create_nas_fileset:
+- rubrik_nas_fileset:
     name: 'AnsibleDemo'
     include: '/usr/local'
     share_type: 'NFS'

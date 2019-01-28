@@ -7,9 +7,9 @@ Grant an End User authorization to the provided object.
 # Example
 
 ```yaml
-- rubrik_assign_sla:
+- rubrik_end_user_authorization:
     object_name: "ansible-tower"
-    sla_name: "Gold"
+    end_user: "ansible-user"
 ```
 
 # Arugments

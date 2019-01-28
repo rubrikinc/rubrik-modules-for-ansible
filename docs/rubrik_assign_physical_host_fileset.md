@@ -8,15 +8,10 @@ Assign a fileset to a Linux or Windows machine. If you have multiple filesets wi
 
 ```yaml
 - rubrik_assign_physical_host_fileset:
-    hostname: 'python-physical-demo'
-    fileset_name: 'Python SDK'
+    hostname: 'ansible-tower'
+    fileset_name: 'all-files'
+    operating_system: Linux
     sla_name: 'Gold'
-    operating_system: 'Linux'
-    include: ['/usr/local', '*.pdf']
-    exclude: ['/user/local/temp', '.mov', '.mp3']
-    exclude_exception: ['/company/*.mp4']
-    follow_network_shares: true
-    backup_hidden_folders: true
 ```
 
 # Arugments
@@ -42,7 +37,7 @@ Assign a fileset to a Linux or Windows machine. If you have multiple filesets wi
 | follow_network_shares | Include or exclude locally-mounted remote file systems from backups.                                         | False   | bool   |                |           |            |
 | hostname              | The hostname or IP Address of the physical host you wish to associate to the Fileset.                        |         | string |                | true      | ip_address |
 | include               | The full paths or wildcards that define the objects to include in the Fileset backup.                        | []      | list   |                |           |            |
-| operating_system      | The operating system of the physical host you are assigning a Fileset to                                     |         | string | Linux, Windows |           |            |
+| operating_system      | The operating system of the physical host you are assigning a Fileset to                                     |         | string | Linux, Windows | true      |            |
 | sla_name              | The name of the SLA Domain to associate with the Fileset.                                                    |         | string |                |           | sla        |
 | timeout               | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error. | 30      | int    |                |           |            |
 

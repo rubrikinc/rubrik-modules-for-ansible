@@ -14,7 +14,6 @@ Begin or end snapshots on a Rubrik Managed Volume.
 
 # End the managed volume snapshot
 - rubrik_managed_volume:
-    provider: "{{ credentials }}"
     name: MV1
     action: end
 ```

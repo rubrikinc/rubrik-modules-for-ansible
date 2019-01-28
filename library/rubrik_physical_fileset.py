@@ -74,7 +74,7 @@ requirements: [rubrik_cdm]
 
 
 EXAMPLES = '''
-- rubrik_create_physical_fileset:
+- rubrik_physical_fileset:
     name: 'AnsibleDemo'
     include: '/usr/local'
     operating_system: 'Linux'

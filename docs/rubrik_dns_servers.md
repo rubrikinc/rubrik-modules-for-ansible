@@ -7,7 +7,7 @@ Configure the DNS Servers on the Rubrik cluster.
 # Example
 
 ```yaml
-- rubrik_configure_dns_servers:
+- rubrik_dns_servers:
     server_ip: ["192.168.100.20", "192.168.100.21"]
 ```
 

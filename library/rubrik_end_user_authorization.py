@@ -51,9 +51,9 @@ requirements: [rubrik_cdm]
 
 
 EXAMPLES = '''
-- rubrik_assign_sla:
+- rubrik_end_user_authorization:
     object_name: "ansible-tower"
-    sla_name: "Gold"
+    end_user: "ansible-user"
 '''
 
 RETURN = '''

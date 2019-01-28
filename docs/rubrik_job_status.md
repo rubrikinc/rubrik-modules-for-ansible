@@ -7,8 +7,12 @@ Certain Rubrik operations may not instantaneously complete. In those cases we ha
 # Example
 
 ```yaml
+- rubrik_on_demand_snapshot:
+    object_name: "{{ vm_name }}"
+  register: snapshot
+
 - rubrik_job_status:
-    url: "https://192.168.1.100/api/v1/vmware/vm/request/CREATE_VMWARE_SNAPSHOT_fbcb1d87-9872-4227-a68c-5982f48-vm-289386_e837-a04c-4327-915b-7698d2c5ecf48:::0"
+    url: "{{ snapshot.job_status_url }}"
 ```
 
 # Arugments

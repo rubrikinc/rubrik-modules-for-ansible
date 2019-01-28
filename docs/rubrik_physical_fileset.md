@@ -7,7 +7,7 @@ Create a Fileset for a Linux or Windows machine.
 # Example
 
 ```yaml
-- rubrik_create_physical_fileset:
+- rubrik_physical_fileset:
     name: 'AnsibleDemo'
     include: '/usr/local'
     operating_system: 'Linux'
