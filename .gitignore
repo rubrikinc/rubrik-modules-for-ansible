@@ -1,0 +1,8 @@
+dev.yml
+.pytest_cache/v/cache/nodeids
+ansible.cfg
+demo.yml
+dev.py
+hosts
+variables.yml
+.vscode/settings.json

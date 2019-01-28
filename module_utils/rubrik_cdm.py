@@ -1,11 +1,12 @@
+
 # This code is part of Ansible, but is an independent component.
+#
 # This particular file snippet, and this file snippet only, is BSD licensed.
 # Modules you write using this snippet, which is embedded dynamically by Ansible
 # still belong to the author of the module, and may assign their own license
 # to the complete work.
 #
-# (c) 2017 Rubrik Inc.
-# Author: Drew Russell (@drusse11)
+# (c) 2018 Rubrik, Inc.
 #
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
@@ -26,16 +27,45 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+
+
 from ansible.module_utils.six import iteritems
 
-try:
-    from pyRubrik import RubrikClient
-    HAS_RUBRIK_CLIENT = True
-except ImportError:
-    HAS_RUBRIK_CLIENT = False
+import urllib3
+urllib3.disable_warnings()
+
+import os
+
+
+def credentials(module):
+    """Helper function to establish inital connectivity to the Rubrik cluster. The function will first attempt
+    to read the relevant credentials from environment variables and then if those are not found try to manually provie
+    the values through supplied parameters.
+
+    Arguments:
+        module {class} -- Ansible module helper class.
+
+    Returns:
+        [str] -- Any potential error that may occur during the initial connection.
+        [class] -- On success, return rubrik_cdm.Connect
+    """
+
+    ansible = module.params
+
+    try:
+        node_ip = ansible["node_ip"]
+        username = ansible["username"]
+        password = ansible["password"]
+    except KeyError:
+        node_ip = os.environ.get('rubrik_cdm_node_ip')
+        username = os.environ.get('rubrik_cdm_username')
+        password = os.environ.get('rubrik_cdm_password')
+
+    return node_ip, username, password
+
 
 login_credentials_spec = {
-    'node': dict(),
+    'node_ip': dict(),
     'username': dict(),
     'password': dict(no_log=True),
 }
@@ -46,30 +76,12 @@ rubrik_argument_spec = {
 
 
 def load_provider_variables(module):
-    '''Pull the node, username, and password arguments from the provider
-    variable '''
+    """Pull the node_ip, username, and password arguments from the provider
+    variable
+    """
 
     provider = module.params.get('provider') or dict()
     for key, value in iteritems(provider):
         if key in login_credentials_spec:
             if module.params.get(key) is None and value is not None:
                 module.params[key] = value
-
-
-def connect_to_cluster(node, username, password, module):
-
-    node = module.params['node']
-    username = module.params['username']
-    password = module.params['password']
-
-    if not HAS_RUBRIK_CLIENT:
-        module.fail_json(
-            msg='The required pyRubrik library is missing. Please install. ')
-
-    try:
-        create_connection = RubrikClient.create(node, username, password)
-    except:
-        module.fail_json(
-            msg="We are unable to connect to the Rubrik Cluster. Please verify the provided credentials.")
-
-    return create_connection

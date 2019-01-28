@@ -12,61 +12,83 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_assign_sla
-short_description: Assign a Rubrik object to an SLA Domain.
+module: rubrik_end_user_authorization
+short_description: Grant an Rubrik End User authorization to the provided object.
 description:
-    - Assign a Rubrik object to an SLA Domain.
+    - Grant an End User authorization to the provided object.
 version_added: 2.8
-author: 'Rubrik Ranger Team'
+author: Rubrik Ranger Team
 options:
   object_name:
     description:
-      - The name of the Rubrik object you wish to assign to an SLA Domain.
-    required: true
+      - The name of the object you wish to grant the I(end_user) authorization to.
+    required: True
     type: str
-  sla_name:
+  end_user:
     description:
-      - The name of the SLA Domain you wish to assign an object to. To exclude the object from all SLA assignments use do not
-        protect as the sla_name. To assign the selected object to the SLA of the next higher level object use clear as the sla_name
-    required: true
+      - The name of the end user you wish to grant authorization to.
+    required: True
     type: str
   object_type:
     description:
-      - The Rubrik object type you want to assign to the SLA Domain.
-    required: false
+      - The Rubrik object type you wish to grant authorization to.
+    required: False
+    type: str
     default: vmware
     choices: [vmware]
-    type: str
   timeout:
     description:
-    - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
     required: False
-    default: 30
     type: int
+    default: 15
+
 
 extends_documentation_fragment:
     - rubrik_cdm
 requirements: [rubrik_cdm]
 '''
 
+
 EXAMPLES = '''
-- rubrik_assign_sla:
+- rubrik_end_user_authorization:
     object_name: "ansible-tower"
-    sla_name: "Gold"
+    end_user: "ansible-user"
 '''
 
 RETURN = '''
 response:
-    description: The full API reponse for POST /internal/sla_domain/{sla_id}/assign.
+    description: The full API response for POST /internal/authorization/role/end_user
     returned: on success
     type: dict
-    sample: {"status_code": "204"}
+    sample:
+      {
+        "hasMore": true,
+        "data": [
+            {
+            "principal": "string",
+            "privileges": {
+                "destructiveRestore": [
+                "string"
+                ],
+                "restore": [
+                "string"
+                ],
+                "provisionOnInfra": [
+                "string"
+                ]
+            },
+            "organizationId": "string"
+            }
+        ],
+        "total": 0
+      }
 
 response:
-    description: A "No changed required" message when the Rubrik object is already assigned to the SLA Domain.
+    description: A "No changed required" message when the end user is already authorized to interface with provided I(objec_name).
     returned: When the module idempotent check is succesful.
     type: str
-    sample: No change required. The vSphere VM 'object_name' is already assigned to the 'sla_name' SLA Domain.
+    sample: No change required. The End User "end_user" is already authorized to interact with the "object_name" VM.
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -91,9 +113,9 @@ def main():
     argument_spec.update(
         dict(
             object_name=dict(required=True, type='str'),
-            sla_name=dict(required=True, type='str'),
+            end_user=dict(required=True, type='str'),
             object_type=dict(required=False, type='str', default="vmware", choices=['vmware']),
-            timeout=dict(required=False, type='int', default=30),
+            timeout=dict(required=False, type='int', default=15),
 
         )
     )
@@ -112,14 +134,14 @@ def main():
         node_ip, username, password = credentials(module)
     except ValueError:
         module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
-
+    
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
     except SystemExit as error:
         module.fail_json(msg=str(error))
 
     try:
-        api_request = rubrik.assign_sla(ansible["object_name"], ansible["sla_name"], ansible["object_type"], ansible["timeout"])
+        api_request = rubrik.end_user_authorization(ansible["object_name"], ansible["end_user"], ansible["object_type"], ansible["timeout"])
     except SystemExit as error:
         module.fail_json(msg=str(error))
 

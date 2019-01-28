@@ -1,145 +1,203 @@
 #!/usr/bin/python
-# Copyright: Rubrik
+# (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['stableinterface'],
-                    'supported_by': 'community'}
-
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'status': ['preview'],
+    'supported_by': 'community'
+}
 
 DOCUMENTATION = '''
----
 module: rubrik_on_demand_snapshot
-requirements: pyRubrik
-extends_documentation_fragment: rubrik
-version_added: "2.5"
-short_description: Take an On Demand Snapshot.
+short_description: Take an on-demand snapshot of a Rubrik object.
 description:
-    - Take an On Demand Snapshot of a vSphere VM and assign an SLA Domain.
-author:
-    - Drew Russell (t. @drusse11)
+    - Take an on-demand snapshot of a Rubrik object.
+version_added: 2.8
+author: Rubrik Ranger Team
 options:
-    sla_domain_name:
-        description:
-            - Then name of the SLA Domain to assign to Snapshot.
-        required: true
-        aliases: sla
-        default: null
-    vsphere_vm_name:
-        description:
-            - The name of the VM to take a Snapshot of.
-        required: true
-        aliases: vm
-        default: null
 
+  object_name:
+    description:
+      - The name of the Rubrik object to take a on-demand snapshot of.
+    required: True
+    type: str
+
+  object_type:
+    description:
+      - The Rubrik object type you want to backup.
+    required: False
+    type: str
+    default: vmware
+    choices: [vmware, physical_host]
+
+  sla_name:
+    description:
+      - The SLA Domain name you want to assign the on-demand snapshot to. By default, the currently assigned SLA Domain will be used.
+    required: False
+    type: str
+    default: current
+
+  fileset:
+    description:
+      - The name of the Fileset you wish to backup. Only required when taking a on-demand snapshot of a physical host.
+    required: False
+    type: str
+    default: None
+
+  host_os:
+    description:
+      - The operating system for the physical host. Only required when taking a on-demand snapshot of a physical host.
+    required: False
+    type: str
+    default: None
+    choices: [None, Linux, Windows]
+
+
+extends_documentation_fragment:
+    - rubrik_cdm
+requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
-- name: Take a On Demand vSphere VM Snapshot
-  rubrik_on_demand_snapshot:
-    provider={{ credentials }}
-    sla_domain_name={{ sla_domain_name }}
-    vsphere_vm_name={{ vsphere_vm_name }}
+- rubrik_on_demand_snapshot:
+    object_name: 'ansible-node01'
+    object_type: "vmware"
+
+- rubrik_on_demand_snapshot:
+        object_name: "ansible-demo"
+        object_type: "physical_host"
+        fileset: "Python SDK"
+        host_os: "Linux"
 '''
 
 RETURN = '''
 response:
-    description: Human readable description of the results of the module execution.
-    returned: success
+    description: The full API response for POST /v1/vmware/vm/{id}/snapshot.
+    returned: on success when action is vmware
     type: dict
-    sample: {"response": "Successfully created a On Demand Snapshot for 'Ansible-Tower'}
+    sample:
+        {
+            "id": "string",
+            "status": "string",
+            "progress": 0,
+            "startTime": "2018-10-16T03:48:59.118Z",
+            "endTime": "2018-10-16T03:48:59.118Z",
+            "nodeId": "string",
+            "error": {
+                "message": "string"
+            },
+            "links": [
+                {
+                "href": "string",
+                "rel": "string"
+                }
+            ]
+        }
+
+response:
+    description: The full API response for POST /v1/fileset/{id}/snapshot.
+    returned: on success when object_type is physical_host
+    type: dict
+    sample:
+        {
+            "id": "string",
+            "status": "string",
+            "progress": 0,
+            "startTime": "2018-10-16T03:48:58.625Z",
+            "endTime": "2018-10-16T03:48:58.625Z",
+            "nodeId": "string",
+            "error": {
+                "message": "string"
+            },
+            "links": [
+                {
+                "href": "string",
+                "rel": "string"
+                }
+            ]
+        }
+
+job_status_url:
+    description: The job staturs url retuend by the full API response which can be passed into the rubrik_job_status module for monitoring.
+    returned: on success
+    type: str
+    sample: https://192.168.8.19/api/v1/fileset/request/CREATE_FILESET_SNAPSHOT_a2f6161c-33a4-3123-efaw-de7d1bef284e_dc0983bf-1c47-45ce-9ce0-b8df3c93b5fa:::0
 '''
 
+from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 
-def get_vsphere_vm_id(rubrik, vsphere_vm_name, module):
-
-    name = vsphere_vm_name
-
-    query_vm = rubrik.query_vm(
-        primary_cluster_id='local', name=name, is_relic=False)
-
-    # Check if any results are returned
-    if not query_vm.data:
-        module.fail_json(
-            msg=("There is no vSphere VM named {} on the Rubrik Cluster.".format(name)))
-    else:
-        for vm in query_vm.data:
-            if vm.name == name:
-                vm_id = vm.id
-
-    return vm_id
-
-
-def get_sla_domain_id(rubrik,  sla_domain_name, module):
-
-    name = sla_domain_name
-
-    query_sla_domain = rubrik.query_sla_domain(
-        primary_cluster_id='local', name=name, is_relic=False)
-
-    # Check if any results are returned
-    if not query_sla_domain.data:
-        module.fail_json(
-            msg=("There is no SLA Domain named {} on the Rubrik Cluster.".format(name)))
-    else:
-        for sla_domain in query_sla_domain.data:
-            if sla_domain.name == name:
-                sla_id = sla_domain.id
-
-    return sla_id
+try:
+    import rubrik_cdm
+    HAS_RUBRIK_SDK = True
+except ImportError:
+    HAS_RUBRIK_SDK = False
 
 
 def main():
-    '''Ansible main. '''
+    """ Main entry point for Ansible module execution.
+    """
 
     argument_spec = rubrik_argument_spec
 
+    # Start Parameters
     argument_spec.update(
         dict(
-            sla_domain_name=dict(required=True, aliases=['sla']),
-            vsphere_vm_name=dict(required=True, aliases=['vm']),
-
+            object_name=dict(required=True, type='str'),
+            object_type=dict(required=False, type='str', default="vmware", choices=[
+                             "vmware", "physical_host"]),
+            sla_name=dict(required=False, type='str', default='current'),
+            fileset=dict(required=False, type='str', default='None'),
+            host_os=dict(required=False, type='str', default='None',
+                         choices=["None", "Linux", "Windows"]),
         )
     )
+    # End Parameters
 
     module = AnsibleModule(argument_spec=argument_spec,
                            supports_check_mode=False)
 
     results = {}
-    load_provider_variables(module)
+
     ansible = module.params
 
-    node = ansible['node']
-    username = ansible['username']
-    password = ansible['password']
-    sla_domain_name = ansible['sla_domain_name']
-    vsphere_vm_name = ansible['vsphere_vm_name']
+    load_provider_variables(module)
 
-    rubrik = connect_to_cluster(node, username, password, module)
+    if not HAS_RUBRIK_SDK:
+        module.fail_json(
+            msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
-    vm_id = get_vsphere_vm_id(rubrik, vsphere_vm_name, module)
-    sla_id = get_sla_domain_id(rubrik, sla_domain_name, module)
+    try:
+        node_ip, username, password = credentials(module)
+    except ValueError:
+        module.fail_json(msg="Missing")
 
-    create_on_demand_snapshot_data_model = {
-        "slaId": sla_id
-    }
+    rubrik = rubrik_cdm.Connect(node_ip, username, password)
 
-    rubrik.create_on_demand_backup(
-        vm_id, config=create_on_demand_snapshot_data_model)
+    if ansible["fileset"] == "None":
+        ansible["fileset"] = None
 
-    results['response'] = "Successfully created a On Demand Snapshot for '{}'.".format(
-        vsphere_vm_name)
+    if ansible["host_os"] == "None":
+        ansible["host_os"] = None
+
+    try:
+        api_request, job_status_url = rubrik.on_demand_snapshot(
+            ansible["object_name"], ansible["object_type"], ansible["sla_name"], ansible["fileset"], ansible["host_os"])
+
+    except SystemExit as error:
+        module.fail_json(msg=str(error))
+
+    results["changed"] = True
+
+    results["response"] = api_request
+    results["job_status_url"] = job_status_url
 
     module.exit_json(**results)
 
 
-from ansible.module_utils.basic import AnsibleModule  # isort:skip
-from ansible.module_utils.rubrik import (
-    connect_to_cluster, load_provider_variables, rubrik_argument_spec)  # isort:skip
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -12,37 +12,33 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_assign_sla
-short_description: Assign a Rubrik object to an SLA Domain.
+module: rubrik_job_status
+short_description: Monitor the progress of a Rubrik job.
 description:
-    - Assign a Rubrik object to an SLA Domain.
+    - Certain Rubrik operations may not instantaneously complete. In those cases we have the ability to monitor the status of
+      the job through a job status link provided in the actions API response body. In those cases the Ansible Module will return a "job_status_link"
+      which can then be registered and used as a variable in the rubrik_job_status module. The rubrik_job_status will check on the status of the
+      job every 20 seconds until the job has successfully completed for failed.
 version_added: 2.8
-author: 'Rubrik Ranger Team'
+author: Rubrik Ranger Team
 options:
-  object_name:
+  url:
     description:
-      - The name of the Rubrik object you wish to assign to an SLA Domain.
-    required: true
-    type: str
-  sla_name:
+      - The job status URL provided by a previous API call.
+    required: True
+  wait_for_completion:
     description:
-      - The name of the SLA Domain you wish to assign an object to. To exclude the object from all SLA assignments use do not
-        protect as the sla_name. To assign the selected object to the SLA of the next higher level object use clear as the sla_name
-    required: true
-    type: str
-  object_type:
-    description:
-      - The Rubrik object type you want to assign to the SLA Domain.
-    required: false
-    default: vmware
-    choices: [vmware]
-    type: str
+      - Flag that determines if the method should wait for the job to complete before exiting.
+    required: False
+    type: bool
+    default: True
   timeout:
     description:
-    - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+      - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
     required: False
-    default: 30
     type: int
+    default: 15
+
 
 extends_documentation_fragment:
     - rubrik_cdm
@@ -50,23 +46,16 @@ requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
-- rubrik_assign_sla:
-    object_name: "ansible-tower"
-    sla_name: "Gold"
+- rubrik_job_status:
+    url: "https://192.168.1.100/api/v1/vmware/vm/request/CREATE_VMWARE_SNAPSHOT_fbcb1d87-9872-4227-a68c-5982f48-vm-289386_e837-a04c-4327-915b-7698d2c5ecf48:::0"
 '''
 
 RETURN = '''
 response:
-    description: The full API reponse for POST /internal/sla_domain/{sla_id}/assign.
+    description: The full API response for the API call.
     returned: on success
     type: dict
-    sample: {"status_code": "204"}
-
-response:
-    description: A "No changed required" message when the Rubrik object is already assigned to the SLA Domain.
-    returned: When the module idempotent check is succesful.
-    type: str
-    sample: No change required. The vSphere VM 'object_name' is already assigned to the 'sla_name' SLA Domain.
+    sample: differs depending on the object_type being monitored.
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -90,11 +79,9 @@ def main():
     # Start Parameters
     argument_spec.update(
         dict(
-            object_name=dict(required=True, type='str'),
-            sla_name=dict(required=True, type='str'),
-            object_type=dict(required=False, type='str', default="vmware", choices=['vmware']),
-            timeout=dict(required=False, type='int', default=30),
-
+            url=dict(required=True),
+            wait_for_completion=dict(required=False, type='bool', default=True),
+            timeout=dict(required=False, type='int', default=15)
         )
     )
     # End Parameters
@@ -112,21 +99,20 @@ def main():
         node_ip, username, password = credentials(module)
     except ValueError:
         module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
-
+    
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
     except SystemExit as error:
         module.fail_json(msg=str(error))
 
+    
+
     try:
-        api_request = rubrik.assign_sla(ansible["object_name"], ansible["sla_name"], ansible["object_type"], ansible["timeout"])
+        api_request = rubrik.job_status(ansible["url"], ansible["wait_for_completion"], ansible["timeout"])
     except SystemExit as error:
         module.fail_json(msg=str(error))
 
-    if "No change required" in api_request:
-        results["changed"] = False
-    else:
-        results["changed"] = True
+    results["changed"] = False
 
     results["response"] = api_request
 
