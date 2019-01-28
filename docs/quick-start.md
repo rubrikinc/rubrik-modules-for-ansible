@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Quick Start Guide: Rubrik Modules for Ansible
 
 ## Introduction to the Rubrik Modules for Ansible
@@ -240,3 +241,6 @@ To use the script, update the `filename = ` variable and then run `python create
 * [Rubrik Modules for Ansible GitHub Repository](https://github.com/rubrikinc/rubrik-modules-for-ansible)
 * [Rubrik Modules for Ansible Official Documentation](https://rubrik.gitbook.io/rubrik-modules-for-ansible)
 * [Rubrik CDM API Documentation](https://github.com/rubrikinc/api-documentation)
+=======
+
+>>>>>>> 15a2b4b0cf4b50dfa428e6bfc3a6eb3a273ce8ff
