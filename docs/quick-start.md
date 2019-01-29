@@ -2,15 +2,15 @@
 
 ## Introduction to the Rubrik Modules for Ansible
 
-Rubrik’s API first architecture enables organizations to embrace and integrate Rubrik moduleality into their existing automation processes. While Rubrik APIs can be consumed natively, companies are at various stages in their automation journey with different levels of automation knowledge on staff. The Rubrik Modules for Ansible extends upon Python’s easy to understand programming language, transforming Rubrik moduleality into easy to consume Ansible modules. This eliminates the need to create inidividual automation scripts and extends upon one of Rubrik’s main design centers - simplicity.
+Rubrik’s API first architecture enables organizations to embrace and integrate Rubrik functionality into their existing automation processes. While Rubrik APIs can be consumed natively, companies are at various stages in their automation journey with different levels of knowledge on staff. The Rubrik Modules for Ansible extends upon the Rubrik Python SDK, transforming Rubrik API functionality into easy to consume Ansible modules which eliminates the need to create inidividual automation scripts and extends upon one of Rubrik’s main design centers - simplicity.
 
 ## Authentication Mechanisms
 
-The Rubrik Modules for Ansible provides two mechanisms for supplying credentials to the Ansible modules. Credentials may be accessed through the use of environment variables or manually passed into the each module task as parameters.
+The Rubrik Modules for Ansible provides two mechanisms for supplying credentials to the Ansible modules. Credentials may be accessed through the use of environment variables or manually passed into the each module task as variables.
 
 ### Authenticating with Environment Variables
 
-Storing credentials in environment variables is a more secure process than directly hard coding them into scripts and ensures that your credentials are not accidentally shared if your code is uploaded to an internal or public version control system such as GitHub. If no arguments are manually passed to the Ansible module, it will attempt to read the Rubrik Cluster credentials from the following environment variables:
+Storing credentials in environment variables is a more secure process than directly hard coding them into Playbooks and ensures that your credentials are not accidentally shared if your code is uploaded to an internal or public version control system such as GitHub. If no arguments are manually passed to the Ansible module, it will attempt to read the Rubrik cluster credentials from the following environment variables:
 
 * **`rubrik_cdm_node_ip`** (Contains the IP/FQDN of a Rubrik node)
 * **`rubrik_cdm_username`** (Contains a username with configured access to the Rubrik cluster)
@@ -33,25 +33,23 @@ Once set, the Ansible modules will automatically utilize the data within the env
 
 ### Authenticate by Providing Username and Password
 
-Although the use of environment variables are recommended, there may be scenarios where directly sending credentials to the Ansible module as parameters makes sense. When arguments are provided, any environment variable information, populated or unpopulated, is ignored. To manually pass connection and credential information, you may use the helper `provider` variable which is a convenience paramater that allows all connection parameters to be passed as a dict object.
+There may be scenarios where directly sending credentials to the Ansible module as variables makes sense. For example, when utilizing [Ansible Vault](https://docs.ansible.com/ansible/latest/user_guide/vault.html) functionality. When arguments are provided, any environment variable information, populated or unpopulated, is ignored. To manually pass connection and credential information, you may use the helper `provider` variable which is a convenience paramater that allows all connection variables to be passed as a single dictionary object.
 
 ```yaml
 ---
 
-- name: Rubrik Modules
-  hosts: local
+- hosts: localhost
   connection: local
   gather_facts: false
   vars:
-       credentials:
-        node_ip: 10.255.0.2
-        username: ansibledemo@rubrik.com
-        password: ansiblepasswordexample
+    credentials:
+      node_ip: 10.255.0.2
+      username: ansibledemo@rubrik.com
+      password: ansiblepasswordexample
 
   tasks:   
 
-    - name: Rubrik Cluster Version
-      rubrik_cluster_version:
+    - rubrik_cluster_version:
         provider: "{{ credentials }}"
 ```
 
@@ -80,18 +78,18 @@ The following are the prerequisites in order to successfully install and run the
 
 ## Configuration
 
-After cloning the GitHub repository to your local machine you will need to update your `ansible.cfg` file with the path to the `library` and `module_utiils`.
+
+The cloned repository includes a `ansible.cfg` file that is pre-configured with the correct paramaters to run the Ansible modules from the local directory.
 
 ```
 [defaults]
 
-library = <path to ucsm-ansible clone>/library
-module_utils   = <path to ucsm-ansible clone>/module_utils
+library = ./library
+module_utils   = ./module_utils
 ```
 
-The cloned repository includes a `ansible.cfg` file that is pre-onfigured with the correct paramaters to run the Ansible modules from the local directory.
 
-### Sample Syntax - vSphere VM On-Demand Snapshot
+### Sample Syntax - vSphere Virtual Machine On-Demand Snapshot
 
 The following code will walk through a number of real-world examples of taking an on-demand snapshot of a vSphere VM. For a full listing of available modules see the complete [Rubrik Modules for Ansible documentation](https://rubrik.gitbook.io/rubrik-modules-for-ansible).
 
@@ -102,8 +100,7 @@ Create a file named `rubrik.yml` in your working directory and copy in the follo
 ```yaml
 ---
 
-- name: Rubrik Modules Example
-  hosts: localhost
+- hosts: localhost
   connection: local
   gather_facts: false
   vars:
@@ -128,7 +125,7 @@ gather_facts: false
 ```
 
 * `hosts:` corresponds to the inventory you wish to run the Ansible module against. In this case, we are providing that information through environment variables so we only need to define `localhost` in this field.
-* `connection:` corresponds to the connection plugin you wish to use in your module. In this case we want to use the `local` connection to execute the Playbook on the local machine.
+* `connection:` corresponds to the connection plugin you wish to use in your module. Since we want to execute the Playbook on the local machine we want to use the `local` connection.
 * `gather_facts:` can be used to gather facts about remote hosts. Since we're running the Ansible Module on the local machine we do not need to gather this information. Setting this value to `false` is optional but recommended.
 
 Once the Ansible specific configurations are in place we need to define the name of the vSphere VM we wish to take a on-demand snapshot of.
@@ -138,7 +135,7 @@ vars:
        vm_name: ansible-node01
 ```
 
-For the sake of simplicy we have included this variable directly in the Playbook. You may also create an external variable file, with the same information, and [import that file into the Playbook](https://docs.ansible.com/ansible/latest/modules/include_vars_module.html). This helps keep the Playbook itself more generic.
+For the sake of simplicy we have included this variable directly in the Playbook. For production environments you can create an external variable file, with the same information, and [import that file into the Playbook](https://docs.ansible.com/ansible/latest/modules/include_vars_module.html) to keep Playbook itself more generic.
 
 The final section in the example is the on-demand snapshot task.
 
@@ -157,7 +154,7 @@ In this example, we are automatically importing the Rubrik cluster credentials t
 
 #### Running the Sample Workflow
 
-Once `rubrik.yml` is saved within the working directory execute the Playbook with the following statement:
+Once `rubrik.yml` is saved within the working directory, execute the Playbook with the following statement:
 
 ```
 ansible-playbook rubrik.yml
@@ -193,9 +190,9 @@ git checkout devel
 
 The `/rubrik-modules-for-ansible/library` directory contains all of the Rubrik Ansible modules. You can also utilize the following file as a template for all new modules:
 
-`/rubrik-modules-for-ansible/docs/rubrik_module_template.py`
+[`/rubrik-modules-for-ansible/docs/rubrik_module_template.py`](https://github.com/rubrikinc/rubrik-modules-for-ansible/blob/master/docs/rubrik_module_template.py)
 
-To add paramters specific to the new module you can can update the following section which starts on `line 60`:
+To add paramters specific to the new module you can update the following section which starts on `line 60`:
 
 ```python
 argument_spec.update(
@@ -229,7 +226,9 @@ api_request = rubrik.cluster_version()
 
 Once the module has been fully coded you can use the following script to automatically generate the module `DOCUMENTATION` block:
 
-`/rubrik-modules-for-ansible/docs/create_documentation_block.py`
+
+[`/rubrik-modules-for-ansible/docs/create_documentation_block.py`](https://github.com/rubrikinc/rubrik-modules-for-ansible/blob/master/docs/create_documentation_block.py)
+
 
 To use the script, update the `filename = ` variable and then run `python create_documentation_block.py`
 
