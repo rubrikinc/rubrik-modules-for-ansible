@@ -20,6 +20,7 @@ Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud D
 ## Documentation
 
 [Module Documentation](https://rubrik.gitbook.io/rubrik-modules-for-ansible/)
+
 [Rubrik API Documentation](https://github.com/rubrikinc/api-documentation)
 
 ## Example
