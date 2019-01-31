@@ -16,8 +16,9 @@ module: rubrik_cluster_version
 short_description: Retrieves the software version of the Rubrik cluster.
 description:
     - Retrieves the software version of the Rubrik cluster.
-version_added: 2.8
-author: Rubrik Ranger Team
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
+
 
 extends_documentation_fragment:
     - rubrik_cdm
@@ -35,7 +36,7 @@ RETURN = '''
 version:
     description: The version of the Rubrik cluster.
     returned: success
-    type: string
+    type: str
     sample: 4.1.3-2510
 '''
 
@@ -58,14 +59,6 @@ def main():
 
     argument_spec = rubrik_argument_spec
 
-    # Start Parameters
-    argument_spec.update(
-        dict(
-
-        )
-    )
-    # End Parameters
-
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
     ansible = module.params
@@ -84,7 +77,7 @@ def main():
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
     except SystemExit as error:
         module.fail_json(msg=str(error))
-        
+
     try:
         api_request = rubrik.cluster_version()
     except SystemExit as error:

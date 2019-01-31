@@ -33,8 +33,8 @@ print("module: {}".format(filename.replace(".py", "")))
 print("short_description: ")
 print("description:")
 print("    -")
-print("version_added: 2.8")
-print("author: Rubrik Ranger Team")
+print("version_added: '2.8'")
+print("author: Rubrik Build Team <build@rubrik.com>")
 print("options:")
 
 for param in module_parameters:

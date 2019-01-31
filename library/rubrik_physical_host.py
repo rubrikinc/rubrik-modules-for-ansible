@@ -16,8 +16,8 @@ module: rubrik_physical_host
 short_description: Add or delete a physical host from a Rubrik cluster.
 description:
     - Add or delete a physical host from a Rubrik cluster.
-version_added: 2.8
-author: Rubrik Ranger Team
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   hostname:
     description:

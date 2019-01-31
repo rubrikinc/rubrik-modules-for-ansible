@@ -16,8 +16,8 @@ module: rubrik_nas_fileset
 short_description: Create a Rubrik NAS Fileset.
 description:
     - Create a Rubrik NAS Fileset.
-version_added: 2.8
-author: Rubrik Ranger Team
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   fileset_name:
     description:

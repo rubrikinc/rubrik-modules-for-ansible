@@ -16,8 +16,8 @@ module: rubrik_dns_servers
 short_description: Configure the DNS Servers on the Rubrik cluster.
 description:
     - Configure the DNS Servers on the Rubrik cluster.
-version_added: 2.8
-author: Rubrik Ranger Team
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   server_ip:
     description:

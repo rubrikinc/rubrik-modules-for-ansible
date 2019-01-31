@@ -16,8 +16,8 @@ module: rubrik_managed_volume
 short_description: Begin or end snapshots on a Rubrik Managed Volume.
 description:
     - Begin or end snapshots on a Rubrik Managed Volume.
-version_added: 2.8
-author: Rubrik Ranger Team
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   managed_volume_name:
     description:

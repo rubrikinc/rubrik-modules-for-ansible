@@ -19,8 +19,8 @@ description:
       the job through a job status link provided in the actions API response body. In those cases the Ansible Module will return a "job_status_link"
       which can then be registered and used as a variable in the rubrik_job_status module. The rubrik_job_status will check on the status of the
       job every 20 seconds until the job has successfully completed for failed.
-version_added: 2.8
-author: Rubrik Ranger Team
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   url:
     description:
