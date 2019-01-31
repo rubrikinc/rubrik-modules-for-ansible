@@ -16,8 +16,8 @@ module: rubrik_on_demand_snapshot
 short_description: Take an on-demand snapshot of a Rubrik object.
 description:
     - Take an on-demand snapshot of a Rubrik object.
-version_added: 2.8
-author: Rubrik Ranger Team
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
 
   object_name:

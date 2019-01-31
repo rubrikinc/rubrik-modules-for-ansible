@@ -16,8 +16,8 @@ module: rubrik_end_user_authorization
 short_description: Grant an Rubrik End User authorization to the provided object.
 description:
     - Grant an End User authorization to the provided object.
-version_added: 2.8
-author: Rubrik Ranger Team
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   object_name:
     description:

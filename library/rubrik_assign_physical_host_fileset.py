@@ -17,8 +17,8 @@ short_description: Assign a Rubrik fileset to a Linux or Windows machine.
 description:
     - Assign a fileset to a Linux or Windows machine. If you have multiple filesets with identical names, you will
       need to populate the filesets properties to find a specific match. Filesets with identical names and properties are not supported.
-version_added: 2.8
-author: 'Rubrik Ranger Team'
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   hostname:
     description:

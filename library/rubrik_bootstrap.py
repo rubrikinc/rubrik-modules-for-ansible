@@ -17,8 +17,8 @@ module: rubrik_bootstrap
 short_description: Issues a bootstrap request to a specified Rubrik cluster
 description:
     - Issues a bootstrap request to a specified Rubrik cluster
-version_added: 2.8
-author: Rubrik Ranger Team
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   cluster_name:
     description:

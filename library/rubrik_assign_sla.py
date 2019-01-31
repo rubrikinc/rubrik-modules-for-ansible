@@ -16,8 +16,8 @@ module: rubrik_assign_sla
 short_description: Assign a Rubrik object to an SLA Domain.
 description:
     - Assign a Rubrik object to an SLA Domain.
-version_added: 2.8
-author: 'Rubrik Ranger Team'
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   object_name:
     description:

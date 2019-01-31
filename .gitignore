@@ -6,3 +6,4 @@ dev.py
 hosts
 variables.yml
 .vscode/settings.json
+.DS_Store

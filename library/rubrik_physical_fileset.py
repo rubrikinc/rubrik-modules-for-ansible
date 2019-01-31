@@ -16,8 +16,8 @@ module: rubrik_physical_fileset
 short_description: Create a Rubrik fileset for a Linux or Windows machine.
 description:
     - Create a Fileset for a Linux or Windows machine.
-version_added: 2.8
-author: Rubrik Ranger Team
+version_added: '2.8'
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   fileset_name:
     description:
