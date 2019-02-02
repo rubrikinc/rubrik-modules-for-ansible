@@ -14,20 +14,16 @@ Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud D
 
 ## Quick Start
 
-[Quick Start Guide](https://github.com/rubrikinc/rubrik-modules-for-ansible/blob/master/docs/quick-start.md)
-
+* [Quick Start Guide](https://github.com/rubrikinc/rubrik-modules-for-ansible/blob/master/docs/quick-start.md)
 
 ## Documentation
 
-[Module Documentation](https://rubrik.gitbook.io/rubrik-modules-for-ansible/)
-
-[Rubrik API Documentation](https://github.com/rubrikinc/api-documentation)
+* [Module Documentation](https://rubrik.gitbook.io/rubrik-modules-for-ansible/)
+* [Rubrik API Documentation](https://github.com/rubrikinc/api-documentation)
 
 ## Ansible Galaxy
 
-[Galaxy Roles](https://galaxy.ansible.com/rubrik-devops)
-
-
+* [Galaxy Roles](https://galaxy.ansible.com/rubrik-devops)
 
 ## Example
 
@@ -37,4 +33,5 @@ Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud D
     object_type: "vmware"
 ```
 
-
+## Additional Links
+* [VIDEO: Getting Started with Rubrik Modules for Ansible](https://www.youtube.com/watch?v=B5MGkiJyIeI&feature=youtu.be)
