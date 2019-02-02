@@ -35,3 +35,8 @@ Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud D
 
 ## Additional Links
 * [VIDEO: Getting Started with Rubrik Modules for Ansible](https://www.youtube.com/watch?v=B5MGkiJyIeI&feature=youtu.be)
+
+## Contributing
+We glady welcome contributions from the community. From updating the documentation to adding more functions for Ansible, all ideas are welcome!
+
+* [Contributing Guide](https://github.com/rubrikinc/rubrik-modules-for-ansible/blob/master/CONTRIBUTING.md)
