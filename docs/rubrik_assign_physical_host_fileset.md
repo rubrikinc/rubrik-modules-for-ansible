@@ -2,7 +2,7 @@
 
 Assign a fileset to a Linux or Windows machine. If you have multiple filesets with identical names, you will need to populate the filesets properties to find a specific match. Filesets with identical names and properties are not supported.
 
-`Requirement: Rubrik Python SDK (pip install rubri-cdm)`
+`Requirement: Rubrik Python SDK (pip install rubrik_cdm)`
 
 # Example
 
