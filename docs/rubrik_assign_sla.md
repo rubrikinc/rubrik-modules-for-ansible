@@ -1,8 +1,6 @@
 # rubrik_assign_sla 
 
-
-
-`Requirement: Rubrik Python SDK (pip install rubri-cdm)`
+`Requirement: Rubrik Python SDK (pip install rubrik_cdm)`
 
 # Example
 

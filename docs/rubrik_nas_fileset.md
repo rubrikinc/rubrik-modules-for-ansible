@@ -2,7 +2,7 @@
 
 Create a Rubrik NAS Fileset.
 
-`Requirement: Rubrik Python SDK (pip install rubri-cdm)`
+`Requirement: Rubrik Python SDK (pip install rubrik_cdm)`
 
 # Example
 

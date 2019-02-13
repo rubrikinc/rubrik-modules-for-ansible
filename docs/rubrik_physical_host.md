@@ -2,7 +2,7 @@
 
 Add or delete a physical host from a Rubrik cluster.
 
-`Requirement: Rubrik Python SDK (pip install rubri-cdm)`
+`Requirement: Rubrik Python SDK (pip install rubrik_cdm)`
 
 # Example
 

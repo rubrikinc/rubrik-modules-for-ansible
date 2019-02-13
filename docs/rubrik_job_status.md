@@ -2,7 +2,7 @@
 
 Certain Rubrik operations may not instantaneously complete. In those cases we have the ability to monitor the status of the job through a job status link provided in the actions API response body. In those cases the Ansible Module will return a "job_status_link" which can then be registered and used as a variable in the rubrik_job_status module. The rubrik_job_status will check on the status of the job every 20 seconds until the job has successfully completed for failed.
 
-`Requirement: Rubrik Python SDK (pip install rubri-cdm)`
+`Requirement: Rubrik Python SDK (pip install rubrik_cdm)`
 
 # Example
 
