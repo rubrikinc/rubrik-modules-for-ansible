@@ -2,7 +2,7 @@
 
 Issues a bootstrap request to a specified Rubrik cluster
 
-`Requirement: Rubrik Python SDK (pip install rubri-cdm)`
+`Requirement: Rubrik Python SDK (pip install rubrik_cdm)`
 
 # Example
 
