@@ -34,7 +34,7 @@ options:
       - The full paths or wildcards that define the objects to include in the Fileset backup.
     required: False
     type: list
-    default = []
+    default: []
   exclude:
     description:
       - The full paths or wildcards that define the objects to exclude from the Fileset backup.
@@ -145,22 +145,18 @@ def main():
 
     results = {}
 
-    argument_spec = rubrik_argument_spec
-
-    # Start Parameters
-    argument_spec.update(
-        dict(
-            fileset_name=dict(required=True, aliases=['name']),
-            operating_system=dict(required=True, choices=['Linux', 'Windows']),
-            include=dict(required=False, type='list', default=[]),
-            exclude=dict(required=False, type='list', default=[]),
-            exclude_exception=dict(required=False, type='list', default=[]),
-            follow_network_shares=dict(required=False, type='bool', default=False),
-            backup_hidden_folders=dict(required=False, type='bool', default=False),
-            timeout=dict(required=False, type='int', default=15),
-        )
+    argument_spec = dict(
+        fileset_name=dict(required=True, aliases=['name']),
+        operating_system=dict(required=True, choices=['Linux', 'Windows']),
+        include=dict(required=False, type='list', default=[]),
+        exclude=dict(required=False, type='list', default=[]),
+        exclude_exception=dict(required=False, type='list', default=[]),
+        follow_network_shares=dict(required=False, type='bool', default=False),
+        backup_hidden_folders=dict(required=False, type='bool', default=False),
+        timeout=dict(required=False, type='int', default=15),
     )
-    # End Parameters
+
+    argument_spec.update(rubrik_argument_spec)
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
@@ -171,26 +167,32 @@ def main():
     if not HAS_RUBRIK_SDK:
         module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
-    try:
-        node_ip, username, password = credentials(module)
-    except ValueError:
-        module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
+    node_ip, username, password = credentials(module)
 
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
     except SystemExit as error:
         module.fail_json(msg=str(error))
 
+    fileset_name = ansible["fileset_name"]
+    operating_system = ansible["operating_system"]
+    include = ansible["include"]
+    exclude = ansible["exclude"]
+    exclude_exception = ansible["exclude_exception"]
+    follow_network_shares = ansible["follow_network_shares"]
+    backup_hidden_folders = ansible["backup_hidden_folders"]
+    timeout = ansible["timeout"]
+
     try:
         api_request = rubrik.create_physical_fileset(
-            ansible["fileset_name"],
-            ansible["operating_system"],
-            ansible["include"],
-            ansible["exclude"],
-            ansible["exclude_exception"],
-            ansible["follow_network_shares"],
-            ansible["backup_hidden_folders"],
-            ansible["timeout"])
+            fileset_name,
+            operating_system,
+            include,
+            exclude,
+            exclude_exception,
+            follow_network_shares,
+            backup_hidden_folders,
+            timeout)
 
     except SystemExit as error:
         module.fail_json(msg=str(error))

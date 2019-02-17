@@ -35,7 +35,6 @@ options:
       - Password for the admin account.
     required: True
     type: str
-    no_log: True
   management_gateway:
     description:
       - IP address assigned to the management network gateway
@@ -130,26 +129,22 @@ def main():
 
     results = {}
 
-    argument_spec = rubrik_argument_spec
-
-    # Start Parameters
-    argument_spec.update(
-        dict(
-            cluster_name=dict(required=True, type='str'),
-            admin_email=dict(required=True, type='str'),
-            admin_password=dict(required=True, type='str', no_log=True),
-            management_gateway=dict(required=True, type='str'),
-            management_subnet_mask=dict(required=True, type='str'),
-            node_config=dict(required=True, type='dict'),
-            enable_encryption=dict(required=False, type='bool', default=True),
-            dns_search_domains=dict(required=False, type='list', default=[]),
-            dns_nameservers=dict(required=False, type='list', default=['8.8.8.8']),
-            ntp_servers=dict(required=False, type='list', default=['pool.ntp.org']),
-            wait_for_completion=dict(required=False, type='bool', default=True),
-            timeout=dict(required=False, type='int', default=30),
-        )
+    argument_spec = dict(
+        cluster_name=dict(required=True, type='str'),
+        admin_email=dict(required=True, type='str'),
+        admin_password=dict(required=True, type='str', no_log=True),
+        management_gateway=dict(required=True, type='str'),
+        management_subnet_mask=dict(required=True, type='str'),
+        node_config=dict(required=True, type='dict'),
+        enable_encryption=dict(required=False, type='bool', default=True),
+        dns_search_domains=dict(required=False, type='list', default=[]),
+        dns_nameservers=dict(required=False, type='list', default=['8.8.8.8']),
+        ntp_servers=dict(required=False, type='list', default=['pool.ntp.org']),
+        wait_for_completion=dict(required=False, type='bool', default=True),
+        timeout=dict(required=False, type='int', default=30),
     )
-    # End Parameters
+
+    argument_spec.update(rubrik_argument_spec)
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
@@ -160,19 +155,29 @@ def main():
     if not HAS_RUBRIK_SDK:
         module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
-    try:
-        node_ip, username, password = credentials(module)
-    except ValueError:
-        module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
+    node_ip, username, password = credentials(module)
 
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
     except SystemExit as error:
         module.fail_json(msg=str(error))
 
+    cluster_name = ansible["cluster_name"]
+    admin_email = ansible["admin_email"]
+    admin_password = ansible["admin_password"]
+    management_gateway = ansible["management_gateway"]
+    management_subnet_mask = ansible["management_subnet_mask"]
+    node_config = ansible["node_config"]
+    enable_encryption = ansible["enable_encryption"]
+    dns_search_domains = ansible["dns_search_domains"]
+    dns_nameservers = ansible["dns_nameservers"]
+    ntp_servers = ansible["ntp_servers"]
+    wait_for_completion = ansible["wait_for_completion"]
+    timeout = ansible["timeout"]
+
     try:
-        api_request = rubrik.setup_cluster(ansible["cluster_name"], ansible["admin_email"], ansible["admin_password"], ansible["management_gateway"], ansible["management_subnet_mask"],
-                                           ansible["node_config"], ansible["enable_encryption"], ansible["dns_search_domains"], ansible["dns_nameservers"], ansible["ntp_servers"], ansible["wait_for_completion"], ansible["timeout"])
+        api_request = rubrik.setup_cluster(cluster_name, admin_email, admin_password, management_gateway, management_subnet_mask,
+                                           node_config, enable_encryption, dns_search_domains, dns_nameservers, ntp_servers, wait_for_completion, timeout)
     except SystemExit as error:
         module.fail_json(msg=str(error))
 

@@ -138,22 +138,18 @@ def main():
 
     results = {}
 
-    argument_spec = rubrik_argument_spec
+    argument_spec = dict(
+        fileset_name=dict(required=True, aliases=['name']),
+        share_type=dict(required=True, choices=['NFS', 'SMB']),
+        include=dict(required=False, type='list', default=[]),
+        exclude=dict(required=False, type='list', default=[]),
+        exclude_exception=dict(required=False, type='list', default=[]),
+        follow_network_shares=dict(required=False, type='bool', default=False),
+        timeout=dict(required=False, type='int', default=15),
 
-    # Start Parameters
-    argument_spec.update(
-        dict(
-            fileset_name=dict(required=True, aliases=['name']),
-            share_type=dict(required=True, choices=['NFS', 'SMB']),
-            include=dict(required=False, type='list', default=[]),
-            exclude=dict(required=False, type='list', default=[]),
-            exclude_exception=dict(required=False, type='list', default=[]),
-            follow_network_shares=dict(required=False, type='bool', default=False),
-            timeout=dict(required=False, type='int', default=15),
-
-        )
     )
-    # End Parameters
+
+    argument_spec.update(rubrik_argument_spec)
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
@@ -164,19 +160,30 @@ def main():
     if not HAS_RUBRIK_SDK:
         module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
-    try:
-        node_ip, username, password = credentials(module)
-    except ValueError:
-        module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
+    node_ip, username, password = credentials(module)
 
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
     except SystemExit as error:
         module.fail_json(msg=str(error))
 
+    fileset_name = ansible["fileset_name"]
+    share_type = ansible["share_type"]
+    include = ansible["include"]
+    exclude = ansible["exclude"]
+    exclude_exception = ansible["exclude_exception"]
+    follow_network_shares = ansible["follow_network_shares"]
+    timeout = ansible["timeout"]
+
     try:
-        api_request = rubrik.create_nas_fileset(ansible["fileset_name"], ansible["share_type"], ansible["include"],
-                                                ansible["exclude"], ansible["exclude_exception"], ansible["follow_network_shares"], ansible["timeout"])
+        api_request = rubrik.create_nas_fileset(
+            fileset_name,
+            share_type,
+            include,
+            exclude,
+            exclude_exception,
+            follow_network_shares,
+            timeout)
 
     except SystemExit as error:
         module.fail_json(msg=str(error))

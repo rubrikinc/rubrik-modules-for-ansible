@@ -104,18 +104,14 @@ def main():
 
     results = {}
 
-    argument_spec = rubrik_argument_spec
-
-    # Start Parameters
-    argument_spec.update(
-        dict(
-            managed_volume_name=dict(required=True, aliases=['name']),
-            sla_name=dict(required=False, type='str', default="current"),
-            action=dict(required=True, choices=['begin', 'end']),
-            timeout=dict(required=False, type='int', default=15),
-        )
+    argument_spec = dict(
+        managed_volume_name=dict(required=True, aliases=['name']),
+        sla_name=dict(required=False, type='str', default="current"),
+        action=dict(required=True, choices=['begin', 'end']),
+        timeout=dict(required=False, type='int', default=15),
     )
-    # End Parameters
+
+    argument_spec.update(rubrik_argument_spec)
 
     required_if = [
         ('action', 'end', ['sla_name'])
@@ -130,10 +126,7 @@ def main():
     if not HAS_RUBRIK_SDK:
         module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
-    try:
-        node_ip, username, password = credentials(module)
-    except ValueError:
-        module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
+    node_ip, username, password = credentials(module)
 
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
@@ -150,7 +143,6 @@ def main():
         try:
             api_request = rubrik.end_managed_volume_snapshot(
                 ansible["managed_volume_name"], ansible["sla_name"], ansible["timeout"])
-
         except SystemExit as error:
             module.fail_json(msg=str(error))
 
