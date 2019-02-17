@@ -32,7 +32,7 @@ options:
     required: False
     type: str
     default: vmware
-    choices: [vmware, physical_host]
+    choices: [vmware, physical_host, ahv]
 
   sla_name:
     description:
@@ -142,24 +142,17 @@ def main():
     """ Main entry point for Ansible module execution.
     """
 
-    argument_spec = rubrik_argument_spec
-
-    # Start Parameters
-    argument_spec.update(
-        dict(
-            object_name=dict(required=True, type='str'),
-            object_type=dict(required=False, type='str', default="vmware", choices=[
-                             "vmware", "physical_host"]),
-            sla_name=dict(required=False, type='str', default='current'),
-            fileset=dict(required=False, type='str', default='None'),
-            host_os=dict(required=False, type='str', default='None',
-                         choices=["None", "Linux", "Windows"]),
-        )
+    argument_spec = dict(
+        object_name=dict(required=True, type='str'),
+        object_type=dict(required=False, type='str', default="vmware", choices=["vmware", "physical_host", "ahv"]),
+        sla_name=dict(required=False, type='str', default='current'),
+        fileset=dict(required=False, type='str', default='None'),
+        host_os=dict(required=False, type='str', default='None', hoices=["None", "Linux", "Windows"]),
     )
-    # End Parameters
 
-    module = AnsibleModule(argument_spec=argument_spec,
-                           supports_check_mode=False)
+    argument_spec.update(rubrik_argument_spec)
+
+    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
     results = {}
 
@@ -168,13 +161,9 @@ def main():
     load_provider_variables(module)
 
     if not HAS_RUBRIK_SDK:
-        module.fail_json(
-            msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
+        module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
-    try:
-        node_ip, username, password = credentials(module)
-    except ValueError:
-        module.fail_json(msg="Missing")
+    node_ip, username, password = credentials(module)
 
     rubrik = rubrik_cdm.Connect(node_ip, username, password)
 
@@ -184,10 +173,14 @@ def main():
     if ansible["host_os"] == "None":
         ansible["host_os"] = None
 
-    try:
-        api_request, job_status_url = rubrik.on_demand_snapshot(
-            ansible["object_name"], ansible["object_type"], ansible["sla_name"], ansible["fileset"], ansible["host_os"])
+    object_name = ansible["object_name"]
+    object_type = ansible["object_type"]
+    sla_name = ansible["sla_name"]
+    fileset = ansible["fileset"]
+    host_os = ansible["host_os"]
 
+    try:
+        api_request, job_status_url = rubrik.on_demand_snapshot(object_name, object_type, sla_name, fileset, host_os)
     except SystemExit as error:
         module.fail_json(msg=str(error))
 
