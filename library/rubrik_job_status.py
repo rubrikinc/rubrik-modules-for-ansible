@@ -74,16 +74,14 @@ def main():
 
     results = {}
 
-    argument_spec = rubrik_argument_spec
+    argument_spec = dict(
+        url=dict(required=True),
+        wait_for_completion=dict(required=False, type='bool', default=True),
+        timeout=dict(required=False, type='int', default=15)
+    )
 
     # Start Parameters
-    argument_spec.update(
-        dict(
-            url=dict(required=True),
-            wait_for_completion=dict(required=False, type='bool', default=True),
-            timeout=dict(required=False, type='int', default=15)
-        )
-    )
+    argument_spec.update(rubrik_argument_spec)
     # End Parameters
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
@@ -95,17 +93,12 @@ def main():
     if not HAS_RUBRIK_SDK:
         module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
-    try:
-        node_ip, username, password = credentials(module)
-    except ValueError:
-        module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
-    
+    node_ip, username, password = credentials(module)
+
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
     except SystemExit as error:
         module.fail_json(msg=str(error))
-
-    
 
     try:
         api_request = rubrik.job_status(ansible["url"], ansible["wait_for_completion"], ansible["timeout"])

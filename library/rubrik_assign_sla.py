@@ -85,19 +85,14 @@ def main():
 
     results = {}
 
-    argument_spec = rubrik_argument_spec
-
-    # Start Parameters
-    argument_spec.update(
-        dict(
-            object_name=dict(required=True, type='str'),
-            sla_name=dict(required=True, type='str'),
-            object_type=dict(required=False, type='str', default="vmware", choices=['vmware']),
-            timeout=dict(required=False, type='int', default=30),
-
-        )
+    argument_spec = dict(
+        object_name=dict(required=True, type='str'),
+        sla_name=dict(required=True, type='str'),
+        object_type=dict(required=False, type='str', default="vmware", choices=['vmware']),
+        timeout=dict(required=False, type='int', default=30),
     )
-    # End Parameters
+
+    argument_spec.update(rubrik_argument_spec)
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
@@ -108,18 +103,20 @@ def main():
     if not HAS_RUBRIK_SDK:
         module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
-    try:
-        node_ip, username, password = credentials(module)
-    except ValueError:
-        module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
+    node_ip, username, password = credentials(module)
 
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
     except SystemExit as error:
         module.fail_json(msg=str(error))
 
+    object_name = ansible["object_name"]
+    sla_name = ansible["sla_name"]
+    object_type = ansible["object_type"]
+    timeout = ansible["timeout"]
+
     try:
-        api_request = rubrik.assign_sla(ansible["object_name"], ansible["sla_name"], ansible["object_type"], ansible["timeout"])
+        api_request = rubrik.assign_sla(object_name, sla_name, object_type, timeout)
     except SystemExit as error:
         module.fail_json(msg=str(error))
 

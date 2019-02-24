@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # (c) 2018 Rubrik, Inc
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
@@ -86,7 +87,8 @@ requirements: ["rubrik_cdm"]
 '''
 
 EXAMPLES = '''
-- rubrik_assign_physical_host_fileset:
+- name: Assign a Physical Host Fileset
+  rubrik_assign_physical_host_fileset:
     hostname: 'python-physical-demo'
     fileset_name: 'Python SDK'
     sla_name: 'Gold'
@@ -139,7 +141,10 @@ def main():
 
     results = {}
 
-    argument_spec = rubrik_argument_spec
+    argument_spec = dict(
+    )
+
+    argument_spec.update(rubrik_argument_spec)
 
     # Start Parameters
     argument_spec.update(
@@ -147,12 +152,16 @@ def main():
             hostname=dict(required=True, type='str', aliases=['ip_address']),
             fileset_name=dict(required=True, type='str'),
             sla_name=dict(required=True, type='str', aliases=['sla']),
-            operating_system=dict(required=True, type='str', choices=['Linux', 'Windows']),
+            operating_system=dict(
+                required=True, type='str', choices=[
+                    'Linux', 'Windows']),
             include=dict(required=False, type='list', default=[]),
             exclude=dict(required=False, type='list', default=[]),
             exclude_exception=dict(required=False, type='list', default=[]),
-            follow_network_shares=dict(required=False, type='bool', default=False),
-            backup_hidden_folders=dict(required=False, type='bool', default=False),
+            follow_network_shares=dict(
+                required=False, type='bool', default=False),
+            backup_hidden_folders=dict(
+                required=False, type='bool', default=False),
             timeout=dict(required=False, type='int', default=30),
 
         )
@@ -163,22 +172,26 @@ def main():
         [
             "include", "exclude", "exclude_exception",
             "follow_network_shares", "backup_hidden_folders"
-            ]
+        ]
     ]
 
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
+    module = AnsibleModule(
+        argument_spec=argument_spec,
+        supports_check_mode=False)
 
     ansible = module.params
 
     load_provider_variables(module)
 
     if not HAS_RUBRIK_SDK:
-        module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
+        module.fail_json(
+            msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
     try:
         node_ip, username, password = credentials(module)
     except ValueError:
-        module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
+        module.fail_json(
+            msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
 
     rubrik = rubrik_cdm.Connect(node_ip, username, password)
 
@@ -188,14 +201,29 @@ def main():
     if bool(ansible['include']) is False:
 
         try:
-            api_request = rubrik.assign_physical_host_fileset(ansible['hostname'], ansible['fileset_name'], ansible['operating_system'], ansible['sla_name'], timeout=ansible["timeout"])
+            api_request = rubrik.assign_physical_host_fileset(
+                ansible['hostname'],
+                ansible['fileset_name'],
+                ansible['operating_system'],
+                ansible['sla_name'],
+                timeout=ansible["timeout"])
         except SystemExit as error:
             module.fail_json(msg=str(error))
 
     else:
 
         try:
-            api_request = rubrik.assign_physical_host_fileset(ansible['hostname'], ansible['fileset_name'], ansible['operating_system'], ansible['sla_name'], ansible["include"], ansible["exclude"], ansible["exclude_exception"], ansible["follow_network_shares"], ansible["backup_hidden_folders"], ansible["timeout"])
+            api_request = rubrik.assign_physical_host_fileset(
+                ansible['hostname'],
+                ansible['fileset_name'],
+                ansible['operating_system'],
+                ansible['sla_name'],
+                ansible["include"],
+                ansible["exclude"],
+                ansible["exclude_exception"],
+                ansible["follow_network_shares"],
+                ansible["backup_hidden_folders"],
+                ansible["timeout"])
         except SystemExit as error:
             module.fail_json(msg=str(error))
 

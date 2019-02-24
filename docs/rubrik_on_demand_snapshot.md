@@ -32,14 +32,14 @@ Take an on-demand snapshot of a Rubrik object.
 
 ## Module Specific
 
-| Name        | Description                                                                                                                   | Default | Type   | Choices               | Mandatory | Aliases |
-|-------------|-------------------------------------------------------------------------------------------------------------------------------|---------|--------|-----------------------|-----------|---------|
-| fileset     | The name of the Fileset you wish to backup. Only required when taking a on-demand snapshot of a physical host.                | None    | string |                       |           |         |
-| host_os     | The operating system for the physical host. Only required when taking a on-demand snapshot of a physical host.                | None    | string | None, Linux, Windows  |           |         |
-| object_name | The name of the Rubrik object to take a on-demand snapshot of.                                                                | vmware  | string | vmware, physical_host | true      |         |
-| object_type | The Rubrik object type you want to backup.                                                                                    |         |        |                       |           |         |
-| sla_name    | The SLA Domain name you want to assign the on-demand snapshot to. By default, the currently assigned SLA Domain will be used. | current |        |                       |           |         |
-| timeout     | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.                  | 30      | int    |                       |           |         |
+| Name        | Description                                                                                                                   | Default | Type   | Choices                    | Mandatory | Aliases |
+|-------------|-------------------------------------------------------------------------------------------------------------------------------|---------|--------|----------------------------|-----------|---------|
+| fileset     | The name of the Fileset you wish to backup. Only required when taking a on-demand snapshot of a physical host.                | None    | string |                            |           |         |
+| host_os     | The operating system for the physical host. Only required when taking a on-demand snapshot of a physical host.                | None    | string | None, Linux, Windows       |           |         |
+| object_name | The name of the Rubrik object to take a on-demand snapshot of.                                                                | vmware  | string | vmware, physical_host, ahv | true      |         |
+| object_type | The Rubrik object type you want to backup.                                                                                    |         |        |                            |           |         |
+| sla_name    | The SLA Domain name you want to assign the on-demand snapshot to. By default, the currently assigned SLA Domain will be used. | current |        |                            |           |         |
+| timeout     | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.                  | 30      | int    |                            |           |         |
 
 # Return Values
 
