@@ -13,12 +13,12 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_all_host_facts
-short_description: Retreives facts about ALL hosts in Rubrik
+module: rubrik_cluster_version
+short_description: Retrieves the software version of the Rubrik cluster.
 description:
-    - Retreives facts about ALL hosts in Rubrik
+    - Retrieves the software version of the Rubrik cluster.
 version_added: '2.8'
-author: Nathan Johnson <njohnson@notchuptek.com>
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 
 
 extends_documentation_fragment:
@@ -28,11 +28,15 @@ requirements: [rubrik_cdm]
 
 EXAMPLES = '''
 - name: Retrieve the software version of the Rubrik cluster
-  rubrik_all_host_facts:
+  rubrik_cluster_version:
 '''
 
 RETURN = '''
-
+version:
+    description: The version of the Rubrik cluster.
+    returned: success
+    type: str
+    sample: 4.1.3-2510
 '''
 
 

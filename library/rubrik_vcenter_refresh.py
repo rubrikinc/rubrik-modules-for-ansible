@@ -18,7 +18,7 @@ short_description: Refreshes the vcenter environment that you specify.
 description:
     - Retrieves the software version of the Rubrik cluster.
 version_added: '2.8'
-author: Nathan Johnson <njohnson@notchuptek.com>
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 
 
 extends_documentation_fragment:
@@ -27,14 +27,16 @@ requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
-- name: Refreshes the vcenter environment that you specify.
+- name: Retrieve the software version of the Rubrik cluster
   vmware_vcenter_refresh:
-    vcenter_ip: [IP]
 '''
 
 RETURN = '''
 version:
-
+    description: The version of the Rubrik cluster.
+    returned: success
+    type: str
+    sample: 4.1.3-2510
 '''
 
 
@@ -64,6 +66,8 @@ def main():
 
     ansible = module.params
 
+    wait_for_completion=False
+
     load_provider_variables(module)
 
     if not HAS_RUBRIK_SDK:
@@ -77,7 +81,7 @@ def main():
         module.fail_json(msg=str(error))
 
     try:
-        api_request = rubrik.refresh_vcenter(ansible["vcenter_ip"])
+        api_request = rubrik.refresh_vcenter(ansible["vcenter_ip"], wait_for_completion)
     except SystemExit as error:
         module.fail_json(msg=str(error))
     #fixed

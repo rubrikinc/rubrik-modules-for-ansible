@@ -13,12 +13,12 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_vmware_vcenter_facts
-short_description: Retreives a list of all vcenter environments registered in Rubrik
+module: rubrik_cluster_version
+short_description: Retrieves the software version of the Rubrik cluster.
 description:
-    - Retreives a list of all vcenter environments registered in Rubrik
+    - Retrieves the software version of the Rubrik cluster.
 version_added: '2.8'
-author: Nathan Johnson <njohnson@notchuptek.com>
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 
 
 extends_documentation_fragment:
@@ -27,12 +27,16 @@ requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
-- name: Retreives a list of all vcenter environments registered in Rubrik
-  rubrik_vmware_vcenter_facts:
+- name: Retrieve the software version of the Rubrik cluster
+  rubrik_cluster_version:
 '''
 
 RETURN = '''
-
+version:
+    description: The version of the Rubrik cluster.
+    returned: success
+    type: str
+    sample: 4.1.3-2510
 '''
 
 

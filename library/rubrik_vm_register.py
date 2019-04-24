@@ -14,11 +14,11 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 module: rubrik_vm_register
-short_description: Registers the specified VM's agent in Rubrik so the agent can run backups.
+short_description: Retrieves the software version of the Rubrik cluster.
 description:
-    - Registers the specified VM's agent in Rubrik so the agent can run backups.
+    - Retrieves the software version of the Rubrik cluster.
 version_added: '2.8'
-author: Nathan Johnson <njohnson@notchuptek.com>
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 
 
 extends_documentation_fragment:
@@ -27,13 +27,16 @@ requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
-- name: Registers the specified VM's agent in Rubrik so the agent can run backups.
-  rubrik_vm_register:
-    vm_name: "VMNAME"
+- name: Retrieve the software version of the Rubrik cluster
+  rubrik_cluster_version:
 '''
 
 RETURN = '''
-
+version:
+    description: The version of the Rubrik cluster.
+    returned: success
+    type: str
+    sample: 4.1.3-2510
 '''
 
 
