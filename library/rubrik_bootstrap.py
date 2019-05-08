@@ -3,6 +3,8 @@
 # GNU General Public License v3.0+ (see COPYING or
 # https://www.gnu.org/licenses/gpl-3.0.txt)
 
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
@@ -114,9 +116,6 @@ response:
 '''
 
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-
 try:
     import rubrik_cdm
     HAS_RUBRIK_SDK = True
@@ -160,7 +159,7 @@ def main():
 
     try:
         rubrik = rubrik_cdm.Bootstrap(node_ip)
-    except SystemExit as error:
+    except Exception as error:
         module.fail_json(msg=str(error))
 
     cluster_name = ansible["cluster_name"]
@@ -179,7 +178,7 @@ def main():
     try:
         api_request = rubrik.setup_cluster(cluster_name, admin_email, admin_password, management_gateway, management_subnet_mask,
                                            node_config, enable_encryption, dns_search_domains, dns_nameservers, ntp_servers, wait_for_completion, timeout)
-    except SystemExit as error:
+    except Exception as error:
         module.fail_json(msg=str(error))
 
     results["response"] = api_request

@@ -2,6 +2,8 @@
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
@@ -128,8 +130,6 @@ job_status_url:
     sample: https://192.168.8.19/api/v1/fileset/request/CREATE_FILESET_SNAPSHOT_a2f6161c-33a4-3123-efaw-de7d1bef284e_dc0983bf-1c47-45ce-9ce0-b8df3c93b5fa:::0
 '''
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 
 try:
     import rubrik_cdm
@@ -181,7 +181,7 @@ def main():
 
     try:
         api_request, job_status_url = rubrik.on_demand_snapshot(object_name, object_type, sla_name, fileset, host_os)
-    except SystemExit as error:
+    except Exception as error:
         module.fail_json(msg=str(error))
 
     results["changed"] = True
