@@ -146,27 +146,21 @@ def main():
 
     argument_spec.update(rubrik_argument_spec)
 
-    # Start Parameters
     argument_spec.update(
         dict(
             hostname=dict(required=True, type='str', aliases=['ip_address']),
             fileset_name=dict(required=True, type='str'),
             sla_name=dict(required=True, type='str', aliases=['sla']),
-            operating_system=dict(
-                required=True, type='str', choices=[
-                    'Linux', 'Windows']),
+            operating_system=dict(required=True, type='str', choices=['Linux', 'Windows']),
             include=dict(required=False, type='list', default=[]),
             exclude=dict(required=False, type='list', default=[]),
             exclude_exception=dict(required=False, type='list', default=[]),
-            follow_network_shares=dict(
-                required=False, type='bool', default=False),
-            backup_hidden_folders=dict(
-                required=False, type='bool', default=False),
+            follow_network_shares=dict(required=False, type='bool', default=False),
+            backup_hidden_folders=dict(required=False, type='bool', default=False),
             timeout=dict(required=False, type='int', default=30),
 
         )
     )
-    # End Parameters
 
     required_together = [
         [
@@ -175,23 +169,16 @@ def main():
         ]
     ]
 
-    module = AnsibleModule(
-        argument_spec=argument_spec,
-        supports_check_mode=False)
+    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
     ansible = module.params
 
     load_provider_variables(module)
 
     if not HAS_RUBRIK_SDK:
-        module.fail_json(
-            msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
+        module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
-    try:
-        node_ip, username, password = credentials(module)
-    except ValueError:
-        module.fail_json(
-            msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
+    node_ip, username, password = credentials(module)
 
     rubrik = rubrik_cdm.Connect(node_ip, username, password)
 

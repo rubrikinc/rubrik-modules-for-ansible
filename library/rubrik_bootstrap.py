@@ -94,6 +94,7 @@ requirements: [rubrik_cdm]
 
 EXAMPLES = '''
 - rubrik_bootstrap:
+    node_ip: "{{ mgmt_node_ip }}"
     cluster_name: "Ansible Demo"
     admin_email: "ansiblebuild@rubrik.com"
     admin_password: "AnsibleAndRubrikPassword"
@@ -158,7 +159,7 @@ def main():
     node_ip, username, password = credentials(module)
 
     try:
-        rubrik = rubrik_cdm.Connect(node_ip, username, password)
+        rubrik = rubrik_cdm.Bootstrap(node_ip)
     except SystemExit as error:
         module.fail_json(msg=str(error))
 

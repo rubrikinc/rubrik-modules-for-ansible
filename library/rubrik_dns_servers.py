@@ -37,7 +37,7 @@ requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
-- rubrik_configure_dns_servers:
+- rubrik_dns_servers:
     server_ip: ["192.168.100.20", "192.168.100.21"]
 '''
 
