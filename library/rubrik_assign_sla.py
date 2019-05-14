@@ -39,6 +39,24 @@ options:
     default: vmware
     choices: [vmware]
     type: str
+  log_backup_frequency_in_seconds:
+    description:
+     - The MSSQL Log Backup frequency you'd like to specify with the SLA. Required when the I(object_type) is mssql_host.
+    required: false
+    default: None
+    type: int
+  log_retention_hours:
+    description:
+     - The MSSQL Log Retention frequency you'd like to specify with the SLA. Required when the I(object_type) is mssql_host.
+    required: false
+    default: None
+    type: int
+  copy_only:
+    description:
+     - Take Copy Only Backups with MSSQL. Required when the I(object_type) is mssql_host.
+    required: false
+    default: None
+    type: bool
   timeout:
     description:
     - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
