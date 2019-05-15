@@ -21,7 +21,7 @@
 
 ```
 
-# Arugments
+# Arguments
 
 ## Common
 
