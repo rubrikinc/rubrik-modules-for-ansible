@@ -1,9 +1,11 @@
 #!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
-
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
+
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -35,8 +37,26 @@ options:
       - The Rubrik object type you want to assign to the SLA Domain.
     required: false
     default: vmware
-    choices: [vmware]
+    choices: [vmware, mssql_host]
     type: str
+  log_backup_frequency_in_seconds:
+    description:
+     - The MSSQL Log Backup frequency you'd like to specify with the SLA. Required when the I(object_type) is mssql_host.
+    required: false
+    default: None
+    type: int
+  log_retention_hours:
+    description:
+     - The MSSQL Log Retention frequency you'd like to specify with the SLA. Required when the I(object_type) is mssql_host.
+    required: false
+    default: None
+    type: int
+  copy_only:
+    description:
+     - Take Copy Only Backups with MSSQL. Required when the I(object_type) is mssql_host.
+    required: false
+    default: None
+    type: bool
   timeout:
     description:
     - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
@@ -69,8 +89,6 @@ response:
     sample: No change required. The vSphere VM 'object_name' is already assigned to the 'sla_name' SLA Domain.
 '''
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 
 try:
     import rubrik_cdm
@@ -88,7 +106,10 @@ def main():
     argument_spec = dict(
         object_name=dict(required=True, type='str'),
         sla_name=dict(required=True, type='str'),
-        object_type=dict(required=False, type='str', default="vmware", choices=['vmware']),
+        object_type=dict(required=False, type='str', default="vmware", choices=['vmware', 'mssql_host']),
+        log_backup_frequency_in_seconds=dict(required=False, default=None, type='int'),
+        log_retention_hours=dict(required=False, default=None, type='int'),
+        copy_only=dict(required=False, default=None, type='bool'),
         timeout=dict(required=False, type='int', default=30),
     )
 
@@ -100,24 +121,39 @@ def main():
 
     load_provider_variables(module)
 
+    object_name = ansible["object_name"]
+    sla_name = ansible["sla_name"]
+    object_type = ansible["object_type"]
+    log_backup_frequency_in_seconds = ansible["log_backup_frequency_in_seconds"]
+    log_retention_hours = ansible["log_retention_hours"]
+    copy_only = ansible["copy_only"]
+    timeout = ansible["timeout"]
+
     if not HAS_RUBRIK_SDK:
         module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
+
+    if object_type == "mssql_host":
+        if log_backup_frequency_in_seconds is None or log_retention_hours is None or log_retention_hours is None:
+            module.fail_json(
+                msg="When the object_type is 'mssql_host' the 'log_backup_frequency_in_seconds', 'log_retention_hours', 'copy_only' paramaters must be populated.")
 
     node_ip, username, password = credentials(module)
 
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
-    except SystemExit as error:
+    except Exception as error:
         module.fail_json(msg=str(error))
 
-    object_name = ansible["object_name"]
-    sla_name = ansible["sla_name"]
-    object_type = ansible["object_type"]
-    timeout = ansible["timeout"]
-
     try:
-        api_request = rubrik.assign_sla(object_name, sla_name, object_type, timeout)
-    except SystemExit as error:
+        api_request = rubrik.assign_sla(
+            object_name,
+            sla_name,
+            object_type,
+            log_backup_frequency_in_seconds,
+            log_retention_hours,
+            copy_only,
+            timeout)
+    except Exception as error:
         module.fail_json(msg=str(error))
 
     if "No change required" in api_request:

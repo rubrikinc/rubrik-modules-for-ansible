@@ -1,9 +1,12 @@
 #!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
-
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
+
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
+
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -58,8 +61,6 @@ response:
     sample: differs depending on the object_type being monitored.
 '''
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 
 try:
     import rubrik_cdm
@@ -97,12 +98,12 @@ def main():
 
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
-    except SystemExit as error:
+    except Exception as error:
         module.fail_json(msg=str(error))
 
     try:
         api_request = rubrik.job_status(ansible["url"], ansible["wait_for_completion"], ansible["timeout"])
-    except SystemExit as error:
+    except Exception as error:
         module.fail_json(msg=str(error))
 
     results["changed"] = False

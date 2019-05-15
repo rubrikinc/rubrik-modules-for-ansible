@@ -30,14 +30,11 @@ Add or delete a physical host from a Rubrik cluster.
 
 ## Module Specific
 
-| Name     | Description                                                                                                  | Default | Type | Choices     | Mandatory | Aliases    |
-|----------|--------------------------------------------------------------------------------------------------------------|---------|------|-------------|-----------|------------|
-| action   | Specify whether or not you wish to add or delete the physical host from the Rubrik cluster.                  |         |      | add, delete | True      |            |
-| hostname | The hostname or IP Address of the physical host you want to add or delete from the Rubrik cluster.           |         |      |             | True      | ip_address |
-|          |                                                                                                              |         |      |             |           |            |
-|          |                                                                                                              |         |      |             |           |            |
-|          |                                                                                                              |         |      |             |           |            |
-| timeout  | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error. | 120     | int  |             |           |            |
+| Name     | Description                                                                                                                                                | Default | Type | Choices     | Mandatory | Aliases    |
+|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|------|-------------|-----------|------------|
+| action   | Specify whether or not you wish to add or delete the physical host from the Rubrik cluster.                                                                |         |      | add, delete | True      |            |
+| hostname | The hostname or IP Address of the physical host you want to add or delete from the Rubrik cluster. When `action=add` this may also be a list of hostnames. |         |      |             | True      | ip_address |
+| timeout  | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.                                               | 120     | int  |             |           |            |
 
 # Return Values
 
