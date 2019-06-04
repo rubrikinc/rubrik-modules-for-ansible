@@ -124,10 +124,13 @@ def main():
     if not HAS_RUBRIK_SDK:
         module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
-    node_ip, username, password = credentials(module)
+    node_ip, username, password, api_token = credentials(module)
 
     try:
-        rubrik = rubrik_cdm.Connect(node_ip, username, password)
+        rubrik = rubrik_cdm.Connect(node_ip, username, password, api_token)
+    except Exception as error:
+        module.fail_json(msg=str(error))
+
     except Exception as error:
         module.fail_json(msg=str(error))
 
