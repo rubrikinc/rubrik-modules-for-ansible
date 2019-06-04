@@ -137,10 +137,10 @@ def main():
             module.fail_json(
                 msg="When the object_type is 'mssql_host' the 'log_backup_frequency_in_seconds', 'log_retention_hours', 'copy_only' paramaters must be populated.")
 
-    node_ip, username, password = credentials(module)
+    node_ip, username, password, api_token = credentials(module)
 
     try:
-        rubrik = rubrik_cdm.Connect(node_ip, username, password)
+        rubrik = rubrik_cdm.Connect(node_ip, username, password, api_token)
     except Exception as error:
         module.fail_json(msg=str(error))
 
