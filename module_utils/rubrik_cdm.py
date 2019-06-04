@@ -46,35 +46,49 @@ def credentials(module):
     Arguments:
         module {class} -- Ansible module helper class.
     Returns:
-        [node_ip] -- The node ip or hostname of the Rubrik cluster
-        [username] -- The username used to login to the Rubrik cluster
-        [password] -- The password used to login to the Rubrik cluster
+        [node_ip] -- The node ip or hostname of the Rubrik cluster.
+        [username] -- The username used to login into the Rubrik cluster.
+        [password] -- The password used to login into the Rubrik cluster.
+        [api_token] -- The API token used to login into the Rubrik cluster.
     """
 
     ansible = module.params
 
     if ansible["provider"]:
+
         node_ip = ansible["provider"]["node_ip"]
+        api_token = ansible["provider"]["api_token"]
         username = ansible["provider"]["username"]
         password = ansible["provider"]["password"]
+
     else:
         node_ip = ansible["node_ip"]
         username = ansible["username"]
         password = ansible["password"]
+        api_token = ansible["api_token"]
 
-    return node_ip, username, password
+    if username is None and password is None and api_token is None:
+        module.fail_json(msg="You must provide an API token or username and password for authentication.")
+
+    if api_token is None:
+        if username is None and password is not None or username is not None and password is None:
+            module.fail_json(msg="The username and password parameters must be provided together.")
+
+    return node_ip, username, password, api_token
 
 
 rubrik_provider_spec = {
-    'node_ip': dict(fallback=(env_fallback, ['rubrik_cdm_node_ip'])),
-    'username': dict(fallback=(env_fallback, ['rubrik_cdm_username'])),
-    'password': dict(fallback=(env_fallback, ['rubrik_cdm_password']), no_log=True),
+    'node_ip': dict(required=True, fallback=(env_fallback, ['rubrik_cdm_node_ip'])),
+    'username': dict(),
+    'password': dict(no_log=True),
+    'api_token': dict(no_log=True),
 }
 
 rubrik_manual_spec = {
-    'node_ip': dict(fallback=(env_fallback, ['rubrik_cdm_node_ip'])),
+    'node_ip': dict(required=True, fallback=(env_fallback, ['rubrik_cdm_node_ip'])),
     'username': dict(fallback=(env_fallback, ['rubrik_cdm_username'])),
     'password': dict(fallback=(env_fallback, ['rubrik_cdm_password']), no_log=True),
+    'api_token': dict(fallback=(env_fallback, ['rubrik_cdm_token']), no_log=True),
 }
 
 rubrik_argument_spec = {
