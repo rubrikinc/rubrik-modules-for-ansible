@@ -3,6 +3,8 @@
 # GNU General Public License v3.0+ (see COPYING or
 # https://www.gnu.org/licenses/gpl-3.0.txt)
 
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
@@ -38,9 +40,6 @@ response:
 '''
 
 
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-
 try:
     import rubrik_cdm
     HAS_RUBRIK_SDK = True
@@ -74,10 +73,12 @@ def main():
     if not HAS_RUBRIK_SDK:
         module.fail_json(msg='The Rubrik Python SDK is required for this module (pip install rubrik_cdm).')
 
+    node_ip, username, password, api_token = credentials(module)
+
     try:
-        node_ip, username, password = credentials(module)
-    except ValueError:
-        module.fail_json(msg="The Rubrik login credentials are missing. Verify the correct env vars are present or provide them through the `provider` param.")
+        rubrik = rubrik_cdm.Connect(node_ip, username, password, api_token)
+    except Exception as error:
+        module.fail_json(msg=str(error))
 
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password)
