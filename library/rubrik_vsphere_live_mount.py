@@ -143,7 +143,7 @@ def main():
     except Exception as error:
         module.fail_json(msg=str(error))
 
-    results["version"] = api_request
+    results["response"] = api_request
 
     module.exit_json(**results)
 
