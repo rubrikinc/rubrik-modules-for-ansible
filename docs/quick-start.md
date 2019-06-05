@@ -15,6 +15,7 @@ Storing credentials in environment variables is a more secure process than direc
 * **`rubrik_cdm_node_ip`** (Contains the IP/FQDN of a Rubrik node)
 * **`rubrik_cdm_username`** (Contains a username with configured access to the Rubrik cluster)
 * **`rubrik_cdm_password`** (Contains the password for the above user)
+* **`rubrik_cdm_token`** (Contains the the API token used for authentication)
 
 
 #### Setting Environment Variables in macOS and \*nix
@@ -27,11 +28,16 @@ export rubrik_cdm_username=user@domain.com
 export rubrik_cdm_password=SecretPassword
 ```
 
+```
+export rubrik_cdm_node_ip=192.168.0.100
+export rubrik_cdm_token=82jfjam920a
+```
+
 In order for the environment variables to persist across terminal sessions, add the above three export commands to the ~\.bash_profile or ~\.profile file.
 
 Once set, the Ansible modules will automatically utilize the data within the environment variables to perform its connection unless credentials are specifically passed in the arguments of the module.
 
-### Authenticate by Providing Username and Password
+### Authenticate by Providing Username and Password or API Token
 
 Although the use of environment variables are recommended, there may be scenarios where directly sending credentials to the Ansible module as parameters makes sense. When arguments are provided, any environment variable information, populated or unpopulated, is ignored. To manually pass connection and credential information, you may use the helper `provider` variable which is a convenience paramater that allows all connection parameters to be passed as a dict object.
 
@@ -43,12 +49,31 @@ Although the use of environment variables are recommended, there may be scenario
   connection: local
   gather_facts: false
   vars:
-       credentials:
-        node_ip: 10.255.0.2
-        username: ansibledemo@rubrik.com
-        password: ansiblepasswordexample
+    credentials:
+      node_ip: 10.255.0.2
+      username: ansibledemo@rubrik.com
+      password: ansiblepasswordexample
 
-  tasks:   
+  tasks:
+
+    - name: Rubrik Cluster Version
+      rubrik_cluster_version:
+        provider: "{{ credentials }}"
+```
+
+```yaml
+---
+
+- name: Rubrik Modules
+  hosts: local
+  connection: local
+  gather_facts: false
+  vars:
+    credentials:
+      node_ip: 10.255.0.2
+      api_token: 82jfjam920a
+
+  tasks:
 
     - name: Rubrik Cluster Version
       rubrik_cluster_version:
@@ -108,8 +133,8 @@ Create a file named `rubrik.yml` in your working directory and copy in the follo
   gather_facts: false
   vars:
        vm_name: ansible-node01
-    
-  tasks:   
+
+  tasks:
 
     - name: On-Demand Snapshot
       rubrik_on_demand_snapshot:
