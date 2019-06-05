@@ -12,13 +12,13 @@
 
 ## Configuration
 
-After cloning the GitHub repository to your local machine you will need to update your `ansible.cfg` file with the path to the `library` and `module_utiils`.
+The cloned repository includes a `ansible.cfg` file that is pre-configured with the correct paramaters to run the Ansible modules from the local directory.
 
 ```
 [defaults]
 
-library = <path to ucsm-ansible clone>/library
-module_utils   = <path to ucsm-ansible clone>/module_utils
+library = ./library
+module_utils   = ./module_utils
 ```
 
 ## Example
