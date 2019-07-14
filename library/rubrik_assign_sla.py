@@ -23,9 +23,9 @@ author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   object_name:
     description:
-      - The name of the Rubrik object you wish to assign to an SLA Domain.
+      - The name of the Rubrik object you wish to assign to an SLA Domain. When the I(object_type) is 'volume_group', the I(object_name) can be a list of volumes.
     required: true
-    type: str
+    type: raw
   sla_name:
     description:
       - The name of the SLA Domain you wish to assign an object to. To exclude the object from all SLA assignments use do not
@@ -37,7 +37,7 @@ options:
       - The Rubrik object type you want to assign to the SLA Domain.
     required: false
     default: vmware
-    choices: [vmware, mssql_host]
+    choices: [vmware, mssql_host, volume_group]
     type: str
   log_backup_frequency_in_seconds:
     description:
@@ -57,6 +57,12 @@ options:
     required: false
     default: None
     type: bool
+  windows_host:
+    description:
+      - The name of the Windows host that contains the relevant volume group. Required when the I(object_type) is volume_group.
+    required: false
+    default: None
+    type: str
   timeout:
     description:
     - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
@@ -73,6 +79,19 @@ EXAMPLES = '''
 - rubrik_assign_sla:
     object_name: "ansible-tower"
     sla_name: "Gold"
+
+- rubrik_assign_sla:
+    object_name: "sql-host"
+    object_type: "mssql_host"
+    sla_name: "Gold"
+    log_backup_frequency_in_seconds: 120
+    log_retention_hours: 12
+    copy_only: false
+
+- rubrik_assign_sla:
+    object_name: ["C:\\", "D:\\"]
+    sla_name: "Gold"
+    windows_host: "windows2016.rubrik.com"
 '''
 
 RETURN = '''
@@ -104,16 +123,26 @@ def main():
     results = {}
 
     argument_spec = dict(
-        object_name=dict(required=True, type='str'),
+        object_name=dict(required=True, type='raw'),
         sla_name=dict(required=True, type='str'),
-        object_type=dict(required=False, type='str', default="vmware", choices=['vmware', 'mssql_host']),
+        object_type=dict(
+            required=False,
+            type='str',
+            default="vmware",
+            choices=[
+                'vmware',
+                'mssql_host',
+                'volume_group']),
         log_backup_frequency_in_seconds=dict(required=False, default=None, type='int'),
         log_retention_hours=dict(required=False, default=None, type='int'),
         copy_only=dict(required=False, default=None, type='bool'),
+        windows_host=dict(required=False, default=None, type='str'),
         timeout=dict(required=False, type='int', default=30),
     )
 
     argument_spec.update(rubrik_argument_spec)
+
+    required_together = [['uri', 'bind_password', 'bind_user', 'base_dn']]
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
@@ -127,6 +156,7 @@ def main():
     log_backup_frequency_in_seconds = ansible["log_backup_frequency_in_seconds"]
     log_retention_hours = ansible["log_retention_hours"]
     copy_only = ansible["copy_only"]
+    windows_host = ansible["windows_host"]
     timeout = ansible["timeout"]
 
     if not HAS_RUBRIK_SDK:
@@ -135,7 +165,11 @@ def main():
     if object_type == "mssql_host":
         if log_backup_frequency_in_seconds is None or log_retention_hours is None or log_retention_hours is None:
             module.fail_json(
-                msg="When the object_type is 'mssql_host' the 'log_backup_frequency_in_seconds', 'log_retention_hours', 'copy_only' paramaters must be populated.")
+                msg="When the object_type is 'mssql_host', the 'log_backup_frequency_in_seconds', 'log_retention_hours', 'copy_only' paramaters must be populated.")
+
+    if object_type == "volume_group":
+        if windows_host is None:
+            module.fail_json(msg="When the object_type is 'volume_group', 'windows_host' must also be populated.")
 
     node_ip, username, password, api_token = credentials(module)
 
