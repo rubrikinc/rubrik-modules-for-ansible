@@ -142,8 +142,6 @@ def main():
 
     argument_spec.update(rubrik_argument_spec)
 
-    required_together = [['uri', 'bind_password', 'bind_user', 'base_dn']]
-
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
     ansible = module.params
