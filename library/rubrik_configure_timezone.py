@@ -56,7 +56,7 @@ response:
     description: A "No changed required" message when the timezone is already configured on the cluster.
     returned: When the module idempotent check is succesful.
     type: str
-    sample: no change required. The Rubrik cluster is already configured with 'timezone' as it's timezone.
+    sample: No change required. The Rubrik cluster is already configured with I(timezone) as it's timezone.
 '''
 
 
