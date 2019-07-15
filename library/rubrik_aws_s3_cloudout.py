@@ -85,6 +85,7 @@ requirements: [rubrik_cdm]
 EXAMPLES = '''
 - rubrik_aws_s3_cloudout:
     aws_bucket_name: rubrik-s3-bucket
+    kms_master_key_id: "{{ kms_master_key_id }}"
 '''
 
 RETURN = '''
@@ -122,7 +123,7 @@ def main():
         kms_master_key_id=dict(required=False, default=None, type='str'),
         rsa_key=dict(required=False, default=None, type='str'),
         archive_name=dict(required=False, default=None, type='str'),
-        storage_class=dict(required=False, default=None, type='str'),
+        storage_class=dict(required=False, default="standard", type='str'),
         timeout=dict(required=False, type='int', default=180),
     )
 
@@ -137,7 +138,7 @@ def main():
     aws_bucket_name = ansible["aws_bucket_name"]
     aws_region = ansible["aws_region"]
     aws_access_key = ansible["aws_access_key"]
-    aws_secret_key = ansible["daily_frequency"]
+    aws_secret_key = ansible["aws_secret_key"]
     kms_master_key_id = ansible["kms_master_key_id"]
     rsa_key = ansible["rsa_key"]
     archive_name = ansible["archive_name"]
@@ -157,6 +158,7 @@ def main():
     try:
         api_request = rubrik.aws_s3_cloudout(
             aws_bucket_name,
+            archive_name,
             aws_region,
             aws_access_key,
             aws_secret_key,
