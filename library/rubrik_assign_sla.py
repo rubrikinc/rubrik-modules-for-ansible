@@ -184,6 +184,7 @@ def main():
             log_backup_frequency_in_seconds,
             log_retention_hours,
             copy_only,
+            windows_host,
             timeout)
     except Exception as error:
         module.fail_json(msg=str(error))
