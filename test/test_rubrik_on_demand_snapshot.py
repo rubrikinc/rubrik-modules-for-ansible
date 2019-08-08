@@ -458,7 +458,9 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_on_demand_snapshot.main()
-        assert result.exception.args[0]['changed']
+        
+        self.assertEqual(result.exception.args[0]['changed'], True)
+        self.assertEqual(result.exception.args[0]['job_status_url'], 'https://cluster-b-rr.rubrik.us/api/v1/vmware/vm/request/CREATE_VMWARE_SNAPSHOT_1226ff04-6100-454f-905b-5df817b6981a-vm-5969_0182e10e-a8a6-45b1-ad1a-a9e3aff63e3f:::0')
 
 if __name__ == '__main__':
     unittest.main()
