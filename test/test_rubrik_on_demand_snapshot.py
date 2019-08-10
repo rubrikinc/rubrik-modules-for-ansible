@@ -34,16 +34,13 @@ def fail_json(*args, **kwargs):
     kwargs['failed'] = True
     raise AnsibleFailJson(kwargs)
 
-def connect(*args, **kwargs):
-    return {'node_ip': '192.168.10.1', 'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'}
-
 def mock_get_v1_vmware_vm():
     return {
         "hasMore": True,
         "data": [
             {
                 "id": "string",
-                "name": "object_name",
+                "name": "test-vm",
                 "configuredSlaDomainId": "string",
                 "configuredSlaDomainName": "string",
                 "primaryClusterId": "string",
@@ -403,10 +400,101 @@ def mock_post_v1_vmware_vm_id_snapshot():
         ]
     }
 
-def on_demand_snapshot():
-    api_request = {'id': 'CREATE_VMWARE_SNAPSHOT_1226ff04-6100-454f-905b-5df817b6981a-vm-5969_0182e10e-a8a6-45b1-ad1a-a9e3aff63e3f:::0', 'status': 'QUEUED', 'progress': 0.0, 'startTime': '2019-07-31T18:47:40.626Z', 'links': [{'href': 'https://cluster-b-rr.rubrik.us/api/v1/vmware/vm/request/CREATE_VMWARE_SNAPSHOT_1226ff04-6100-454f-905b-5df817b6981a-vm-5969_0182e10e-a8a6-45b1-ad1a-a9e3aff63e3f:::0', 'rel': 'self'}]}
-    snapshot_status_url = api_request['links'][0]['href']
-    return api_request, snapshot_status_url
+def mock_get_internal_nutanix_vm():
+    return {
+        "hasMore": True,
+        "data": [
+            {
+                "id": "string",
+                "name": "test-vm",
+                "configuredSlaDomainId": "string",
+                "configuredSlaDomainName": "string",
+                "primaryClusterId": "string",
+                "slaAssignment": "Derived",
+                "effectiveSlaDomainId": "string",
+                "effectiveSlaDomainName": "Gold",
+                "effectiveSlaDomainPolarisManagedId": "string",
+                "effectiveSlaSourceObjectId": "string",
+                "effectiveSlaSourceObjectName": "string",
+                "nutanixClusterId": "string",
+                "nutanixClusterName": "string",
+                "isRelic": True,
+                "snapshotConsistencyMandate": "Automatic",
+                "agentStatus": {
+                    "agentStatus": "string",
+                    "disconnectReason": "string"
+                },
+                "operatingSystemType": "AIX"
+            }
+        ],
+        "total": 1
+    }
+
+def mock_get_internal_nutanix_vm_id():
+    return {
+        "configuredSlaDomainId": "string",
+        "isPaused": True,
+        "snapshotConsistencyMandate": "Automatic",
+        "excludedDiskIds": [
+            "string"
+        ],
+        "id": "string",
+        "name": "string",
+        "configuredSlaDomainName": "string",
+        "primaryClusterId": "string",
+        "slaAssignment": "Derived",
+        "effectiveSlaDomainId": "string",
+        "effectiveSlaDomainName": "Gold",
+        "effectiveSlaDomainPolarisManagedId": "string",
+        "effectiveSlaSourceObjectId": "string",
+        "effectiveSlaSourceObjectName": "string",
+        "nutanixClusterId": "string",
+        "nutanixClusterName": "string",
+        "isRelic": True,
+        "agentStatus": {
+            "agentStatus": "string",
+            "disconnectReason": "string"
+        },
+        "operatingSystemType": "AIX",
+        "blackoutWindowStatus": {
+            "isGlobalBlackoutActive": True,
+            "isSnappableBlackoutActive": True
+        },
+        "blackoutWindows": {
+            "globalBlackoutWindows": [
+                {
+                    "startTime": "string",
+                    "endTime": "string"
+                }
+            ],
+            "snappableBlackoutWindows": [
+                {
+                    "startTime": "string",
+                    "endTime": "string"
+                }
+            ]
+        },
+        "isAgentRegistered": True
+    }
+
+def mock_post_internal_nutanix_vm_id_snapshot():
+    return {
+        "id": "string",
+        "status": "string",
+        "progress": 0,
+        "startTime": "2019-05-05T19:20:22.137Z",
+        "endTime": "2019-05-05T19:20:22.137Z",
+        "nodeId": "string",
+        "error": {
+            "message": "string"
+        },
+        "links": [
+            {
+                "href": "href_string",
+                "rel": "string"
+            }
+        ]
+    }
 
 class TestRubrikOnDemandSnapshot(unittest.TestCase):
 
@@ -425,42 +513,141 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
     def test_module_fail_with_incorrect_object_type(self):
         set_module_args({
             'object_name': 'test-vm',
-            'object_type': 'foo'
+            'object_type': 'foo',
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
-        with self.assertRaises(AnsibleFailJson):
+        with self.assertRaises(AnsibleFailJson) as result:
             rubrik_on_demand_snapshot.main()
+
+        self.assertEqual(result.exception.args[0]['failed'], True)
+        self.assertEqual(result.exception.args[0]['msg'], "value of object_type must be one of: vmware, physical_host, ahv, got: foo")
 
     def test_module_fail_with_incorrect_host_os(self):
         set_module_args({
             'object_name': 'test-vm',
             'object_type': 'vmware',
-            'host_os': 'foo'
+            'host_os': 'foo',
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
-        with self.assertRaises(AnsibleFailJson):
+        with self.assertRaises(AnsibleFailJson) as result:
             rubrik_on_demand_snapshot.main()    
 
-    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.data_management.Data_Management, 'on_demand_snapshot')
-    def test_module(self, mock_on_demand_snapshot):
+        self.assertEqual(result.exception.args[0]['failed'], True)
+        self.assertEqual(result.exception.args[0]['msg'], "value of host_os must be one of: None, Linux, Windows, got: foo")
+
+    def test_module_fail_with_physical_host_host_os_not_populated(self):
+        set_module_args({
+            'object_name': 'test-vm',
+            'object_type': 'physical_host',
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
+        })
+        with self.assertRaises(AnsibleFailJson) as result:
+            rubrik_on_demand_snapshot.main()    
+
+        self.assertEqual(result.exception.args[0]['failed'], True)
+        self.assertEqual(result.exception.args[0]['msg'], "The on_demand_snapshot() `host_os` argument must be populated when taking a Physical host snapshot.")
+    
+    def test_module_fail_with_physical_host_host_fileset_not_populated(self):
+        set_module_args({
+            'object_name': 'test-vm',
+            'object_type': 'physical_host',
+            'host_os': 'Linux',
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
+        })
+        with self.assertRaises(AnsibleFailJson)  as result:
+            rubrik_on_demand_snapshot.main()    
+
+        self.assertEqual(result.exception.args[0]['failed'], True)
+        self.assertEqual(result.exception.args[0]['msg'], "The on_demand_snapshot() `fileset` argument must be populated when taking a Physical host snapshot.")
+
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_vmware_current_sla(self, mock_get, mock_post):
         set_module_args({
             'object_name': 'test-vm',
             'object_type': 'vmware',
+            'sla_name': 'current',
             'node_ip': '1.1.1.1',
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
 
-        mock_on_demand_snapshot.return_value = on_demand_snapshot()
-        
-        mock_get = patch('rubrik_on_demand_snapshot.rubrik_cdm.Connect.get', autospec=True, spec_set=True)
-        mock_get.side_effect = [mock_get_v1_vmware_vm(), mock_get_v1_sla_domain()]
+        mock_get.side_effect = [mock_get_v1_vmware_vm(), mock_get_v1_vmware_vm_id()]
 
-        mock_post = patch('rubrik_on_demand_snapshot.rubrik_cdm.Connect.post', autospec=True, spec_set=True)
         mock_post.return_value = mock_post_v1_vmware_vm_id_snapshot()
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_on_demand_snapshot.main()
         
         self.assertEqual(result.exception.args[0]['changed'], True)
-        self.assertEqual(result.exception.args[0]['job_status_url'], 'https://cluster-b-rr.rubrik.us/api/v1/vmware/vm/request/CREATE_VMWARE_SNAPSHOT_1226ff04-6100-454f-905b-5df817b6981a-vm-5969_0182e10e-a8a6-45b1-ad1a-a9e3aff63e3f:::0')
+        self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
+
+
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_vmware_specific_sla(self, mock_get, mock_post):
+        set_module_args({
+            'object_name': 'test-vm',
+            'object_type': 'vmware',
+            'sla_name': 'Gold',
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
+        })
+
+        mock_get.side_effect = [mock_get_v1_vmware_vm(), mock_get_v1_sla_domain()]
+
+        mock_post.return_value = mock_post_v1_vmware_vm_id_snapshot()
+
+        with self.assertRaises(AnsibleExitJson) as result:
+            rubrik_on_demand_snapshot.main()
+        
+        self.assertEqual(result.exception.args[0]['changed'], True)
+        self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
+
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_ahv_current_sla(self, mock_get, mock_post):
+        set_module_args({
+            'object_name': 'test-vm',
+            'object_type': 'ahv',
+            'sla_name': 'current',
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
+        })
+
+        mock_get.side_effect = [mock_get_internal_nutanix_vm(), mock_get_internal_nutanix_vm_id()]
+
+        mock_post.return_value = mock_post_internal_nutanix_vm_id_snapshot()
+
+        with self.assertRaises(AnsibleExitJson) as result:
+            rubrik_on_demand_snapshot.main()
+        
+        self.assertEqual(result.exception.args[0]['changed'], True)
+        self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
+
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_ahv_specific_sla(self, mock_get, mock_post):
+        set_module_args({
+            'object_name': 'test-vm',
+            'object_type': 'ahv',
+            'sla_name': 'Gold',
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
+        })
+
+        mock_get.side_effect = [mock_get_internal_nutanix_vm(), mock_get_v1_sla_domain()]
+
+        mock_post.return_value = mock_post_internal_nutanix_vm_id_snapshot()
+
+        with self.assertRaises(AnsibleExitJson) as result:
+            rubrik_on_demand_snapshot.main()
+        
+        self.assertEqual(result.exception.args[0]['changed'], True)
+        self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
 
 if __name__ == '__main__':
     unittest.main()
