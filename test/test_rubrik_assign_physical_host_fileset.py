@@ -34,9 +34,6 @@ def fail_json(*args, **kwargs):
     kwargs['failed'] = True
     raise AnsibleFailJson(kwargs)
 
-def connect(*args, **kwargs):
-    return {'node_ip': '192.168.10.1', 'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'}
-
 def mock_get_no_host():
     return {
         "hasMore": True,
