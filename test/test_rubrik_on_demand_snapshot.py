@@ -496,6 +496,137 @@ def mock_post_internal_nutanix_vm_id_snapshot():
         ]
     }
 
+def mock_get_v1_host():
+    return {
+        "hasMore": True,
+        "data": [
+            {
+                "id": "string",
+                "name": "test-host",
+                "hostname": "string",
+                "primaryClusterId": "string",
+                "operatingSystem": "string",
+                "operatingSystemType": "string",
+                "status": "string",
+                "nasBaseConfig": {
+                    "vendorType": "string",
+                    "apiUsername": "string",
+                    "apiCertificate": "string",
+                    "apiHostname": "string",
+                    "apiEndpoint": "string",
+                    "zoneName": "string"
+                },
+                "mssqlCbtEnabled": "Enabled",
+                "mssqlCbtEffectiveStatus": "On",
+                "organizationId": "string",
+                "organizationName": "string"
+            }
+        ],
+        "total": 1
+    }
+
+def mock_get_v1_fileset_template():
+    return {
+        "hasMore": True,
+        "data": [
+            {
+                "allowBackupNetworkMounts": True,
+                "allowBackupHiddenFoldersInNetworkMounts": True,
+                "useWindowsVss": True,
+                "name": "fileset",
+                "includes": [
+                    "string"
+                ],
+                "excludes": [
+                    "string"
+                ],
+                "exceptions": [
+                    "string"
+                ],
+                "operatingSystemType": "UnixLike",
+                "shareType": "NFS",
+                "preBackupScript": "string",
+                "postBackupScript": "string",
+                "backupScriptTimeout": 0,
+                "backupScriptErrorHandling": "string",
+                "isArrayEnabled": True,
+                "id": "string",
+                "primaryClusterId": "string",
+                "isArchived": True,
+                "hostCount": 0,
+                "shareCount": 0
+            }
+        ],
+        "total": 1
+    }
+
+def mock_get_no_fileset():
+    return {
+        "hasMore": True,
+        "data": [],
+        "total": 0
+    }
+
+def mock_get_v1_fileset():
+    return {
+        "hasMore": True,
+        "data": [
+            {
+                "allowBackupNetworkMounts": True,
+                "allowBackupHiddenFoldersInNetworkMounts": True,
+                "useWindowsVss": True,
+                "id": "string",
+                "name": "fileset",
+                "configuredSlaDomainId": "string",
+                "configuredSlaDomainName": "string",
+                "primaryClusterId": "string",
+                "hostId": "string",
+                "shareId": "string",
+                "hostName": "string",
+                "templateId": "string",
+                "templateName": "string",
+                "operatingSystemType": "string",
+                "effectiveSlaDomainId": "string",
+                "effectiveSlaDomainName": "Gold",
+                "effectiveSlaDomainPolarisManagedId": "string",
+                "includes": [
+                    "string"
+                ],
+                "excludes": [
+                    "string"
+                ],
+                "exceptions": [
+                    "string"
+                ],
+                "isRelic": True,
+                "arraySpec": {
+                    "proxyHostId": "string"
+                },
+                "isPassthrough": True
+            }
+        ],
+        "total": 1
+    }
+
+def mock_post_v1_fileset_id_snapshot():
+    return {
+        "id": "string",
+        "status": "string",
+        "progress": 0,
+        "startTime": "2019-05-05T18:57:06.003Z",
+        "endTime": "2019-05-05T18:57:06.003Z",
+        "nodeId": "string",
+        "error": {
+            "message": "string"
+        },
+        "links": [
+            {
+                "href": "href_string",
+                "rel": "string"
+            }
+        ]
+    }
+
 class TestRubrikOnDemandSnapshot(unittest.TestCase):
 
     def setUp(self):
@@ -648,6 +779,94 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
         
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
+
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Cluster, 'cluster_version', autospec=True, spec_set=True)
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_fail_with_physical_host_invalid_fileset(self, mock_get, mock_cluster_version):
+        set_module_args({
+            'object_name': 'test-host',
+            'object_type': 'physical_host',
+            'host_os': 'Linux',
+            'fileset': 'fileset',
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
+        })
+
+        mock_cluster_version.return_value = "5.0"
+
+        mock_get.side_effect = [
+            mock_get_v1_host(),
+            mock_get_v1_fileset_template(),
+            mock_get_no_fileset()]
+
+        with self.assertRaises(AnsibleFailJson) as result:
+            rubrik_on_demand_snapshot.main()
+        
+        self.assertEqual(result.exception.args[0]['failed'], True)
+        self.assertEqual(result.exception.args[0]['msg'], "The Physical Host 'test-host' is not assigned to the 'fileset' Fileset.")
+
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Cluster, 'cluster_version', autospec=True, spec_set=True)
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_physical_host_current_sla(self, mock_get, mock_post, mock_cluster_version):
+        set_module_args({
+            'object_name': 'test-host',
+            'object_type': 'physical_host',
+            'host_os': 'Linux',
+            'fileset': 'fileset',
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
+        })
+
+        mock_cluster_version.return_value = "5.0"
+
+        mock_get.side_effect = [
+            mock_get_v1_host(),
+            mock_get_v1_fileset_template(),
+            mock_get_v1_fileset()]
+
+        mock_post.return_value = mock_post_v1_fileset_id_snapshot()
+
+        with self.assertRaises(AnsibleExitJson) as result:
+            rubrik_on_demand_snapshot.main()
+
+        self.assertEqual(result.exception.args[0]['changed'], True)
+        self.assertEqual(result.exception.args[0]['response'], mock_post_v1_fileset_id_snapshot())
+        self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
+
+    """
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Cluster, 'cluster_version', autospec=True, spec_set=True)
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_physical_host_specific_sla(self, mock_get, mock_post, mock_cluster_version):
+        set_module_args({
+            'object_name': 'test-host',
+            'object_type': 'physical_host',
+            'host_os': 'Linux',
+            'sla_name': 'Gold',
+            'fileset': 'fileset',
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
+        })
+
+        mock_cluster_version.return_value = "5.0"
+
+        mock_get.side_effect = [
+            mock_get_v1_host(),
+            mock_get_v1_fileset_template(),
+            mock_get_v1_fileset()]
+
+        mock_post.return_value = mock_post_v1_fileset_id_snapshot()
+
+        with self.assertRaises(AnsibleExitJson) as result:
+            rubrik_on_demand_snapshot.main()
+
+        self.assertEqual(result.exception.args[0]['changed'], True)
+        self.assertEqual(result.exception.args[0]['response'], mock_post_v1_fileset_id_snapshot())
+        self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
+    """
+
+    
 
 if __name__ == '__main__':
     unittest.main()
