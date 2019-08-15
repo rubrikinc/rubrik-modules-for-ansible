@@ -834,39 +834,5 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['response'], mock_post_v1_fileset_id_snapshot())
         self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
 
-    """
-    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Cluster, 'cluster_version', autospec=True, spec_set=True)
-    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
-    @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
-    def test_module_physical_host_specific_sla(self, mock_get, mock_post, mock_cluster_version):
-        set_module_args({
-            'object_name': 'test-host',
-            'object_type': 'physical_host',
-            'host_os': 'Linux',
-            'sla_name': 'Gold',
-            'fileset': 'fileset',
-            'node_ip': '1.1.1.1',
-            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
-        })
-
-        mock_cluster_version.return_value = "5.0"
-
-        mock_get.side_effect = [
-            mock_get_v1_host(),
-            mock_get_v1_fileset_template(),
-            mock_get_v1_fileset()]
-
-        mock_post.return_value = mock_post_v1_fileset_id_snapshot()
-
-        with self.assertRaises(AnsibleExitJson) as result:
-            rubrik_on_demand_snapshot.main()
-
-        self.assertEqual(result.exception.args[0]['changed'], True)
-        self.assertEqual(result.exception.args[0]['response'], mock_post_v1_fileset_id_snapshot())
-        self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
-    """
-
-    
-
 if __name__ == '__main__':
     unittest.main()
