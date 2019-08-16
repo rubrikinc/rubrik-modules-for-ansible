@@ -91,7 +91,7 @@ class TestRubrikEndUserAuthorization(unittest.TestCase):
 
     @patch.object(rubrik_end_user_authorization.rubrik_cdm.rubrik_cdm.Connect, 'object_id', autospec=True, spec_set=True)
     @patch.object(rubrik_end_user_authorization.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
-    def test_module_idempotency(self, mock_get, mock_object_id):
+    def test_module_idempotence(self, mock_get, mock_object_id):
 
         def mock_self_object_id():
             return "VirtualMachine:::e6a7e6f1-6050-1ee33-9ba6-8e284e2801de-vm-38297"
