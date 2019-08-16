@@ -35,12 +35,12 @@ Live Mount a mssql database from a specified recovery point i.e. data and time.
 | Name                   | Description                                                                                                                                                         | Default | Type | Choices | Mandatory | Aliases |
 |------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|------|---------|-----------|---------|
 | db_name                | The name of the database to Live Mount.                                                                                                                           |         | str  |         | true      |         |
-| date                   | The recovery_point date you wish to Live Mount formated as `Month-Day-Year` (ex: 1-15-2014).   |       | str  |         |           |         |
-| time                   | The recovery_point time you wish to Live Mount formated as `Hour:Minute AM/PM` (ex: 1:30 AM). |       | str  |         |           |         |
-| sql_instance           | The SQL instance name with the database you wish to Live Mount.                               | None | str  |         |           |         |
-| sql_host               | The SQL Host of the database/instance to Live Mount.  | None   | str |         |           |         |
-| mount_name             | The name given to the Live Mounted database i.e. AdventureWorksClone.  | None    | str |         |           |         |
-| timeout                | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error. | 30      | int  |         |           |         |
+| date                   | The recovery_point date you wish to Live Mount formated as `Month-Day-Year` (ex: 1-15-2014).   |       | str  |         |true|         |
+| time                   | The recovery_point time you wish to Live Mount formated as `Hour:Minute AM/PM` (ex: 1:30 AM). |       | str  |         |true|         |
+| sql_instance           | The SQL instance name with the database you wish to Live Mount.                               | None | str  |         |true|         |
+| sql_host               | The SQL Host of the database/instance to Live Mount.  | None   | str |         |true|         |
+| mount_name             | The name given to the Live Mounted database i.e. AdventureWorksClone.  | None    | str |         |true|         |
+| timeout                | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error. | 30      | int  |         |false|         |
 
 # Return Values
 
