@@ -34,7 +34,7 @@ def fail_json(*args, **kwargs):
     kwargs['failed'] = True
     raise AnsibleFailJson(kwargs)
 
-class TestRubrikOnDemandSnapshot(unittest.TestCase):
+class TestRubrikClusterVersion(unittest.TestCase):
 
     def setUp(self):
         self.mock_module_helper = patch.multiple(basic.AnsibleModule,
