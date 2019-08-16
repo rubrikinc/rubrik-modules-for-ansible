@@ -6,7 +6,7 @@ from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
 from module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 from urllib.error import HTTPError
-from rubrik_cdm.exceptions import InvalidParameterException, RubrikException, APICallException, InvalidTypeException
+from rubrik_cdm.exceptions import RubrikException, APICallException
 from socket import gaierror
 import library.rubrik_bootstrap as rubrik_bootstrap
 
