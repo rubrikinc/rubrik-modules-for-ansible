@@ -15,54 +15,54 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_vsphere_live_mount
-short_description: Live Mount a vSphere VM from a specified snapshot.
+module: rubrik_sql_live_mount
+short_description: Live Mount a mssql database from a specified recovery point i.e. data and time.
 description:
-    - Live Mount a vSphere VM from a specified snapshot.
+    - Live Mount a mssql database from a specified recovery point i.e. data and time.
 version_added: '2.8'
 author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
-  vm_name:
+  db_name:
     description:
-      - The name of the vSphere VM to Live Mount.
+      - The name of the database to Live Mount.
     required: True
     type: str
   date:
     description:
-      - The date of the snapshot you wish to Live Mount formated as Month-Day-Year (ex: 1-15-2014). If latest is specified, the last snapshot taken will be used.
-    required: False
+      - The recovery_point date you wish to Live Mount formated as `Month-Day-Year` (ex: 1-15-2014).
+    required: True
     type: str
-    default: latest
+    default: None
   time:
     description:
-      - The time of the snapshot you wish to Live Mount formated formated as Hour:Minute AM/PM (ex: 1:30 AM). If latest is specified, the last snapshot taken will be used.
-    required: False
+      - The recovery_point time you wish to Live Mount formated as `Hour:Minute AM/PM` (ex: 1:30 AM).
+    required: True
     type: str
-    default: latest
-  host:
+    default: None
+  sql_instance:
     description:
-      - The hostname or IP address of the ESXi host to Live Mount the VM on. By default, the current host will be used.
-    required: False
+      - The SQL instance name with the database you wish to Live Mount.
+    required: True
     type: str
-    default: current
-  remove_network_devices:
+    default: None
+  sql_host:
     description:
-      - Flag that determines whether to remove the network interfaces from the Live Mounted VM. Set to True to remove all network interfaces.
-    required: False
-    type: bool
-    default: False
-  power_on:
+      - The SQL Host of the database/instance to Live Mount.
+    required: True
+    type: str
+    default: None
+  mount_name:
     description:
-      - Flag that determines whether the VM should be powered on after the Live Mount. Set to True to power on the VM. Set to False to mount the VM but not power it on.
-    required: False
-    type: bool
-    default: True
+      - The name given to the Live Mounted database i.e. AdventureWorks_Clone.
+    required: True
+    type: str
+    default: None
   timeout:
     description:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
     required: False
     type: int
-    default: 15
+    default: 30
 
 extends_documentation_fragment:
     - rubrik_cdm
@@ -71,19 +71,19 @@ requirements: [rubrik_cdm]
 
 
 EXAMPLES = '''
-- rubrik_vsphere_live_mount:
-    vm_name: 'ansible-tower'
-
-- rubrik_vsphere_live_mount:
-    vm_name: 'ansible-tower'
-    date: '1-15-2019'
-    time: '1:30 PM'
-
+- rubrik_sql_live_mount:
+    db_name: 'AdventureWorks2016'
+    date: '08-26-2018'
+    time: '12:11 AM'
+    sql_instance: 'MSSQLSERVER'
+    sql_host: 'sql.rubrikdemo.com'
+    mount_name: 'AdventureWorksClone'
 '''
+
 
 RETURN = '''
 version:
-    description: The full API response for POST /v1/vmware/vm/snapshot/{snapshot_id}/mount.
+    description: The full response of `POST /v1/mssql/db/{id}/mount`.
     returned: success
     type: dict
 '''
@@ -103,13 +103,13 @@ def main():
     results = {}
 
     argument_spec = dict(
-        vm_name=dict(required=True, type='str'),
-        date=dict(required=False, type='str', default="latest"),
-        time=dict(required=False, type='str', default="latest"),
-        host=dict(required=False, type='str', default="current"),
-        remove_network_devices=dict(required=False, type='bool', default=False),
-        power_on=dict(required=False, type='bool', default=True),
-        timeout=dict(required=False, type='int', default=15),
+        db_name=dict(required=True, type='str'),
+        date=dict(required=True, type='str'),
+        time=dict(required=True, type='str'),
+        sql_instance=dict(required=True, type='str', default=None),
+        sql_host=dict(required=True, type='str', default=None),
+        mount_name=dict(required=True, type='str', default=None),
+        timeout=dict(required=False, type='int', default=30),
 
     )
 
@@ -132,13 +132,13 @@ def main():
         module.fail_json(msg=str(error))
 
     try:
-        api_request = rubrik.vsphere_live_mount(
-            ansible["vm_name"],
+        api_request = rubrik.sql_live_mount(
+            ansible["db_name"],
             ansible["date"],
             ansible["time"],
-            ansible["host"],
-            ansible["remove_network_devices"],
-            ansible["power_on"],
+            ansible["sql_instance"],
+            ansible["sql_host"],
+            ansible["mount_name"],
             ansible["timeout"])
     except Exception as error:
         module.fail_json(msg=str(error))

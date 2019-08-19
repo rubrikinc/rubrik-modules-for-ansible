@@ -18,3 +18,7 @@
 * [rubrik_on_demand_snapshot](rubrik_on_demand_snapshot.md)
 * [rubrik_physical_fileset](rubrik_physical_fileset.md)
 * [rubrik_physical_host](rubrik_physical_host.md)
+* [rubrik_vsphere_live_mount](rubrik_vsphere_live_mount.md)
+* [rubrik_vsphere_live_unmount](rubrik_vsphere_live_unmount.md)
+* [rubrik_sql_live_mount](rubrik_sql_live_mount.md)
+* [rubrik_sql_live_unmount](rubrik_sql_live_unmount.md)
