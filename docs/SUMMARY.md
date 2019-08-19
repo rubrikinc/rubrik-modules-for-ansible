@@ -22,3 +22,6 @@
 * [rubrik_vsphere_live_unmount](rubrik_vsphere_live_unmount.md)
 * [rubrik_sql_live_mount](rubrik_sql_live_mount.md)
 * [rubrik_sql_live_unmount](rubrik_sql_live_unmount.md)
+* [rubrik_get_vsphere_live_mount](rubrik_get_vsphere_live_mount.md)
+* [rubrik_get_vsphere_live_mount_names](rubrik_get_vsphere_live_mount_names.md)
+* [rubrik_get_sql_live_mount](rubrik_get_sql_live_mount.md)
