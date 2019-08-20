@@ -6,7 +6,7 @@
 FROM python:3
 
 # Install the required development packages
-RUN pip install pylint requests python-dateutil pytz coverage pytest-cov pytest-mock tox pep8 autopep8 rubrik_cdm ansible
+RUN pip install pylint requests python-dateutil pytz coverage pytest-cov pytest-mock tox pep8 autopep8 rubrik_cdm ansible mazer
 
 # Configure apt
 ENV DEBIAN_FRONTEND=noninteractive
