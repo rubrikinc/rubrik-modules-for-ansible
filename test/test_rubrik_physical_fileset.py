@@ -93,7 +93,7 @@ class TestRubrikNASFileset(unittest.TestCase):
             'operating_system': 'Linux',
             'include': ["includes"],
             'exclude': ['excludes'],
-            'exclude_exception': ["exceptions"]
+            'exclude_exception': ["exceptions"],
             'follow_network_shares': True,
             'backup_hidden_folders': True
         })
@@ -151,7 +151,7 @@ class TestRubrikNASFileset(unittest.TestCase):
             'operating_system': 'Linux',
             'include': ["includes"],
             'exclude': ['excludes'],
-            'exclude_exception': ["exceptions"]
+            'exclude_exception': ["exceptions"],
             'follow_network_shares': True,
             'backup_hidden_folders': True
         })

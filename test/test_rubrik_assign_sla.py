@@ -7,10 +7,12 @@ from ansible.module_utils._text import to_bytes
 from module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 import library.rubrik_assign_sla as rubrik_assign_sla
 
+
 def set_module_args(args):
     """prepare arguments so that they will be picked up during module creation"""
     args = json.dumps({'ANSIBLE_MODULE_ARGS': args})
     basic._ANSIBLE_ARGS = to_bytes(args)
+
 
 class AnsibleExitJson(Exception):
     """Exception class to be raised by module.exit_json and caught by the test case"""
@@ -33,6 +35,7 @@ def fail_json(*args, **kwargs):
     """function to patch over fail_json; package return data into an exception"""
     kwargs['failed'] = True
     raise AnsibleFailJson(kwargs)
+
 
 class TestRubrikAssignSla(unittest.TestCase):
 
@@ -60,11 +63,13 @@ class TestRubrikAssignSla(unittest.TestCase):
             rubrik_assign_sla.main()
 
         self.assertEqual(result.exception.args[0]['failed'], True)
-        self.assertEqual(result.exception.args[0]['msg'], "value of object_type must be one of: vmware, mssql_host, got: invalid-type")
+        self.assertEqual(
+            result.exception.args[0]['msg'],
+            "value of object_type must be one of: vmware, mssql_host, got: invalid-type")
 
     @patch.object(rubrik_assign_sla.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_idempotence_specific_sla(self, mock_get):
-        
+
         def mock_get_v1_sla_domain():
             return {
                 "hasMore": True,
@@ -135,7 +140,7 @@ class TestRubrikAssignSla(unittest.TestCase):
                 ],
                 "total": 1
             }
-    
+
         def mock_get_v1_vmware_vm():
             return {
                 "hasMore": True,
@@ -196,7 +201,7 @@ class TestRubrikAssignSla(unittest.TestCase):
                 ],
                 "total": 1
             }
-    
+
         def mock_get_v1_vmware_vm_id():
             return {
                 "maxNestedVsphereSnapshots": 0,
@@ -411,7 +416,7 @@ class TestRubrikAssignSla(unittest.TestCase):
                 },
                 "isAgentRegistered": True
             }
-    
+
         set_module_args({
             'object_name': 'test-vm',
             'object_type': 'vmware',
@@ -424,9 +429,11 @@ class TestRubrikAssignSla(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_assign_sla.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], False)
-        self.assertEqual(result.exception.args[0]['response'], "No change required. The vSphere VM 'test-vm' is already assigned to the 'Gold' SLA Domain.")
+        self.assertEqual(
+            result.exception.args[0]['response'],
+            "No change required. The vSphere VM 'test-vm' is already assigned to the 'Gold' SLA Domain.")
 
     @patch.object(rubrik_assign_sla.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_idempotence_do_not_protect_sla(self, mock_get):
@@ -491,7 +498,7 @@ class TestRubrikAssignSla(unittest.TestCase):
                 ],
                 "total": 1
             }
-    
+
         def mock_get_v1_vmware_vm_id():
             return {
                 "maxNestedVsphereSnapshots": 0,
@@ -719,9 +726,11 @@ class TestRubrikAssignSla(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_assign_sla.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], False)
-        self.assertEqual(result.exception.args[0]['response'], "No change required. The vSphere VM 'test-vm' is already assigned to the 'do not protect' SLA Domain.")
+        self.assertEqual(
+            result.exception.args[0]['response'],
+            "No change required. The vSphere VM 'test-vm' is already assigned to the 'do not protect' SLA Domain.")
 
     @patch.object(rubrik_assign_sla.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_idempotence_clear_sla(self, mock_get):
@@ -786,7 +795,7 @@ class TestRubrikAssignSla(unittest.TestCase):
                 ],
                 "total": 1
             }
-    
+
         def mock_get_v1_vmware_vm_id():
             return {
                 "maxNestedVsphereSnapshots": 0,
@@ -1014,9 +1023,11 @@ class TestRubrikAssignSla(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_assign_sla.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], False)
-        self.assertEqual(result.exception.args[0]['response'], "No change required. The vSphere VM 'test-vm' is already assigned to the 'clear' SLA Domain.")
+        self.assertEqual(
+            result.exception.args[0]['response'],
+            "No change required. The vSphere VM 'test-vm' is already assigned to the 'clear' SLA Domain.")
 
     @patch.object(rubrik_assign_sla.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
     @patch.object(rubrik_assign_sla.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
@@ -1092,7 +1103,7 @@ class TestRubrikAssignSla(unittest.TestCase):
                 ],
                 "total": 1
             }
-    
+
         def mock_get_v1_vmware_vm():
             return {
                 "hasMore": True,
@@ -1153,7 +1164,7 @@ class TestRubrikAssignSla(unittest.TestCase):
                 ],
                 "total": 1
             }
-    
+
         def mock_get_v1_vmware_vm_id():
             return {
                 "maxNestedVsphereSnapshots": 0,
@@ -1386,9 +1397,10 @@ class TestRubrikAssignSla(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_assign_sla.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'], mock_post_internal_sla_domain_id_assign())
+
 
 if __name__ == '__main__':
     unittest.main()
