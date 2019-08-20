@@ -93,7 +93,7 @@ class TestRubrikNASFileset(unittest.TestCase):
             'share_type': 'NFS',
             'include': ["includes"],
             'exclude': ['excludes'],
-            'exclude_exception': ["exceptions"]
+            'exclude_exception': ["exceptions"],
             'follow_network_shares': True
         })
 
@@ -150,7 +150,7 @@ class TestRubrikNASFileset(unittest.TestCase):
             'share_type': 'NFS',
             'include': ["includes"],
             'exclude': ['excludes'],
-            'exclude_exception': ["exceptions"]
+            'exclude_exception': ["exceptions"],
             'follow_network_shares': True
         })
 
