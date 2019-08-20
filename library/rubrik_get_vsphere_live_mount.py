@@ -15,48 +15,18 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_vsphere_live_mount
-short_description: Live Mount a vSphere VM from a specified snapshot.
+module: rubrik_get_vsphere_live_mount
+short_description: Get existing Live Mounts for a vSphere VM.
 description:
-    - Live Mount a vSphere VM from a specified snapshot.
+    - Get existing Live Mounts for a vSphere VM.
 version_added: '2.8'
 author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   vm_name:
     description:
-      - The name of the vSphere VM to Live Mount.
+      - The name of the mounted vSphere VM.
     required: True
     type: str
-  date:
-    description:
-      - The date of the snapshot you wish to Live Mount formated as Month-Day-Year (ex: 1-15-2014). If latest is specified, the last snapshot taken will be used.
-    required: False
-    type: str
-    default: latest
-  time:
-    description:
-      - The time of the snapshot you wish to Live Mount formated formated as Hour:Minute AM/PM (ex: 1:30 AM). If latest is specified, the last snapshot taken will be used.
-    required: False
-    type: str
-    default: latest
-  host:
-    description:
-      - The hostname or IP address of the ESXi host to Live Mount the VM on. By default, the current host will be used.
-    required: False
-    type: str
-    default: current
-  remove_network_devices:
-    description:
-      - Flag that determines whether to remove the network interfaces from the Live Mounted VM. Set to True to remove all network interfaces.
-    required: False
-    type: bool
-    default: False
-  power_on:
-    description:
-      - Flag that determines whether the VM should be powered on after the Live Mount. Set to True to power on the VM. Set to False to mount the VM but not power it on.
-    required: False
-    type: bool
-    default: True
   timeout:
     description:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
@@ -71,19 +41,14 @@ requirements: [rubrik_cdm]
 
 
 EXAMPLES = '''
-- rubrik_vsphere_live_mount:
+- rubrik_get_vsphere_live_mount:
     vm_name: 'ansible-tower'
-
-- rubrik_vsphere_live_mount:
-    vm_name: 'ansible-tower'
-    date: '1-15-2019'
-    time: '1:30 PM'
 
 '''
 
 RETURN = '''
 version:
-    description: The full API response for POST /v1/vmware/vm/snapshot/{snapshot_id}/mount.
+    description: The full response of `GET /v1/vmware/vm/snapshot/mount?vm_id={vm_id}`.
     returned: success
     type: dict
 '''
@@ -104,11 +69,6 @@ def main():
 
     argument_spec = dict(
         vm_name=dict(required=True, type='str'),
-        date=dict(required=False, type='str', default="latest"),
-        time=dict(required=False, type='str', default="latest"),
-        host=dict(required=False, type='str', default="current"),
-        remove_network_devices=dict(required=False, type='bool', default=False),
-        power_on=dict(required=False, type='bool', default=True),
         timeout=dict(required=False, type='int', default=15),
 
     )
@@ -132,13 +92,8 @@ def main():
         module.fail_json(msg=str(error))
 
     try:
-        api_request = rubrik.vsphere_live_mount(
+        api_request = rubrik.get_vsphere_live_mount(
             ansible["vm_name"],
-            ansible["date"],
-            ansible["time"],
-            ansible["host"],
-            ansible["remove_network_devices"],
-            ansible["power_on"],
             ansible["timeout"])
     except Exception as error:
         module.fail_json(msg=str(error))

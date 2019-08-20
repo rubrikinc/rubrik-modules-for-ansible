@@ -18,7 +18,13 @@
     log_backup_frequency_in_seconds: 120
     log_retention_hours: 12
     copy_only: false
+```
 
+```yaml
+- rubrik_assign_sla:
+    object_name: ["C:\\", "D:\\"]
+    sla_name: "Gold"
+    windows_host: "windows2016.rubrik.com"
 ```
 
 # Arguments

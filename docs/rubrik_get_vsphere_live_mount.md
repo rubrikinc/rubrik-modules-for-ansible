@@ -1,20 +1,13 @@
-# rubrik_vsphere_live_mount
+# rubrik_get_vsphere_live_mount
 
-Live Mount a vSphere VM from a specified snapshot.
+Get existing Live Mounts for a vSphere VM.
 `Requirement: Rubrik Python SDK (pip install rubrik_cdm)`
 
 # Example
 
 ```yaml
-- rubrik_vsphere_live_mount:
+- rubrik_get_vsphere_live_mount:
     vm_name: 'ansible-tower'
-```
-
-```yaml
-- rubrik_vsphere_live_mount:
-    vm_name: 'ansible-tower'
-    date: '1-15-2019'
-    time: '1:30 PM'
 ```
 
 # Arugments
@@ -36,16 +29,11 @@ Live Mount a vSphere VM from a specified snapshot.
 
 | Name                   | Description                                                                                                                                                         | Default | Type | Choices | Mandatory | Aliases |
 |------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|------|---------|-----------|---------|
-| vm_name                | The name of the vSphere VM to Live Mount.                                                                                                                           |         | str  |         | true      |         |
-| date                   | The date of the snapshot you wish to Live Mount formated as Month-Day-Year (ex: 1-15-2014). If latest is specified, the last snapshot taken will be used.           | latest  | str  |         |           |         |
-| time                   | The time of the snapshot you wish to Live Mount formated formated as Hour:Minute AM/PM (ex: 1:30 AM). If latest is specified, the last snapshot taken will be used. | latest  | str  |         |           |         |
-| host                   | The hostname or IP address of the ESXi host to Live Mount the VM on.                                                                                                | current | str  |         |           |         |
-| remove_network_devices | Flag that determines whether to remove the network interfaces from the Live Mounted VM. Set to True to remove all network interfaces.                               | False   | bool |         |           |         |
-| power_on               | Flag that determines whether the VM should be powered on after the Live Mount. Set to True to power on the VM. Set to False to mount the VM but not power it on.    | True    | bool |         |           |         |
+| vm_name                | The name of the mounted vSphere VM.            |         | str  |         | true      |         |
 | timeout                | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.                                                        | 15      | int  |         |           |         |
 
 # Return Values
 
 | Name     | Description                                                                | Returned | Type | Aliases |
 |----------|----------------------------------------------------------------------------|----------|------|---------|
-| response | The full API response for POST /v1/vmware/vm/snapshot/{snapshot_id}/mount. | success  | dict |         |
+| response | The full response of `GET /v1/vmware/vm/snapshot/mount?vm_id={vm_id}`      | success  | dict |         |
