@@ -148,7 +148,7 @@ def main():
         object_type=dict(required=False, type='str', default="vmware", choices=["vmware", "physical_host", "ahv"]),
         sla_name=dict(required=False, type='str', default='current'),
         fileset=dict(required=False, type='str', default='None'),
-        host_os=dict(required=False, type='str', default='None', hoices=["None", "Linux", "Windows"]),
+        host_os=dict(required=False, type='str', default='None', choices=["None", "Linux", "Windows"]),
     )
 
     argument_spec.update(rubrik_argument_spec)
