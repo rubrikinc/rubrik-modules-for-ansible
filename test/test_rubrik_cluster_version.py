@@ -7,10 +7,12 @@ from ansible.module_utils._text import to_bytes
 from module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 import library.rubrik_cluster_version as rubrik_cluster_version
 
+
 def set_module_args(args):
     """prepare arguments so that they will be picked up during module creation"""
     args = json.dumps({'ANSIBLE_MODULE_ARGS': args})
     basic._ANSIBLE_ARGS = to_bytes(args)
+
 
 class AnsibleExitJson(Exception):
     """Exception class to be raised by module.exit_json and caught by the test case"""
@@ -33,6 +35,7 @@ def fail_json(*args, **kwargs):
     """function to patch over fail_json; package return data into an exception"""
     kwargs['failed'] = True
     raise AnsibleFailJson(kwargs)
+
 
 class TestRubrikClusterVersion(unittest.TestCase):
 
@@ -63,6 +66,6 @@ class TestRubrikClusterVersion(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_cluster_version.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], False)
         self.assertEqual(result.exception.args[0]['version'], '5.0.1-1280')

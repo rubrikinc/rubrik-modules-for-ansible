@@ -7,10 +7,12 @@ from ansible.module_utils._text import to_bytes
 from module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 import library.rubrik_assign_physical_host_fileset as rubrik_assign_physical_host_fileset
 
+
 def set_module_args(args):
     """prepare arguments so that they will be picked up during module creation"""
     args = json.dumps({'ANSIBLE_MODULE_ARGS': args})
     basic._ANSIBLE_ARGS = to_bytes(args)
+
 
 class AnsibleExitJson(Exception):
     """Exception class to be raised by module.exit_json and caught by the test case"""
@@ -34,12 +36,14 @@ def fail_json(*args, **kwargs):
     kwargs['failed'] = True
     raise AnsibleFailJson(kwargs)
 
+
 def mock_get_no_host():
     return {
         "hasMore": True,
         "data": [],
         "total": 0
     }
+
 
 def mock_get_no_fileset_template():
     return {
@@ -48,12 +52,14 @@ def mock_get_no_fileset_template():
         "total": 0
     }
 
+
 def mock_get_no_fileset():
     return {
         "hasMore": True,
         "data": [],
         "total": 0
     }
+
 
 def mock_get_v1_host():
     return {
@@ -83,6 +89,7 @@ def mock_get_v1_host():
         ],
         "total": 1
     }
+
 
 def mock_get_v1_fileset_template():
     return {
@@ -118,6 +125,7 @@ def mock_get_v1_fileset_template():
         ],
         "total": 1
     }
+
 
 def mock_get_multiple_fileset_templates():
     return {
@@ -180,6 +188,7 @@ def mock_get_multiple_fileset_templates():
         ],
         "total": 2
     }
+
 
 def mock_get_multiple_matching_fileset_templates():
     return {
@@ -245,75 +254,76 @@ def mock_get_multiple_matching_fileset_templates():
 
 
 def mock_get_v1_sla_domain():
-        return {
-            "hasMore": True,
-            "data": [
-                {
-                    "id": "string_sla_id",
-                    "primaryClusterId": "string",
-                    "name": "gold",
-                    "frequencies": [
-                        {
-                            "timeUnit": "string",
-                            "frequency": 0,
-                            "retention": 0
-                        }
-                    ],
-                    "allowedBackupWindows": [
-                        {
-                            "startTimeAttributes": {
-                                "minutes": 0,
-                                "hour": 0,
-                                "dayOfWeek": 0
-                            },
-                            "durationInHours": 0
-                        }
-                    ],
-                    "firstFullAllowedBackupWindows": [
-                        {
-                            "startTimeAttributes": {
-                                "minutes": 0,
-                                "hour": 0,
-                                "dayOfWeek": 0
-                            },
-                            "durationInHours": 0
-                        }
-                    ],
-                    "localRetentionLimit": 0,
-                    "maxLocalRetentionLimit": 0,
-                    "archivalSpecs": [
-                        {
-                            "locationId": "string",
-                            "archivalThreshold": 0
-                        }
-                    ],
-                    "replicationSpecs": [
-                        {
-                            "locationId": "string",
-                            "retentionLimit": 0
-                        }
-                    ],
-                    "numDbs": 0,
-                    "numOracleDbs": 0,
-                    "numFilesets": 0,
-                    "numHypervVms": 0,
-                    "numNutanixVms": 0,
-                    "numManagedVolumes": 0,
-                    "numStorageArrayVolumeGroups": 0,
-                    "numWindowsVolumeGroups": 0,
-                    "numLinuxHosts": 0,
-                    "numShares": 0,
-                    "numWindowsHosts": 0,
-                    "numVms": 0,
-                    "numEc2Instances": 0,
-                    "numVcdVapps": 0,
-                    "numProtectedObjects": 0,
-                    "isDefault": True,
-                    "uiColor": "string"
-                }
-            ],
-            "total": 1
-        }
+    return {
+        "hasMore": True,
+        "data": [
+            {
+                "id": "string_sla_id",
+                "primaryClusterId": "string",
+                "name": "gold",
+                "frequencies": [
+                    {
+                        "timeUnit": "string",
+                        "frequency": 0,
+                        "retention": 0
+                    }
+                ],
+                "allowedBackupWindows": [
+                    {
+                        "startTimeAttributes": {
+                            "minutes": 0,
+                            "hour": 0,
+                            "dayOfWeek": 0
+                        },
+                        "durationInHours": 0
+                    }
+                ],
+                "firstFullAllowedBackupWindows": [
+                    {
+                        "startTimeAttributes": {
+                            "minutes": 0,
+                            "hour": 0,
+                            "dayOfWeek": 0
+                        },
+                        "durationInHours": 0
+                    }
+                ],
+                "localRetentionLimit": 0,
+                "maxLocalRetentionLimit": 0,
+                "archivalSpecs": [
+                    {
+                        "locationId": "string",
+                        "archivalThreshold": 0
+                    }
+                ],
+                "replicationSpecs": [
+                    {
+                        "locationId": "string",
+                        "retentionLimit": 0
+                    }
+                ],
+                "numDbs": 0,
+                "numOracleDbs": 0,
+                "numFilesets": 0,
+                "numHypervVms": 0,
+                "numNutanixVms": 0,
+                "numManagedVolumes": 0,
+                "numStorageArrayVolumeGroups": 0,
+                "numWindowsVolumeGroups": 0,
+                "numLinuxHosts": 0,
+                "numShares": 0,
+                "numWindowsHosts": 0,
+                "numVms": 0,
+                "numEc2Instances": 0,
+                "numVcdVapps": 0,
+                "numProtectedObjects": 0,
+                "isDefault": True,
+                "uiColor": "string"
+            }
+        ],
+        "total": 1
+    }
+
 
 def mock_get_existing_fileset():
     return {
@@ -356,6 +366,7 @@ def mock_get_existing_fileset():
         "total": 1
     }
 
+
 def mock_get_v1_fileset():
     return {
         "hasMore": True,
@@ -396,6 +407,7 @@ def mock_get_v1_fileset():
         ],
         "total": 1
     }
+
 
 def mock_patch_v1_fileset():
     return {
@@ -463,6 +475,7 @@ def mock_patch_v1_fileset():
         "backupScriptErrorHandling": "string"
     }
 
+
 def mock_post_v1_fileset():
     return {
         "configuredSlaDomainId": "string",
@@ -529,6 +542,7 @@ def mock_post_v1_fileset():
         "backupScriptErrorHandling": "string"
     }
 
+
 class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
 
     def setUp(self):
@@ -543,7 +557,6 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
             set_module_args({})
             rubrik_assign_physical_host_fileset.main()
 
-    
     def test_module_fail_with_invalid_operating_system(self):
         set_module_args({
             'hostname': 'test-host',
@@ -563,7 +576,7 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
             'follow_network_shares': 'Yes'
         })
         with self.assertRaises(AnsibleFailJson):
-            rubrik_assign_physical_host_fileset.main()    
+            rubrik_assign_physical_host_fileset.main()
 
     def test_module_fail_with_invalid_backup_hidden_folders(self):
         set_module_args({
@@ -585,7 +598,7 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
             'include': 'invalid_include'
         })
         with self.assertRaises(AnsibleFailJson):
-            rubrik_assign_physical_host_fileset.main() 
+            rubrik_assign_physical_host_fileset.main()
 
     def test_module_fail_with_invalid_exclude(self):
         set_module_args({
@@ -609,7 +622,8 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
         with self.assertRaises(AnsibleFailJson):
             rubrik_assign_physical_host_fileset.main()
 
-    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
+                  'get', autospec=True, spec_set=True)
     def test_module_fail_with_invalid_hostname(self, mock_get):
         set_module_args({
             'hostname': 'invalid-host',
@@ -626,9 +640,12 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
             rubrik_assign_physical_host_fileset.main()
 
         self.assertEqual(result.exception.args[0]['failed'], True)
-        self.assertEqual(result.exception.args[0]['msg'], "The Rubrik cluster is not connected to a Linux physical host named 'invalid-host'.")
+        self.assertEqual(
+            result.exception.args[0]['msg'],
+            "The Rubrik cluster is not connected to a Linux physical host named 'invalid-host'.")
 
-    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
+                  'get', autospec=True, spec_set=True)
     def test_module_fail_with_invalid_fileset_name(self, mock_get):
         set_module_args({
             'hostname': 'hostname',
@@ -645,9 +662,12 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
             rubrik_assign_physical_host_fileset.main()
 
         self.assertEqual(result.exception.args[0]['failed'], True)
-        self.assertEqual(result.exception.args[0]['msg'], "The Rubrik cluster does not have a Linux Fileset named 'invalid-fileset'.")
+        self.assertEqual(
+            result.exception.args[0]['msg'],
+            "The Rubrik cluster does not have a Linux Fileset named 'invalid-fileset'.")
 
-    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
+                  'get', autospec=True, spec_set=True)
     def test_module_fail_with_invalid_fileset_name_multiple_matches_not_specific(self, mock_get):
         set_module_args({
             'hostname': 'hostname',
@@ -664,9 +684,12 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
             rubrik_assign_physical_host_fileset.main()
 
         self.assertEqual(result.exception.args[0]['failed'], True)
-        self.assertEqual(result.exception.args[0]['msg'], "The Rubrik cluster contains multiple Linux Filesets named 'fileset'. Please populate all function arguments to find a more specific match.")
+        self.assertEqual(
+            result.exception.args[0]['msg'],
+            "The Rubrik cluster contains multiple Linux Filesets named 'fileset'. Please populate all function arguments to find a more specific match.")
 
-    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
+                  'get', autospec=True, spec_set=True)
     def test_module_fail_with_invalid_fileset_name_multiple_matches_specific(self, mock_get):
         set_module_args({
             'hostname': 'hostname',
@@ -685,10 +708,14 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
             rubrik_assign_physical_host_fileset.main()
 
         self.assertEqual(result.exception.args[0]['failed'], True)
-        self.assertEqual(result.exception.args[0]['msg'], "The Rubrik cluster contains multiple Linux Filesets named 'fileset' that match all of the populate function arguments. Please use a unique Fileset.")
+        self.assertEqual(
+            result.exception.args[0]['msg'],
+            "The Rubrik cluster contains multiple Linux Filesets named 'fileset' that match all of the populate function arguments. Please use a unique Fileset.")
 
-    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect, 'patch', autospec=True, spec_set=True)
-    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
+                  'patch', autospec=True, spec_set=True)
+    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
+                  'get', autospec=True, spec_set=True)
     def test_module_assign_physical_host_fileset_patch_sla(self, mock_get, mock_patch):
         set_module_args({
             'hostname': 'hostname',
@@ -713,7 +740,8 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response']['hostName'], "hostname")
 
-    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
+                  'get', autospec=True, spec_set=True)
     def test_module_assign_physical_host_fileset_idempotence(self, mock_get):
         set_module_args({
             'hostname': 'hostname',
@@ -735,9 +763,12 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
 
         self.assertEqual(result.exception.args[0]['changed'], False)
 
-    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect, 'patch', autospec=True, spec_set=True)
-    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
-    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
+                  'patch', autospec=True, spec_set=True)
+    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
+                  'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
+                  'get', autospec=True, spec_set=True)
     def test_module_assign_physical_host_no_current_fileset(self, mock_get, mock_post, mock_patch):
         set_module_args({
             'hostname': 'hostname',
@@ -755,7 +786,7 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
             mock_get_no_fileset()]
 
         mock_post.return_value = mock_post_v1_fileset()
-        
+
         mock_patch.return_value = mock_patch_v1_fileset()
 
         with self.assertRaises(AnsibleExitJson) as result:
@@ -764,6 +795,7 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'][0], mock_post_v1_fileset())
         self.assertEqual(result.exception.args[0]['response'][1], mock_patch_v1_fileset())
+
 
 if __name__ == '__main__':
     unittest.main()

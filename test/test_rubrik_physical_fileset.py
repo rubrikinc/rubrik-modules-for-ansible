@@ -89,6 +89,8 @@ class TestRubrikNASFileset(unittest.TestCase):
             }
 
         set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'fileset_name': 'name',
             'operating_system': 'Linux',
             'include': ["includes"],
@@ -147,6 +149,8 @@ class TestRubrikNASFileset(unittest.TestCase):
             }
 
         set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'fileset_name': 'name',
             'operating_system': 'Linux',
             'include': ["includes"],

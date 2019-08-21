@@ -7,10 +7,12 @@ from ansible.module_utils._text import to_bytes
 from module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 import library.rubrik_managed_volume as rubrik_managed_volume
 
+
 def set_module_args(args):
     """prepare arguments so that they will be picked up during module creation"""
     args = json.dumps({'ANSIBLE_MODULE_ARGS': args})
     basic._ANSIBLE_ARGS = to_bytes(args)
+
 
 class AnsibleExitJson(Exception):
     """Exception class to be raised by module.exit_json and caught by the test case"""
@@ -33,6 +35,7 @@ def fail_json(*args, **kwargs):
     """function to patch over fail_json; package return data into an exception"""
     kwargs['failed'] = True
     raise AnsibleFailJson(kwargs)
+
 
 class TestRubrikManagedVolume(unittest.TestCase):
 
@@ -204,9 +207,11 @@ class TestRubrikManagedVolume(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_managed_volume.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], False)
-        self.assertEqual(result.exception.args[0]['response'], "No change required. The Managed Volume 'test_mv' is already assigned in a writeable state.")
+        self.assertEqual(
+            result.exception.args[0]['response'],
+            "No change required. The Managed Volume 'test_mv' is already assigned in a writeable state.")
 
     @patch.object(rubrik_managed_volume.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
     @patch.object(rubrik_managed_volume.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
@@ -285,7 +290,6 @@ class TestRubrikManagedVolume(unittest.TestCase):
                 ],
                 "total": 1
             }
-
 
         def mock_get_internal_managed_volume_id():
             return {
@@ -374,7 +378,7 @@ class TestRubrikManagedVolume(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_managed_volume.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'], mock_post_internal_managed_volume_id_begin_snapshot())
 
@@ -534,9 +538,11 @@ class TestRubrikManagedVolume(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_managed_volume.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], False)
-        self.assertEqual(result.exception.args[0]['response'], "No change required. The Managed Volume 'test_mv' is already assigned in a read only state.")
+        self.assertEqual(
+            result.exception.args[0]['response'],
+            "No change required. The Managed Volume 'test_mv' is already assigned in a read only state.")
 
     @patch.object(rubrik_managed_volume.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_fail_when_end_mv_snapshot_invalid_current_sla(self, mock_get):
@@ -694,9 +700,11 @@ class TestRubrikManagedVolume(unittest.TestCase):
 
         with self.assertRaises(AnsibleFailJson) as result:
             rubrik_managed_volume.main()
-        
+
         self.assertEqual(result.exception.args[0]['failed'], True)
-        self.assertEqual(result.exception.args[0]['msg'], "The Managed Volume 'test_mv' does not have a SLA assigned currently assigned. You must populate the sla_name argument.")
+        self.assertEqual(
+            result.exception.args[0]['msg'],
+            "The Managed Volume 'test_mv' does not have a SLA assigned currently assigned. You must populate the sla_name argument.")
 
     @patch.object(rubrik_managed_volume.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_fail_when_end_mv_snapshot_current_sla_unprotected(self, mock_get):
@@ -854,9 +862,11 @@ class TestRubrikManagedVolume(unittest.TestCase):
 
         with self.assertRaises(AnsibleFailJson) as result:
             rubrik_managed_volume.main()
-        
+
         self.assertEqual(result.exception.args[0]['failed'], True)
-        self.assertEqual(result.exception.args[0]['msg'], "The Managed Volume 'test_mv' does not have a SLA assigned currently assigned. You must populate the sla_name argument.")
+        self.assertEqual(
+            result.exception.args[0]['msg'],
+            "The Managed Volume 'test_mv' does not have a SLA assigned currently assigned. You must populate the sla_name argument.")
 
     @patch.object(rubrik_managed_volume.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
     @patch.object(rubrik_managed_volume.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
@@ -1047,7 +1057,7 @@ class TestRubrikManagedVolume(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_managed_volume.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'], mock_post_internal_managed_volume_id_begin_snapshot())
 
@@ -1315,6 +1325,6 @@ class TestRubrikManagedVolume(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_managed_volume.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'], mock_post_internal_managed_volume_id_begin_snapshot())
