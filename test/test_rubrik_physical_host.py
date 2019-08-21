@@ -36,7 +36,7 @@ def fail_json(*args, **kwargs):
     raise AnsibleFailJson(kwargs)
 
 
-class TestRubrikNASFileset(unittest.TestCase):
+class TestRubrikPhysicalHost(unittest.TestCase):
 
     def setUp(self):
         self.mock_module_helper = patch.multiple(basic.AnsibleModule, exit_json=exit_json, fail_json=fail_json)
@@ -50,17 +50,20 @@ class TestRubrikNASFileset(unittest.TestCase):
 
     def test_module_fail_with_incorrect_hostname_list_when_action_is_delete(self):
         set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'action': 'delete',
-            'hostname': ["hostname1", "hostname2"]
+            'hostname': ['hostname1', 'hostname2'],
         })
+
         with self.assertRaises(AnsibleFailJson) as result:
-            rubrik_assign_sla.main()
+            rubrik_physical_host.main()
 
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(result.exception.args[0]['msg'], "A list of hostnames is not supported when action is delete.")
 
-    @patch.object(rubrik_physical_host.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     @patch.object(rubrik_physical_host.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_physical_host.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_configure_rubrik_physical_host_add(self, mock_get, mock_post):
 
         def mock_get_v1_host():
@@ -123,6 +126,8 @@ class TestRubrikNASFileset(unittest.TestCase):
             }
 
         set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'action': 'add',
             'hostname': 'hostname'
         })
@@ -137,8 +142,8 @@ class TestRubrikNASFileset(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'], mock_post_v1_host())
 
-     @patch.object(rubrik_physical_host.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
-     def test_module_idempotence_add(self, mock_get):
+    @patch.object(rubrik_physical_host.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_idempotence_add(self, mock_get):
 
         def mock_get_v1_host():
             return {
@@ -170,6 +175,8 @@ class TestRubrikNASFileset(unittest.TestCase):
             }
 
         set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'action': 'add',
             'hostname': 'hostname'
         })
@@ -238,6 +245,8 @@ class TestRubrikNASFileset(unittest.TestCase):
             }
 
         set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'action': 'add',
             'hostname': ["hostname1", "hostname2"]
         })
@@ -248,12 +257,12 @@ class TestRubrikNASFileset(unittest.TestCase):
             rubrik_physical_host.main()
 
         self.assertEqual(result.exception.args[0]['changed'], False)
-        self.assertEqual(
-            result.exception.args[0]['response'], "No Change Required. All Hosts Already added or supplied list was empty")
-    
-    @patch.object(rubrik_physical_host.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+        self.assertEqual(result.exception.args[0]['response'],
+                         "No Change Required. All Hosts Already added or supplied list was empty")
+
     @patch.object(rubrik_physical_host.rubrik_cdm.rubrik_cdm.Connect, 'delete', autospec=True, spec_set=True)
-    def test_module_configure_rubrik_physical_host_delete(self, mock_get, mock_post):
+    @patch.object(rubrik_physical_host.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_configure_rubrik_physical_host_delete(self, mock_get, mock_delete):
 
         def mock_get_v1_host():
             return {
@@ -309,13 +318,22 @@ class TestRubrikNASFileset(unittest.TestCase):
             return {"status_code: 204"}
 
             set_module_args({
+                'node_ip': '1.1.1.1',
+                'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
                 'action': 'delete',
                 'hostname': 'hostname'
             })
 
+        set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
+            'action': 'delete',
+            'hostname': 'hostname'
+        })
+
         mock_get.return_value = mock_get_v1_host()
 
-        mock_post.return_value = mock_delete_v1_host_id()
+        mock_delete.return_value = mock_delete_v1_host_id()
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_physical_host.main()
@@ -356,8 +374,10 @@ class TestRubrikNASFileset(unittest.TestCase):
             }
 
         set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'action': 'delete',
-            'hostname': ["hostname"]
+            'hostname': "hostname"
         })
 
         mock_get.return_value = mock_get_v1_host()

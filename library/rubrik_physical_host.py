@@ -4,7 +4,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 from ansible.module_utils.basic import AnsibleModule
 
 
@@ -107,7 +107,7 @@ def main():
     results = {}
 
     argument_spec = dict(
-        hostname=dict(required=True, aliases=['ip_address']),
+        hostname=dict(required=True, aliases=['ip_address'], type="raw"),
         action=dict(required=True, choices=['add', 'delete']),
         timeout=dict(required=False, type='int', default=120),
 
@@ -139,7 +139,10 @@ def main():
             api_request = rubrik.add_physical_host(ansible["hostname"], ansible["timeout"])
         except Exception as error:
             module.fail_json(msg=str(error))
-    else:
+    elif ansible["action"] == "delete":
+
+        # module.fail_json(msg=str(ansible["hostname"]))
+
         if isinstance(ansible["hostname"], list) is True:
             module.fail_json(msg="A list of hostnames is not supported when action is delete.")
         try:
@@ -147,7 +150,7 @@ def main():
         except Exception as error:
             module.fail_json(msg=str(error))
 
-    if "No change required" in api_request:
+    if "No change required" in api_request or "No Change Required" in api_request:
         results["changed"] = False
     else:
         results["changed"] = True
