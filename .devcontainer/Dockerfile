@@ -34,5 +34,8 @@ RUN apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=dialog
 
+ENV PYTHONPATH=/workspaces/rubrik-modules-for-ansible
+ENV ANSIBLE_HOME=/workspaces/rubrik-modules-for-ansible
+
 # Set the default shell to zsh rather than sh
 ENV SHELL /bin/zsh
