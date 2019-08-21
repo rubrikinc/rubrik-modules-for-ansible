@@ -36,7 +36,7 @@ def fail_json(*args, **kwargs):
     raise AnsibleFailJson(kwargs)
 
 
-class TestRubrikNASFileset(unittest.TestCase):
+class TestRubrikVsphereLiveMount(unittest.TestCase):
 
     def setUp(self):
         self.mock_module_helper = patch.multiple(basic.AnsibleModule, exit_json=exit_json, fail_json=fail_json)
@@ -48,8 +48,8 @@ class TestRubrikNASFileset(unittest.TestCase):
             set_module_args({})
             rubrik_vsphere_live_mount.main()
 
-    @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_configure_rubrik_vsphere_live_mount(self, mock_get, mock_post):
 
         def mock_get_v1_vmware_vm():
@@ -348,6 +348,8 @@ class TestRubrikNASFileset(unittest.TestCase):
             }
 
         set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'vm_name': 'vm_name',
         })
 
@@ -358,14 +360,13 @@ class TestRubrikNASFileset(unittest.TestCase):
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_vsphere_live_mount.main()
 
-        self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'], mock_post_v1_vmware_vm_snapshot_id_mount())
 
-    @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
     @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect,
                   '_date_time_conversion', autospec=True, spec_set=True)
-    @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
-    def test_module_configure_rubrik_vsphere_live_specific_time(self, mock_get, mock_post):
+    @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_configure_rubrik_vsphere_live_specific_time(self, mock_get, mock__date_time_conversion, mock_post):
 
         def mock_get_v1_vmware_vm():
             return {
@@ -663,6 +664,8 @@ class TestRubrikNASFileset(unittest.TestCase):
             }
 
         set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'vm_name': 'vm_name',
             'date': '1-15-2014',
             'time': '1:30 AM'
@@ -672,19 +675,19 @@ class TestRubrikNASFileset(unittest.TestCase):
 
         mock__date_time_conversion.return_value = "2014-01-15T09:30"
 
-        mock_post.return_value = mock_post_v1_vmware_vm_snapshot_id_mount()()
+        mock_post.return_value = mock_post_v1_vmware_vm_snapshot_id_mount()
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_vsphere_live_mount.main()
 
-        self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'], mock_post_v1_vmware_vm_snapshot_id_mount())
 
-    @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
     @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect,
                   '_date_time_conversion', autospec=True, spec_set=True)
-    @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
-    def test_module_configure_rubrik_vsphere_live_specific_host(self, mock_get, mock_post):
+    @patch.object(rubrik_vsphere_live_mount.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_configure_rubrik_vsphere_live_mount_specific_host(
+            self, mock_get, mock__date_time_conversion, mock_post):
 
         def mock_get_v1_vmware_vm():
             return {
@@ -1014,6 +1017,8 @@ class TestRubrikNASFileset(unittest.TestCase):
             }
 
         set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'vm_name': 'vm_name',
             'date': '1-15-2014',
             'time': '1:30 AM',
@@ -1024,10 +1029,9 @@ class TestRubrikNASFileset(unittest.TestCase):
 
         mock__date_time_conversion.return_value = "2014-01-15T09:30"
 
-        mock_post.return_value = mock_post_v1_vmware_vm_snapshot_id_mount()()
+        mock_post.return_value = mock_post_v1_vmware_vm_snapshot_id_mount()
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_vsphere_live_mount.main()
 
-        self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'], mock_post_v1_vmware_vm_snapshot_id_mount())
