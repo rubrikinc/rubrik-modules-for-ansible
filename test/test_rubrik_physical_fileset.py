@@ -48,8 +48,8 @@ class TestRubrikNASFileset(unittest.TestCase):
             set_module_args({})
             rubrik_physical_fileset.main()
 
-    @patch.object(rubrik_physical_fileset.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     @patch.object(rubrik_physical_fileset.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_physical_fileset.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_configure_rubrik_physical_fileset(self, mock_get, mock_post):
 
         def mock_get_v1_fileset_template():
