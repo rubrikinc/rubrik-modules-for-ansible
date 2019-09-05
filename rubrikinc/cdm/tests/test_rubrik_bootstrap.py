@@ -9,6 +9,8 @@ from rubrik_cdm.exceptions import RubrikException, APICallException
 from socket import gaierror
 from plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 import plugins.modules.rubrik_bootstrap as rubrik_bootstrap
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
 
 
 def set_module_args(args):

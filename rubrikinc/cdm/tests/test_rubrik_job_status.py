@@ -7,6 +7,8 @@ from ansible.module_utils._text import to_bytes
 from rubrik_cdm.exceptions import RubrikException, APICallException
 from plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 import plugins.modules.rubrik_job_status as rubrik_job_status
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
 
 
 def set_module_args(args):

@@ -30,6 +30,8 @@
 
 from ansible.module_utils.six import iteritems
 from ansible.module_utils.basic import env_fallback
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
 
 
 try:
