@@ -58,7 +58,7 @@ options:
     default: 30
 
 extends_documentation_fragment:
-    - rubrikinc.cdm.cdm.rubrik_cdm
+    - rubrik_cdm
 requirements: [rubrik_cdm]
 '''
 
