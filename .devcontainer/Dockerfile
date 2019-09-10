@@ -6,7 +6,7 @@
 FROM python:3
 
 # Install the required development packages
-RUN pip install pylint requests python-dateutil pytz coverage pytest-cov pytest-mock tox pep8 autopep8 rubrik_cdm ansible mazer
+RUN pip install pylint requests python-dateutil pytz coverage pytest-cov pytest-mock tox pep8 autopep8 rubrik_cdm paramiko PyYAML Jinja2 httplib2 six voluptuous isort lazy-object-proxy wrapt docutils rstcheck pathspec yamllint
 
 # Configure apt
 ENV DEBIAN_FRONTEND=noninteractive
@@ -26,6 +26,10 @@ RUN chsh -s $(which zsh)
 RUN sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 RUN mkdir /workspace
+RUN git clone https://github.com/ansible/ansible.git /workspaces/ansible
+
+RUN mkdir -p /root/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
+
 WORKDIR /workspace
 
 # Clean up
@@ -34,9 +38,7 @@ RUN apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=dialog
 
-ENV PYTHONPATH=/workspaces/rubrik-modules-for-ansible/rubrikinc/cdm
-ENV ANSIBLE_HOME=/workspaces/rubrik-modules-for-ansible
-ENV ANSIBLE_COLLECTIONS_PATHS=/workspaces/rubrik-modules-for-ansible
+ENV ANSIBLE_COLLECTIONS_PATHS="~/.ansible/collections"
 
 # Set the default shell to zsh rather than sh
 ENV SHELL /bin/zsh
