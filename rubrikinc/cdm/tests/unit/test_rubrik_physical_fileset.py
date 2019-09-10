@@ -1,3 +1,6 @@
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
 import json
 import unittest
 from unittest.mock import Mock, patch
@@ -5,8 +8,7 @@ from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
 from plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 import plugins.modules.rubrik_physical_fileset as rubrik_physical_fileset
-from __future__ import (absolute_import, division, print_function)
-__metaclass__ = type
+
 
 def set_module_args(args):
     """prepare arguments so that they will be picked up during module creation"""
@@ -168,4 +170,5 @@ class TestRubrikNASFileset(unittest.TestCase):
 
         self.assertEqual(result.exception.args[0]['changed'], False)
         self.assertEqual(
-            result.exception.args[0]['response'], "No change required. The Rubrik cluster already has a Linux Fileset named 'name' configured with the provided variables.")
+            result.exception.args[0]['response'], """No change required. The Rubrik cluster already has a Linux Fileset
+            named 'name' configured with the provided variables.""")

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
@@ -23,7 +24,8 @@ author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   object_name:
     description:
-      - The name of the Rubrik object you wish to assign to an SLA Domain. When the I(object_type) is 'volume_group', the I(object_name) can be a list of volumes.
+      - The name of the Rubrik object you wish to assign to an SLA Domain.
+      - When the I(object_type) is 'volume_group', the I(object_name) can be a list of volumes.
     required: true
     type: raw
   sla_name:
@@ -163,7 +165,8 @@ def main():
     if object_type == "mssql_host":
         if log_backup_frequency_in_seconds is None or log_retention_hours is None or log_retention_hours is None:
             module.fail_json(
-                msg="When the object_type is 'mssql_host', the 'log_backup_frequency_in_seconds', 'log_retention_hours', 'copy_only' paramaters must be populated.")
+                msg="""When the object_type is 'mssql_host', the 'log_backup_frequency_in_seconds',
+                'log_retention_hours', 'copy_only' paramaters must be populated.""")
 
     if object_type == "volume_group":
         if windows_host is None:

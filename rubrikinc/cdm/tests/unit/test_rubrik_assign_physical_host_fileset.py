@@ -1,13 +1,13 @@
-import json
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
 
+import json
 import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
 from plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 import plugins.modules.rubrik_assign_physical_host_fileset as rubrik_assign_physical_host_fileset
-from __future__ import (absolute_import, division, print_function)
-__metaclass__ = type
 
 
 def set_module_args(args):
@@ -712,7 +712,8 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(
             result.exception.args[0]['msg'],
-            "The Rubrik cluster contains multiple Linux Filesets named 'fileset' that match all of the populate function arguments. Please use a unique Fileset.")
+            """The Rubrik cluster contains multiple Linux Filesets named 'fileset'
+            that match all of the populate function arguments. Please use a unique Fileset.""")
 
     @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
                   'patch', autospec=True, spec_set=True)

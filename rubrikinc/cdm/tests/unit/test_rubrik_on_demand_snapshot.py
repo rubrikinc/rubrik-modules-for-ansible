@@ -1,18 +1,20 @@
-import json
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
 
+import json
 import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
 from plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 import plugins.modules.rubrik_on_demand_snapshot as rubrik_on_demand_snapshot
-from __future__ import (absolute_import, division, print_function)
-__metaclass__ = type
+
 
 def set_module_args(args):
     """prepare arguments so that they will be picked up during module creation"""
     args = json.dumps({'ANSIBLE_MODULE_ARGS': args})
     basic._ANSIBLE_ARGS = to_bytes(args)
+
 
 class AnsibleExitJson(Exception):
     """Exception class to be raised by module.exit_json and caught by the test case"""
@@ -35,6 +37,7 @@ def fail_json(*args, **kwargs):
     """function to patch over fail_json; package return data into an exception"""
     kwargs['failed'] = True
     raise AnsibleFailJson(kwargs)
+
 
 def mock_get_v1_vmware_vm():
     return {
@@ -96,6 +99,7 @@ def mock_get_v1_vmware_vm():
         ],
         "total": 1
     }
+
 
 def mock_get_v1_vmware_vm_id():
     return {
@@ -312,6 +316,7 @@ def mock_get_v1_vmware_vm_id():
         "isAgentRegistered": True
     }
 
+
 def mock_get_v1_sla_domain():
     return {
         "hasMore": True,
@@ -383,6 +388,7 @@ def mock_get_v1_sla_domain():
         "total": 1
     }
 
+
 def mock_post_v1_vmware_vm_id_snapshot():
     return {
         "id": "string",
@@ -401,6 +407,7 @@ def mock_post_v1_vmware_vm_id_snapshot():
             }
         ]
     }
+
 
 def mock_get_internal_nutanix_vm():
     return {
@@ -431,6 +438,7 @@ def mock_get_internal_nutanix_vm():
         ],
         "total": 1
     }
+
 
 def mock_get_internal_nutanix_vm_id():
     return {
@@ -479,6 +487,7 @@ def mock_get_internal_nutanix_vm_id():
         "isAgentRegistered": True
     }
 
+
 def mock_post_internal_nutanix_vm_id_snapshot():
     return {
         "id": "string",
@@ -497,6 +506,7 @@ def mock_post_internal_nutanix_vm_id_snapshot():
             }
         ]
     }
+
 
 def mock_get_v1_host():
     return {
@@ -526,6 +536,7 @@ def mock_get_v1_host():
         ],
         "total": 1
     }
+
 
 def mock_get_v1_fileset_template():
     return {
@@ -562,12 +573,14 @@ def mock_get_v1_fileset_template():
         "total": 1
     }
 
+
 def mock_get_no_fileset():
     return {
         "hasMore": True,
         "data": [],
         "total": 0
     }
+
 
 def mock_get_v1_fileset():
     return {
@@ -610,6 +623,7 @@ def mock_get_v1_fileset():
         "total": 1
     }
 
+
 def mock_post_v1_fileset_id_snapshot():
     return {
         "id": "string",
@@ -628,6 +642,7 @@ def mock_post_v1_fileset_id_snapshot():
             }
         ]
     }
+
 
 class TestRubrikOnDemandSnapshot(unittest.TestCase):
 
@@ -665,7 +680,7 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
         with self.assertRaises(AnsibleFailJson) as result:
-            rubrik_on_demand_snapshot.main()    
+            rubrik_on_demand_snapshot.main()
 
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(result.exception.args[0]['msg'], "value of host_os must be one of: None, Linux, Windows, got: foo")
@@ -678,11 +693,11 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
         with self.assertRaises(AnsibleFailJson) as result:
-            rubrik_on_demand_snapshot.main()    
+            rubrik_on_demand_snapshot.main()
 
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(result.exception.args[0]['msg'], "The on_demand_snapshot() `host_os` argument must be populated when taking a Physical host snapshot.")
-    
+
     def test_module_fail_with_physical_host_host_fileset_not_populated(self):
         set_module_args({
             'object_name': 'test-vm',
@@ -691,8 +706,8 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
             'node_ip': '1.1.1.1',
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
-        with self.assertRaises(AnsibleFailJson)  as result:
-            rubrik_on_demand_snapshot.main()    
+        with self.assertRaises(AnsibleFailJson) as result:
+            rubrik_on_demand_snapshot.main()
 
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(result.exception.args[0]['msg'], "The on_demand_snapshot() `fileset` argument must be populated when taking a Physical host snapshot.")
@@ -714,10 +729,9 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_on_demand_snapshot.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
-
 
     @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
     @patch.object(rubrik_on_demand_snapshot.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
@@ -736,7 +750,7 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_on_demand_snapshot.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
 
@@ -757,7 +771,7 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_on_demand_snapshot.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
 
@@ -778,7 +792,7 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_on_demand_snapshot.main()
-        
+
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
 
@@ -803,7 +817,7 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
 
         with self.assertRaises(AnsibleFailJson) as result:
             rubrik_on_demand_snapshot.main()
-        
+
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(result.exception.args[0]['msg'], "The Physical Host 'test-host' is not assigned to the 'fileset' Fileset.")
 
@@ -835,6 +849,7 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'], mock_post_v1_fileset_id_snapshot())
         self.assertEqual(result.exception.args[0]['job_status_url'], 'href_string')
+
 
 if __name__ == '__main__':
     unittest.main()

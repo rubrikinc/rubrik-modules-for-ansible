@@ -1,5 +1,6 @@
-#!/usr/bin/python
-# Copyright: Rubrik
+#!/usr/bin/env python
+
+# (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
@@ -57,7 +58,7 @@ options:
     default: 30
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.cdm.rubrik_cdm
 requirements: [rubrik_cdm]
 '''
 
@@ -71,7 +72,9 @@ EXAMPLES = '''
 
 RETURN = '''
 response:
-    description: The full API response for `POST /v1/vmware/vcenter` and the job status URL which can be used to monitor progress of the adding the vCenter to the Rubrik cluster. (api_response, job_status_url)
+    description:
+      - The full API response for `POST /v1/vmware/vcenter`.
+      - The job status URL which can be used to monitor progress of the adding the vCenter to the Rubrik cluster (api_response, job_status_url).
     returned: on success
     type: tuple
 

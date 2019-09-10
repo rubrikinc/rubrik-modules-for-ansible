@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
@@ -128,9 +129,6 @@ def main():
 
     try:
         rubrik = rubrik_cdm.Connect(node_ip, username, password, api_token)
-    except Exception as error:
-        module.fail_json(msg=str(error))
-
     except Exception as error:
         module.fail_json(msg=str(error))
 

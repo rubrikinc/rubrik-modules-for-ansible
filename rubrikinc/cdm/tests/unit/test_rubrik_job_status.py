@@ -1,5 +1,7 @@
-import json
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
 
+import json
 import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
@@ -7,8 +9,6 @@ from ansible.module_utils._text import to_bytes
 from rubrik_cdm.exceptions import RubrikException, APICallException
 from plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 import plugins.modules.rubrik_job_status as rubrik_job_status
-from __future__ import (absolute_import, division, print_function)
-__metaclass__ = type
 
 
 def set_module_args(args):
@@ -56,9 +56,13 @@ class TestRubrikJobStatus(unittest.TestCase):
 
     def test_module_fail_with_invalid_wait_for_completion(self):
 
+        url = "https://1.1.1.1/api/v1/vmware/vm/request/"
+        job_id = "CREATE_VMWARE_SNAPSHOT_fbcb1d87-9872-4227-a68c-5982f48-vm-289386_e837-a04c-4327-915b-7698d2c5ecf48:::0"
+
+        full_url = url + job_id
+
         set_module_args({
-            'url': 'https://1.1.1.1/api/v1/vmware/vm/request/CREATE_VMWARE_SNAPSHOT_fbcb1d87-9872-4227-a68c-5982f48-vm-289386_e837-a04c-4327-915b-7698d2c5ecf48:::0',
-            'wait_for_completion': 'foo',
+            'url': full_url,
             'node_ip': '1.1.1.1',
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
@@ -86,8 +90,13 @@ class TestRubrikJobStatus(unittest.TestCase):
                 ]
             }
 
+        url = "https://1.1.1.1/api/v1/vmware/vm/request/"
+        job_id = "CREATE_VMWARE_SNAPSHOT_fbcb1d87-9872-4227-a68c-5982f48-vm-289386_e837-a04c-4327-915b-7698d2c5ecf48:::0"
+
+        full_url = url + job_id
+
         set_module_args({
-            'url': 'https://1.1.1.1/api/v1/vmware/vm/request/CREATE_VMWARE_SNAPSHOT_fbcb1d87-9872-4227-a68c-5982f48-vm-289386_e837-a04c-4327-915b-7698d2c5ecf48:::0',
+            'url': full_url,
             'node_ip': '1.1.1.1',
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })

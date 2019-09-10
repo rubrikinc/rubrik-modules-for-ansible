@@ -1,3 +1,6 @@
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
 import json
 import unittest
 from unittest.mock import Mock, patch
@@ -5,7 +8,7 @@ from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
 from plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 import plugins.modules.rubrik_vsphere_live_mount as rubrik_vsphere_live_mount
-__metaclass__ = type
+
 
 def set_module_args(args):
     """prepare arguments so that they will be picked up during module creation"""

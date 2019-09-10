@@ -85,10 +85,8 @@ def main():
     except SystemExit as error:
         module.fail_json(msg=str(error))
 
-    ##################################
-    ######### Code Block #############
-    ##################################
-    ##################################
+    # Code Block 
+ 
 
     try:
         api_request = rubrik.

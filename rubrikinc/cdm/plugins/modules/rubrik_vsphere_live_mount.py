@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or
 # https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -29,13 +30,15 @@ options:
     type: str
   date:
     description:
-      - The date of the snapshot you wish to Live Mount formated as Month-Day-Year (ex: 1-15-2014). If latest is specified, the last snapshot taken will be used.
+      - The date of the snapshot you wish to Live Mount formated as Month-Day-Year (ex: 1-15-2014).
+      - If latest is specified, the last snapshot taken will be used.
     required: False
     type: str
     default: latest
   time:
     description:
-      - The time of the snapshot you wish to Live Mount formated formated as Hour:Minute AM/PM (ex: 1:30 AM). If latest is specified, the last snapshot taken will be used.
+      - The time of the snapshot you wish to Live Mount formated formated as Hour:Minute AM/PM (ex: 1:30 AM).
+      - Set to True to power on the VM. Set to False to mount the VM but not power it on.
     required: False
     type: str
     default: latest
@@ -53,7 +56,8 @@ options:
     default: False
   power_on:
     description:
-      - Flag that determines whether the VM should be powered on after the Live Mount. Set to True to power on the VM. Set to False to mount the VM but not power it on.
+      - Flag that determines whether the VM should be powered on after the Live Mount.
+      - Set to True to power on the VM. Set to False to mount the VM but not power it on.
     required: False
     type: bool
     default: True

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
@@ -23,37 +24,61 @@ author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   aws_bucket_name:
     description:
-      - The name of the AWS S3 bucket you wish to use as an archive target. The bucket name will automatically have all whitespace removed, all letters lowercased, and can not contain any of the following characters: _\/*?%.:|<>.
+      - The name of the AWS S3 bucket you wish to use as an archive target.
+      - The bucket name will  have all whitespace removed, all letters lowercased, and can not contain any of the following characters: _\\/*?%.:|<>".
     required: true
     type: str
   aws_region:
     description:
-      - The name of the AWS region where the bucket is located. If set to the default None keyword argument, we will look for a AWS_DEFAULT_REGION environment variable to pull the value from.
-    choices: [ap-south-1, ap-northeast-2, ap-southeast-1, ap-southeast-2, ap-northeast-1, ca-central-1, cn-north-1, cn-northwest-1, eu-central-1, eu-west-1, eu-west-2, eu-west-3, sa-east-1, us-gov-west-1, us-west-1, us-east-1, us-east-2, us-west-2]
+      - The name of the AWS region where the bucket is located.
+      - If set to the default None keyword argument, we will look for a AWS_DEFAULT_REGION environment variable to pull the value from.
+    choices:
+      - ap-south-1
+      - ap-northeast-2
+      - ap-southeast-1
+      - ap-southeast-2
+      - ap-northeast-1
+      - ca-central-1
+      - cn-north-1
+      - cn-northwest-1
+      - eu-central-1
+      - eu-west-1
+      - eu-west-2
+      - eu-west-3
+      - sa-east-1
+      - us-gov-west-1
+      - us-west-1
+      - us-east-1
+      - us-east-2
+      - us-west-2
     required: false
     default: None
     type: str
   aws_access_key:
     description:
-      - The access key of a AWS account with the required permissions. If set to the default None keyword argument, we will look for a AWS_ACCESS_KEY_ID environment variable to pull the value from.
+      - The access key of a AWS account with the required permissions.
+      - If set to the default None keyword argument, we will look for a AWS_ACCESS_KEY_ID environment variable to pull the value from.
     required: false
     default: None
     type: str
   aws_secret_key:
     description:
-      - The secret key of a AWS account with the required permissions. If set to the default None keyword argument, we will look for a AWS_SECRET_ACCESS_KEY environment variable to pull the value from.
+      - The secret key of a AWS account with the required permissions.
+      - If set to the default None keyword argument, we will look for a AWS_SECRET_ACCESS_KEY environment variable to pull the value from.
     required: false
     default: None
     type: str
   kms_master_key_id:
     description:
-      - The AWS KMS master key ID that will be used to encrypt the archive data. If set to the default None keyword argument, you will need to provide a I(rsa_key) instead.
+      - The AWS KMS master key ID that will be used to encrypt the archive data.
+      - If set to the default None keyword argument, you will need to provide a I(rsa_key) instead.
     required: false
     default: None
     type: str
   rsa_key:
     description:
-      - The RSA key that will be used to encrypt the archive data. A key can be generated through openssl genrsa -out rubrik_encryption_key.pem 2048. If set to the default None keyword argument, you will need to provide a I(kms_master_key_id) instead.
+      - The RSA key that will be used to encrypt the archive data. A key can be generated through openssl genrsa -out rubrik_encryption_key.pem 2048.
+      - If set to the default None keyword argument, you will need to provide a I(kms_master_key_id) instead.
     required: false
     default: None
     type: str

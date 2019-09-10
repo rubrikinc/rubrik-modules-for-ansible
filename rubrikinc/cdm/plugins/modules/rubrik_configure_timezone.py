@@ -1,5 +1,6 @@
-#!/usr/bin/python
-# Copyright: Rubrik
+#!/usr/bin/env python
+
+# (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
@@ -26,7 +27,40 @@ options:
     description:
       - The timezone you wish the Rubrik cluster to use.
     required: True
-    choices: [America/Anchorage, America/Araguaina, America/Barbados, America/Chicago, America/Denver, America/Los_Angeles, America/Mexico_City, America/New_York, America/Noronha, America/Phoenix, America/Toronto, America/Vancouver, Asia/Bangkok, Asia/Dhaka, Asia/Dubai, Asia/Hong_Kong, Asia/Karachi, Asia/Kathmandu, Asia/Kolkata, Asia/Magadan, Asia/Singapore, Asia/Tokyo, Atlantic/Cape_Verde, Australia/Perth, Australia/Sydney, Europe/Amsterdam, Europe/Athens, Europe/London, Europe/Moscow, Pacific/Auckland, Pacific/Honolulu, Pacific/Midway, UTC]
+    choices:
+      - America/Anchorage
+      - America/Araguaina
+      - America/Barbados
+      - America/Chicago
+      - America/Denver
+      - America/Los_Angeles
+      - America/Mexico_City
+      - America/New_York
+      - America/Noronha
+      - America/Phoenix
+      - America/Toronto
+      - America/Vancouver
+      - Asia/Bangkok
+      - Asia/Dhaka
+      - Asia/Dubai
+      - Asia/Hong_Kong
+      - Asia/Karachi
+      - Asia/Kathmandu
+      - Asia/Kolkata
+      - Asia/Magadan
+      - Asia/Singapore
+      - Asia/Tokyo
+      - Atlantic/Cape_Verde
+      - Asia/Perth
+      - Asia/Sydney
+      - Asia/Amsterdam
+      - Asia/Athens
+      - Asia/London
+      - Asia/Moscow
+      - Asia/Auckland
+      - Asia/Honolulu
+      - Asia/Midway
+      - UTC
     type: str
   timeout:
     description:
