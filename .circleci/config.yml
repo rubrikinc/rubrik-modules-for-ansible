@@ -1,0 +1,41 @@
+version: 2.0
+
+jobs:
+
+ python-3.7:
+    docker:
+      - image: circleci/python:3.7.3
+    working_directory: ~/rubrik-modules-for-ansible
+    environment:
+      ANSIBLE_COLLECTIONS_PATHS: ~/.ansible/collections
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: |
+            sudo pip install pylint requests python-dateutil pytz coverage pytest-cov pytest-mock tox pep8 autopep8 rubrik_cdm paramiko PyYAML Jinja2 httplib2 six voluptuous isort lazy-object-proxy wrapt docutils rstcheck pathspec yamllin
+      - run:
+          name: Clone and Setup Ansible Dev Tools
+          command: |
+            git clone https://github.com/ansible/ansible.git ~/ansible
+            source ~/ansible/hacking/env-setup
+            mkdir -p ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
+            cp -a ~/rubrik-modules-for-ansible/rubrikinc/cdm/. ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
+            rm ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/docs/rubrik_module_template.py
+            rm ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/docs/create_documentation_block.py
+            rm ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/docs/quick-start.md
+      - run:
+          name: Execute Ansible Sanity Test
+          command: |
+            cd ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
+            ansible-test sanity
+      - run:
+          name: Execute Unit Tests
+          command: |
+            cd ~/rubrik-modules-for-ansible
+            python -m unittest discover -s ./test
+workflows:
+  version: 2
+  build:
+    jobs:
+      - python-3.7
