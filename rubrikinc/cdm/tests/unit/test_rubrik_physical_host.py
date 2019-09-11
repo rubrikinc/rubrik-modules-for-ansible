@@ -261,7 +261,7 @@ class TestRubrikPhysicalHost(unittest.TestCase):
 
         self.assertEqual(result.exception.args[0]['changed'], False)
         self.assertEqual(result.exception.args[0]['response'],
-                         "No Change Required. All Hosts Already added or supplied list was empty")
+                         "No change required. All Hosts have already been added or supplied list was empty.")
 
     @patch.object(rubrik_physical_host.rubrik_cdm.rubrik_cdm.Connect, 'delete', autospec=True, spec_set=True)
     @patch.object(rubrik_physical_host.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)

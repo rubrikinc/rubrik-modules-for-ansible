@@ -67,7 +67,7 @@ class TestRubrikAssignSla(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(
             result.exception.args[0]['msg'],
-            "value of object_type must be one of: vmware, mssql_host, got: invalid-type")
+            "value of object_type must be one of: vmware, mssql_host, volume_group, got: invalid-type")
 
     @patch.object(rubrik_assign_sla.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_idempotence_specific_sla(self, mock_get):
