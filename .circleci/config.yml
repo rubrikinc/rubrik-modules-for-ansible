@@ -29,7 +29,7 @@ jobs:
           name: Execute Ansible Sanity Test
           command: |
             cd ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
-            ~/ansible/bin/ansible-test sanity --test compile --python 2.7 lineinfile
+            ~/ansible/bin/ansible-test sanity --test compile --python 2.7
       - run:
           name: Execute Unit Tests
           command: |
@@ -172,19 +172,19 @@ jobs:
           command: |
             git clone https://github.com/ansible/ansible.git ~/ansible
             source ~/ansible/hacking/env-setup
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_assign_physical_host_fileset.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_assign_sla.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_bootstrap.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_cluster_version.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_dns_servers.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_end_user_authorization.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_job_status.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_managed_volume.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_nas_fileset.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_on_demand_snapshot.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_physical_fileset.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_physical_host.py' >> /ansible/test/sanity/pylint/skip.txt
-            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_vsphere_live_mount.py' >> /ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_assign_physical_host_fileset.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_assign_sla.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_bootstrap.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_cluster_version.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_dns_servers.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_end_user_authorization.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_job_status.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_managed_volume.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_nas_fileset.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_on_demand_snapshot.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_physical_fileset.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_physical_host.py' >> ~/ansible/test/sanity/pylint/skip.txt
+            echo 'rubrik_cdm/cdm/tests/unit/test_rubrik_vsphere_live_mount.py' >> ~/ansible/test/sanity/pylint/skip.txt
             mkdir -p ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
             cp -a ~/rubrik-modules-for-ansible/rubrikinc/cdm/. ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
             rm ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/docs/rubrik_module_template.py
