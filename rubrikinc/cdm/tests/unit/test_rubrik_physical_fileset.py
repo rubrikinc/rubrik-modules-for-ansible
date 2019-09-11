@@ -170,5 +170,4 @@ class TestRubrikNASFileset(unittest.TestCase):
 
         self.assertEqual(result.exception.args[0]['changed'], False)
         self.assertEqual(
-            result.exception.args[0]['response'], """No change required. The Rubrik cluster already has a Linux Fileset
-            named 'name' configured with the provided variables.""")
+            result.exception.args[0]['response'], """No change required. The Rubrik cluster already has a Linux Fileset named 'name' configured with the provided variables.""")

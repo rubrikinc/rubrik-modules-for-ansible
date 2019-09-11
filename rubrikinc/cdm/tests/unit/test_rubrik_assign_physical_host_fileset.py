@@ -712,8 +712,7 @@ class TestRubrikAssignPhysicalHostFileset(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(
             result.exception.args[0]['msg'],
-            """The Rubrik cluster contains multiple Linux Filesets named 'fileset'
-            that match all of the populate function arguments. Please use a unique Fileset.""")
+            """The Rubrik cluster contains multiple Linux Filesets named 'fileset' that match all of the populate function arguments. Please use a unique Fileset.""")
 
     @patch.object(rubrik_assign_physical_host_fileset.rubrik_cdm.rubrik_cdm.Connect,
                   'patch', autospec=True, spec_set=True)

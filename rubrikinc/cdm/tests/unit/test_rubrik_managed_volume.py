@@ -544,7 +544,7 @@ class TestRubrikManagedVolume(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['changed'], False)
         self.assertEqual(
             result.exception.args[0]['response'],
-            "No change required. The Managed Volume 'test_mv' is already assigned in a read only state.")
+            "No change required. The Managed Volume 'name' is already assigned in a read only state.")
 
     @patch.object(rubrik_managed_volume.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_fail_when_end_mv_snapshot_invalid_current_sla(self, mock_get):

@@ -33,8 +33,11 @@ jobs:
       - run:
           name: Execute Unit Tests
           command: |
-            cd ~/rubrik-modules-for-ansible
-            python -m unittest discover -s ./rubrikinc/cdm/tests/unit/
+            cd ~/.ansible/collections
+            ln -s ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/plugins/ plugins
+            ln -s ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm ./ansible_collections/rubrikinc
+            ln -s ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/plugins/module_utils/ ./ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/module_utils
+            python -m unittest discover -s ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/tests/unit
 workflows:
   version: 2
   build:
