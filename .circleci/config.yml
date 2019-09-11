@@ -29,7 +29,7 @@ jobs:
           name: Execute Ansible Sanity Test
           command: |
             cd ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
-            ansible-test sanity
+            ~/ansible/bin/ansible-test sanity
       - run:
           name: Execute Unit Tests
           command: |
