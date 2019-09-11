@@ -34,7 +34,7 @@ jobs:
           name: Execute Unit Tests
           command: |
             cd ~/rubrik-modules-for-ansible
-            python -m unittest discover -s ./test
+            python -m unittest discover -s ./rubrikinc/cdm/tests/unit/
 workflows:
   version: 2
   build:
