@@ -33,6 +33,7 @@ jobs:
       - run:
           name: Execute Unit Tests
           command: |
+            sudo pip install ansible
             cd ~/.ansible/collections
             ln -s ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/plugins/ plugins
             ln -s ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm ./ansible_collections/rubrikinc
