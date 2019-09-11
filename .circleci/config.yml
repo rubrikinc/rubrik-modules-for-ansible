@@ -30,15 +30,6 @@ jobs:
           command: |
             cd ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
             ~/ansible/bin/ansible-test sanity --test compile --python 2.7
-      - run:
-          name: Execute Unit Tests
-          command: |
-            sudo pip install ansible
-            cd ~/.ansible/collections
-            ln -s ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/plugins/ plugins
-            ln -s ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm ./ansible_collections/rubrikinc
-            ln -s ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/plugins/module_utils/ ./ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/module_utils
-            python -m unittest discover -s ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/tests/unit
  
  python-3.5:
     docker:
@@ -196,6 +187,7 @@ workflows:
   version: 2
   build:
     jobs:
+      - python-2.7
       - python-3.5
       - python-3.6
       - python-3.7
