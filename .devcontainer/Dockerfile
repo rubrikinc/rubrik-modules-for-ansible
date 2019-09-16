@@ -28,7 +28,8 @@ RUN sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/too
 RUN mkdir /workspace
 RUN git clone https://github.com/ansible/ansible.git /workspaces/ansible
 
-RUN mkdir -p /root/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
+RUN mkdir -p /root/.ansible/collections/ansible_collections/rubrikinc/cdm
+
 
 WORKDIR /workspace
 

@@ -3,7 +3,7 @@
 echo "source /workspaces/ansible/hacking/env-setup" >> ~/.zshrc
 echo "source /workspaces/ansible/hacking/env-setup" >> ~/.zshrc
 
-echo "alias sanity='cp -a /workspaces/rubrik-modules-for-ansible/rubrikinc/cdm/. /root/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm && /root/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm && rm /root/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/docs/rubrik_module_template.py && rm /root/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/docs/create_documentation_block.py && rm /root/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm/docs/quick-start.md && ansible-test sanity && cd -'" >> ~/.zshrc
+echo "alias sanity='cp -a /workspaces/rubrik-modules-for-ansible/rubrikinc/cdm/. /root/.ansible/collections/ansible_collections/rubrikinc/cdm && /root/.ansible/collections/ansible_collections/rubrikinc/cdm && rm /root/.ansible/collections/ansible_collections/rubrikinc/cdm/docs/rubrik_module_template.py && rm /root/.ansible/collections/ansible_collections/rubrikinc/cdm/docs/create_documentation_block.py && rm /root/.ansible/collections/ansible_collections/rubrikinc/cdm/docs/quick-start.md && ansible-test sanity && cd -'" >> ~/.zshrc
 
  
 
