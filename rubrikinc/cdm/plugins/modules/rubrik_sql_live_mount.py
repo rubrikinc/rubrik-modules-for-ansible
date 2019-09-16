@@ -1,13 +1,9 @@
-#!/usr/bin/env python
-
+#!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or
 # https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -30,34 +26,29 @@ options:
     type: str
   date:
     description:
-      - The recovery_point date you wish to Live Mount formated as `Month-Day-Year` (ex: 1-15-2014).
+      - The recovery_point date you wish to Live Mount formated as Month-Day-Year (ex. 1-15-2014).
     required: True
     type: str
-    default: None
   time:
     description:
-      - The recovery_point time you wish to Live Mount formated as `Hour:Minute AM/PM` (ex: 1:30 AM).
+      - The recovery_point time you wish to Live Mount formated as Hour:Minute AM/PM (ex. 1:30 AM).
     required: True
     type: str
-    default: None
   sql_instance:
     description:
       - The SQL instance name with the database you wish to Live Mount.
     required: True
     type: str
-    default: None
   sql_host:
     description:
       - The SQL Host of the database/instance to Live Mount.
     required: True
     type: str
-    default: None
   mount_name:
     description:
       - The name given to the Live Mounted database i.e. AdventureWorks_Clone.
     required: True
     type: str
-    default: None
   timeout:
     description:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
@@ -66,7 +57,7 @@ options:
     default: 30
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
@@ -83,12 +74,14 @@ EXAMPLES = '''
 
 
 RETURN = '''
-version:
+full_response:
     description: The full response of `POST /v1/mssql/db/{id}/mount`.
     returned: success
     type: dict
 '''
 
+from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 try:
     import rubrik_cdm
@@ -107,9 +100,9 @@ def main():
         db_name=dict(required=True, type='str'),
         date=dict(required=True, type='str'),
         time=dict(required=True, type='str'),
-        sql_instance=dict(required=True, type='str', default=None),
-        sql_host=dict(required=True, type='str', default=None),
-        mount_name=dict(required=True, type='str', default=None),
+        sql_instance=dict(required=True, type='str'),
+        sql_host=dict(required=True, type='str'),
+        mount_name=dict(required=True, type='str'),
         timeout=dict(required=False, type='int', default=30),
 
     )

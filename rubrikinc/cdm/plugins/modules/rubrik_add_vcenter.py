@@ -1,13 +1,8 @@
-#!/usr/bin/env python
-
+#!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
-
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -42,13 +37,12 @@ options:
     description:
       - Automatically link discovered virtual machines (i.e VM Linking).
     required: False
-    Default: True
+    default: True
     type: bool
   ca_certificate:
     description:
       - CA certificiate used to perform TLS certificate validation
     required: False
-    Default: None
     type: str
   timeout:
     description:
@@ -58,32 +52,36 @@ options:
     default: 30
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
 - rubrik_add_vcenter:
-    vcenter_ip: "demo-vcsa.python.demo
+    vcenter_ip: "demo-vcsa.python.demo"
     vcenter_username: "ansible_user"
     vcenter_password: "ansible_password"
 '''
 
 
 RETURN = '''
-response:
+full_response:
     description:
       - The full API response for `POST /v1/vmware/vcenter`.
       - The job status URL which can be used to monitor progress of the adding the vCenter to the Rubrik cluster (api_response, job_status_url).
     returned: on success
-    type: tuple
+    type: dict
 
-response:
+idempotent_response:
     description: A "No changed required" message when the vCenter has already been added to the Rubrik cluster
     returned: When the module idempotent check is succesful.
     type: str
     sample: No change required. The vCenter '`vcenter_ip`' has already been added to the Rubrik cluster.
 '''
+
+
+from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 
 try:
@@ -104,7 +102,7 @@ def main():
         vcenter_username=dict(required=True, type='str'),
         vcenter_password=dict(required=True, type='str'),
         vm_linking=dict(required=False, default=True, type='bool'),
-        ca_certificate=dict(required=False, default=None, type='str'),
+        ca_certificate=dict(required=False, type='str'),
         timeout=dict(required=False, type='int', default=30),
 
     )

@@ -1,12 +1,8 @@
-#!/usr/bin/env python
-
+#!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
 
 
 ANSIBLE_METADATA = {
@@ -28,11 +24,13 @@ options:
       - The hostname or IP Address of the physical host you want to add or delete from the Rubrik cluster.
       - When C(action=add) this may also be a list of hostnames.
     required: True
+    type: raw
     aliases: ["ip_address"]
   action:
     description:
       - Specify whether or not you wish to add or delete the physical host from the Rubrik cluster.
     required: True
+    type: str
     choices: [add, delete]
   timeout:
     description:
@@ -43,7 +41,7 @@ options:
 
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
@@ -58,7 +56,7 @@ EXAMPLES = '''
 '''
 
 RETURN = '''
-response:
+full_response_action_add:
     description: The full API response for POST /v1/host
     returned: on success when action is add
     type: dict
@@ -74,24 +72,27 @@ response:
             "compressionEnabled": true
         }
 
-response:
+success_response_action_delete:
     description: The full API response for DELETE /v1/host/{id}.
     returned: on success when action is delete
     type: dict
     sample: {"status_code": 204}
 
-response:
+idempotent_response_action_add:
     description: A "No changed required" message when the host has already been added to the Rubrik cluster.
     returned: When the module idempotent check is succesful and action is add.
     type: str
     sample: No change requird. The host 'hostname' is already connected to the Rubrik cluster.
 
-response:
+idempotent_response_action_delete:
     description: A "No changed required" message when the host is not present on the Rubrik cluster.
     returned: When the module idempotent check is succesful and action is delete.
     type: str
     sample: No change required. The host 'hostname' is not connected to the Rubrik cluster.
 '''
+
+from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 
 try:

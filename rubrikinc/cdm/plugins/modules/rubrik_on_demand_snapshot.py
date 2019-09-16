@@ -1,13 +1,8 @@
-#!/usr/bin/env python
-
+#!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
-
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -62,7 +57,7 @@ options:
 
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
@@ -79,9 +74,9 @@ EXAMPLES = '''
 '''
 
 RETURN = '''
-response:
+full_response_object_type_vmware:
     description: The full API response for POST /v1/vmware/vm/{id}/snapshot.
-    returned: on success when action is vmware
+    returned: on success when the object_type is vmware
     type: dict
     sample:
         {
@@ -102,7 +97,7 @@ response:
             ]
         }
 
-response:
+full_response_object_type_physical_host:
     description: The full API response for POST /v1/fileset/{id}/snapshot.
     returned: on success when object_type is physical_host
     type: dict
@@ -132,6 +127,9 @@ job_status_url:
     sample: https://192.168.8.19/api/v1/fileset/request/CREATE_FILESET_SNAPSHOT_a2f6161c-33a4-3123-efaw-de7d1bef284e_dc0983bf-1c47-45ce-9ce0-b8df3c93b5fa:::0
 '''
 
+
+from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 try:
     import rubrik_cdm

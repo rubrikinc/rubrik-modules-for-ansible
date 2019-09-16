@@ -1,12 +1,9 @@
-#!/usr/bin/env python
-
+#!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -45,25 +42,21 @@ options:
     description:
      - The MSSQL Log Backup frequency you'd like to specify with the SLA. Required when the I(object_type) is mssql_host.
     required: false
-    default: None
     type: int
   log_retention_hours:
     description:
      - The MSSQL Log Retention frequency you'd like to specify with the SLA. Required when the I(object_type) is mssql_host.
     required: false
-    default: None
     type: int
   copy_only:
     description:
      - Take Copy Only Backups with MSSQL. Required when the I(object_type) is mssql_host.
     required: false
-    default: None
     type: bool
   windows_host:
     description:
       - The name of the Windows host that contains the relevant volume group. Required when the I(object_type) is volume_group.
     required: false
-    default: None
     type: str
   timeout:
     description:
@@ -73,7 +66,7 @@ options:
     type: int
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
@@ -90,25 +83,24 @@ EXAMPLES = '''
     log_retention_hours: 12
     copy_only: false
 
-- rubrik_assign_sla:
-    object_name: ["C:\\", "D:\\"]
-    sla_name: "Gold"
-    windows_host: "windows2016.rubrik.com"
 '''
 
 RETURN = '''
-response:
+full_response:
     description: The full API reponse for POST /internal/sla_domain/{sla_id}/assign.
     returned: on success
     type: dict
     sample: {"status_code": "204"}
 
-response:
+idempotent_response:
     description: A "No changed required" message when the Rubrik object is already assigned to the SLA Domain.
     returned: When the module idempotent check is succesful.
     type: str
     sample: No change required. The vSphere VM 'object_name' is already assigned to the 'sla_name' SLA Domain.
 '''
+
+from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 
 try:
@@ -135,10 +127,10 @@ def main():
                 'vmware',
                 'mssql_host',
                 'volume_group']),
-        log_backup_frequency_in_seconds=dict(required=False, default=None, type='int'),
-        log_retention_hours=dict(required=False, default=None, type='int'),
-        copy_only=dict(required=False, default=None, type='bool'),
-        windows_host=dict(required=False, default=None, type='str'),
+        log_backup_frequency_in_seconds=dict(required=False, type='int'),
+        log_retention_hours=dict(required=False, type='int'),
+        copy_only=dict(required=False, type='bool'),
+        windows_host=dict(required=False, type='str'),
         timeout=dict(required=False, type='int', default=30),
     )
 

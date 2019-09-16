@@ -1,12 +1,8 @@
-#!/usr/bin/env python
-
+#!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -71,13 +67,11 @@ options:
     description:
       - The optional archive location you wish to configure on the SLA Domain. When populated, you must also provide a I(retention_on_brik_in_days).
     required: false
-    default: None
-    type: int
+    type: str
   retention_on_brik_in_days:
     description:
       - The number of days you wish to keep the backups on the Rubrik cluster. When populated, you must also provide a I(archive_name).
     required: false
-    default: None
     type: int
   instant_archive:
     description:
@@ -93,7 +87,7 @@ options:
     type: int
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
@@ -114,23 +108,25 @@ EXAMPLES = '''
 '''
 
 RETURN = '''
-response:
+full_response_cdm_4:
     description: The full API response for POST /v1/sla_domain.
     returned: on success when connected to a CDM v4.x or lower cluster
     type: dict
 
-response:
+respofull_response_cdm_5:
     description: The full API response for POST /v2/sla_domain.
     returned: on success when connected to a CDM v5.0 or greater cluster
     type: dict
 
-response:
+idempotent_response:
     description: A "No changed required" message when the Rubrik SLA is already present on the cluster.
     returned: When the module idempotent check is succesful.
     type: str
     sample: No change required. The 'name' SLA Domain is already configured with the provided configuration.
 '''
 
+from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 try:
     import rubrik_cdm

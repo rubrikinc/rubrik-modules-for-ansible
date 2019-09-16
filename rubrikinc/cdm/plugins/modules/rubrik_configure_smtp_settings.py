@@ -1,13 +1,8 @@
-#!/usr/bin/env python
-
+#!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
-
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -16,7 +11,7 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_configure_timezone
+module: rubrik_configure_smtp_settings
 short_description: Configure the Rubrik cluster SMTP settings.
 description:
     - The Rubrik cluster uses email to send all notifications to local Rubrik cluster user accounts that have the Admin role.
@@ -26,44 +21,41 @@ description:
 version_added: '2.8'
 author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
-  timezone:
+  hostname:
     description:
-      - The timezone you wish the Rubrik cluster to use.
+      - Hostname of the SMTP server.
     required: True
+    type: str
+  port:
+    description:
+      - Incoming port on the SMTP server.
+      - Normally port 25, port 465, or port 587, depending upon the type of encryption used.
+    required: True
+    type: int
+  from_email:
+    description:
+      - The email address assigned to the account on the SMTP server.
+    required: True
+    type: str
+  smtp_username:
+    description:
+      - The username assigned to the account on the SMTP server.
+    required: True
+    type: str
+  smtp_password:
+    description:
+      - The password associated with the username.
+    required: True
+    type: str
+  encryption:
+    description:
+      - The encryption protocol that the SMTP server requires for incoming SMTP connections.
     choices:
-      - America/Anchorage
-      - America/Araguaina
-      - America/Barbados
-      - America/Chicago
-      - America/Denver
-      - America/Los_Angeles
-      - America/Mexico_City
-      - America/New_York
-      - America/Noronha
-      - America/Phoenix
-      - America/Toronto
-      - America/Vancouver
-      - Asia/Bangkok
-      - Asia/Dhaka
-      - Asia/Dubai
-      - Asia/Hong_Kong
-      - Asia/Karachi
-      - Asia/Kathmandu
-      - Asia/Kolkata
-      - Asia/Magadan
-      - Asia/Singapore
-      - Asia/Tokyo
-      - Atlantic/Cape_Verde
-      - Asia/Perth
-      - Asia/Sydney
-      - Asia/Amsterdam
-      - Asia/Athens
-      - Asia/London
-      - Asia/Moscow
-      - Asia/Auckland
-      - Asia/Honolulu
-      - Asia/Midway
-      - UTC
+        - NONE
+        - SSL
+        - STARTTLS
+    required: True
+    default: NONE
     type: str
   timeout:
     description:
@@ -73,7 +65,7 @@ options:
     default: 15
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
@@ -84,18 +76,20 @@ EXAMPLES = '''
 
 
 RETURN = '''
-response:
+full_response:
     description: The full API response for PATCH /v1/cluster/me
     returned: on success
     type: dict
 
-response:
+idempotent_response:
     description: A "No changed required" message when the timezone is already configured on the cluster.
     returned: When the module idempotent check is succesful.
     type: str
     sample: No change required. The Rubrik cluster is already configured with I(timezone) as it's timezone.
 '''
 
+from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 try:
     import rubrik_cdm

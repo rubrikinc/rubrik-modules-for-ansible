@@ -1,13 +1,8 @@
-#!/usr/bin/env python
-
+#!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
-
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -27,11 +22,13 @@ options:
     description:
       - The name of the Fileset you wish to create.
     required: True
+    type: str
     aliases: ["name"]
   operating_system:
     description:
       - The operating system type of the Fileset you are creating.
     required: True
+    type: str
     choices: [Linux, Windows]
   include:
     description:
@@ -72,7 +69,7 @@ options:
 
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
@@ -89,7 +86,7 @@ EXAMPLES = '''
 '''
 
 RETURN = '''
-response:
+full_response:
     description: The full response for the POST /internal/fileset_template/bulk API endpoint.
     returned: on success
     type: dict
@@ -126,13 +123,15 @@ response:
         "total": 0
       }
 
-response:
+idempotent_response:
     description: A "No changed required" message when the NAS Fileset is already present on the Rubrik cluster.
     returned: When the module idempotent check is succesful.
     type: str
     sample: No change required. The Rubrik cluster already has a NAS Fileset named 'name' configured with the provided variables.
 '''
 
+from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 try:
     import rubrik_cdm

@@ -1,13 +1,8 @@
-#!/usr/bin/env python
-
+#!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
-
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -27,6 +22,7 @@ options:
     description:
       - The name of the Managed Volume to begin or end the snapshot on.
     required: True
+    type: str
     aliases: ["name"]
   sla_name:
     description:
@@ -39,6 +35,7 @@ options:
     description:
       - Specify whether or not you wish to begin or end a snapshot.
     required: True
+    type: str
     choices: [begin, end]
   timeout:
     description:
@@ -49,7 +46,7 @@ options:
 
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
@@ -67,19 +64,19 @@ EXAMPLES = '''
 '''
 
 RETURN = '''
-response:
+full_response_action_begin:
     description: The full API response for POST /internal/managed_volume/{id}/begin_snapshot
     returned: on success when action is begin
     type: dict
     sample: {"status_code": "204"}
 
-response:
+full_response_action_end:
     description: The full API response for POST /internal/managed_volume/{id}/end_snapshot
     returned: on success when action is end
     type: dict
     sample: {"status_code": "204"}
 
-response:
+idempotent_response:
     description: A "No changed require" message when the managed volume is already in a writable state.
     returned: When the module idempotent check is succesful and action is begin.
     type: str
@@ -92,6 +89,8 @@ response:
     sample: No change required. The Managed Volume 'I(managed_volume_name)' is already assigned in a read only state.
 '''
 
+from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 try:
     import rubrik_cdm
