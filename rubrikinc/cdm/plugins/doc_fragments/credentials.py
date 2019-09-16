@@ -47,36 +47,57 @@ options:
         description:
           - The DNS hostname or IP address of the Rubrik cluster. By defeault, the module will attempt to
             read this value from the rubrik_cdm_node_ip environment variable. If this environment variable is
-            not present it will need to be manually specified here or in the I(provider) parameter.
+            not present it will need to be manually specified here or in the I(node_ip) parameter.
         required: false
+        type: str
+      api_token:
+        description:
+          - The API Token used for authentication in place of a I(username) or I(password) variable. By defeault, the module
+            will attempt to read this value from the rubrik_cdm_token environment variable. If this environment variable is
+            not present it will need to be manually specified here or in the I(api_token) parameter.
+        required: false
+        type: str
       username:
         description:
           - The username used to authenticate the connection to the Rubrik cluster. By defeault, the module will attempt to
             read this value from the rubrik_cdm_username environment variable. If this environment variable is
-            not present it will need to be manually specified here or in the I(provider) parameter.
+            not present it will need to be manually specified here or in the I(username) parameter.
         required: false
+        type: str
       password:
         description:
           - The password used to authenticate the connection to the Rubrik cluster. By defeault, the module will attempt to
             read this value from the rubrik_cdm_password environment variable. If this environment variable is
-            not present it will need to be manually specified here or in the I(provider) parameter.
+            not present it will need to be manually specified here or in the I(password) parameter.
         required: false
+        type: str
+    type: dict
   node_ip:
     description:
       - The DNS hostname or IP address of the Rubrik cluster. By defeault, the module will attempt to
         read this value from the rubrik_cdm_node_ip environment variable. If this environment variable is
         not present it will need to be manually specified here or in the I(provider) parameter.
     required: false
+    type: str
+  api_token:
+    description:
+      - The API Token used for authentication in place of a I(username) or I(password) variable. By defeault, the module
+        will attempt to read this value from the rubrik_cdm_token environment variable. If this environment variable is
+        not present it will need to be manually specified here or in the I(provider) parameter.
+    required: false
+    type: str
   username:
     description:
       - The username used to authenticate the connection to the Rubrik cluster. By defeault, the module will attempt to
         read this value from the rubrik_cdm_username environment variable. If this environment variable is
         not present it will need to be manually specified here or in the I(provider) parameter.
     required: false
+    type: str
   password:
     description:
       - The password used to authenticate the connection to the Rubrik cluster. By defeault, the module will attempt to
         read this value from the rubrik_cdm_password environment variable. If this environment variable is
         not present it will need to be manually specified here or in the I(provider) parameter.
     required: false
+    type: str
 """
