@@ -58,7 +58,7 @@ jobs:
           name: Execute Ansible Sanity Test
           command: |
             cd ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
-            ~/ansible/bin/ansible-test sanity
+            ~/ansible/bin/ansible-test sanity --skip-test shebang
       - run:
           name: Execute Unit Tests
           command: |
@@ -96,7 +96,7 @@ jobs:
           name: Execute Ansible Sanity Test
           command: |
             cd ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
-            ~/ansible/bin/ansible-test sanity
+            ~/ansible/bin/ansible-test sanity --skip-test shebang
       - run:
           name: Execute Unit Tests
           command: |
@@ -134,7 +134,7 @@ jobs:
           name: Execute Ansible Sanity Test
           command: |
             cd ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
-            ~/ansible/bin/ansible-test sanity
+            ~/ansible/bin/ansible-test sanity --skip-test shebang
       - run:
           name: Execute Unit Tests
           command: |
@@ -172,7 +172,7 @@ jobs:
           name: Execute Ansible Sanity Test
           command: |
             cd ~/.ansible/collections/ansible_collections/rubrik_cdm/cdm/rubrik_cdm/cdm
-            ~/ansible/bin/ansible-test sanity --skip-test pylint
+            ~/ansible/bin/ansible-test sanity --skip-test pylint shebang
       - run:
           name: Execute Unit Tests
           command: |
