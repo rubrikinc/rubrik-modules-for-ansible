@@ -126,7 +126,8 @@ def main():
             choices=[
                 'vmware',
                 'mssql_host',
-                'volume_group']),
+                'volume_group',
+                'ahv']),
         log_backup_frequency_in_seconds=dict(required=False, type='int'),
         log_retention_hours=dict(required=False, type='int'),
         copy_only=dict(required=False, type='bool'),
