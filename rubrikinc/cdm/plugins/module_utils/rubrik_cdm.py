@@ -70,8 +70,11 @@ def credentials(module):
         password = ansible["password"]
         api_token = ansible["api_token"]
 
+    if node_ip is None:
+        module.fail_json(msg="You must provide an node_ip in order to connect to the Rubrik cluster.")
+
     if username is None and password is None and api_token is None:
-        module.fail_json(msg="You must provide an API token or username and password for authentication.")
+        module.fail_json(msg="You must provide an api_token or username and password for authentication.")
 
     if api_token is None:
         if username is None and password is not None or username is not None and password is None:
@@ -81,14 +84,14 @@ def credentials(module):
 
 
 rubrik_provider_spec = {
-    'node_ip': dict(required=True, fallback=(env_fallback, ['rubrik_cdm_node_ip'])),
+    'node_ip': dict(fallback=(env_fallback, ['rubrik_cdm_node_ip'])),
     'username': dict(),
     'password': dict(no_log=True),
     'api_token': dict(no_log=True),
 }
 
 rubrik_manual_spec = {
-    'node_ip': dict(required=True, fallback=(env_fallback, ['rubrik_cdm_node_ip'])),
+    'node_ip': dict(fallback=(env_fallback, ['rubrik_cdm_node_ip'])),
     'username': dict(fallback=(env_fallback, ['rubrik_cdm_username'])),
     'password': dict(fallback=(env_fallback, ['rubrik_cdm_password']), no_log=True),
     'api_token': dict(fallback=(env_fallback, ['rubrik_cdm_token']), no_log=True),
