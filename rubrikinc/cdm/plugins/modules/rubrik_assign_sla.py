@@ -36,7 +36,7 @@ options:
       - The Rubrik object type you want to assign to the SLA Domain.
     required: false
     default: vmware
-    choices: [vmware, mssql_host, volume_group]
+    choices: [vmware, mssql_host, volume_group, ahv]
     type: str
   log_backup_frequency_in_seconds:
     description:
