@@ -151,11 +151,6 @@ class TestRubrikBootstrap(unittest.TestCase):
                 'status': 'IN_PROGRESS'
             }
 
-        def mock_get_v1_cluster_me_version():
-            return {
-                "version": "5.0.2-p1-2130"
-            }
-
         def mock_get_v1_bootstrap_status_1():
             return {
                 'status': 'IN_PROGRESS',
@@ -221,7 +216,7 @@ class TestRubrikBootstrap(unittest.TestCase):
 
         mock_post.return_value = mock_post_v1_bootstrap()
 
-        mock_get.side_effect = [mock_get_v1_cluster_me_version(), mock_get_v1_bootstrap_status_1(), mock_get_v1_bootstrap_status_2()]
+        mock_get.side_effect = [mock_get_v1_bootstrap_status_1(), mock_get_v1_bootstrap_status_2()]
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_bootstrap.main()
@@ -277,8 +272,8 @@ class TestRubrikBootstrap(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(result.exception.args[0]['msg'], 'Unable to establish a connection to the Rubrik cluster.')
 
-    @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.socket, 'getaddrinfo', autospec=True, spec_set=True)
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.socket, 'getaddrinfo', autospec=True, spec_set=True)
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'post', autospec=True, spec_set=True)
     def test_module_fail_resolution_failure(self, mock_post, mock_getaddrinfo, mock_get):
 
@@ -315,7 +310,7 @@ class TestRubrikBootstrap(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(
             result.exception.args[0]['msg'],
-            'Error: Could not resolve address for cluster, or invalid IP/address supplied')
+            'Error: Could not resolve addrsss for cluster, or invalid IP/address supplied')
 
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):
