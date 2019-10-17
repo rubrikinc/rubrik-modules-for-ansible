@@ -94,10 +94,10 @@ class TestRubrikBootstrap(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['response'],
                          'No change required. The Rubrik cluster is already bootstrapped.')
 
-    @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'get', autospec=True, spec_set=True)
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'get', autospec=True, spec_set=True)
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, '__init__', autospec=True, spec_set=True)
-    def test_module_bootstrap_node_no_wait(self, mock_bootstrap_init, mock_post, mock_get):
+    def test_module_bootstrap_node_no_wait(self, mock_bootstrap_init, mock_get, mock_post):
         def mock_get_v1_cluster_me_version():
             return {
                 "version": "5.0.2-p1-2130"
@@ -141,10 +141,15 @@ class TestRubrikBootstrap(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['response']['status'], 'IN_PROGRESS')
 
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.time, 'sleep', autospec=True, spec_set=True)
-    @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'get', autospec=True, spec_set=True)
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'get', autospec=True, spec_set=True)
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, '__init__', autospec=True, spec_set=True)
-    def test_module_bootstrap_node_wait_for_completion(self, mock_bootstrap_init, mock_post, mock_get, mock_sleep):
+    def test_module_bootstrap_node_wait_for_completion(self, mock_bootstrap_init, mock_get, mock_post, mock_sleep):
+        def mock_get_v1_cluster_me_version():
+            return {
+                "version": "5.0.2-p1-2130"
+            }
+
         def mock_post_v1_bootstrap():
             return {
                 'id': 0,
@@ -216,7 +221,7 @@ class TestRubrikBootstrap(unittest.TestCase):
 
         mock_post.return_value = mock_post_v1_bootstrap()
 
-        mock_get.side_effect = [mock_get_v1_bootstrap_status_1(), mock_get_v1_bootstrap_status_2()]
+        mock_get.side_effect = [mock_get_v1_cluster_me_version(), mock_get_v1_bootstrap_status_1(), mock_get_v1_bootstrap_status_2()]
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_bootstrap.main()
@@ -225,10 +230,10 @@ class TestRubrikBootstrap(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['response']['status'], 'SUCCESS')
 
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.time, 'sleep', autospec=True, spec_set=True)
-    @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'get', autospec=True, spec_set=True)
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'get', autospec=True, spec_set=True)
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, '__init__', autospec=True, spec_set=True)
-    def test_module_fail_connection_timeout(self, mock_bootstrap_init, mock_post, mock_sleep, mock_get):
+    def test_module_fail_connection_timeout(self, mock_bootstrap_init, mock_get, mock_post, mock_sleep):
         def mock_get_v1_cluster_me_version():
             return {
                 "version": "5.0.2-p1-2130"
@@ -310,7 +315,7 @@ class TestRubrikBootstrap(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(
             result.exception.args[0]['msg'],
-            'Error: Could not resolve addrsss for cluster, or invalid IP/address supplied')
+            'Error: Could not resolve address for cluster, or invalid IP/address supplied')
 
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):

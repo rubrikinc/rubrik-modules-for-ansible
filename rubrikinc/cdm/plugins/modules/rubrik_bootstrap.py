@@ -177,7 +177,9 @@ def main():
 
     try:
         api_request = rubrik.setup_cluster(cluster_name, admin_email, admin_password, management_gateway, management_subnet_mask,
-                                           node_config, enable_encryption, dns_search_domains, dns_nameservers, ntp_servers, wait_for_completion, timeout)
+                                           node_config, enable_encryption, dns_search_domains, dns_nameservers, ntp_servers,
+                                           wait_for_completion, timeout=timeout)
+
     except Exception as error:
         module.fail_json(msg=str(error))
 
