@@ -85,9 +85,9 @@ def credentials(module):
 
 rubrik_provider_spec = {
     'node_ip': dict(fallback=(env_fallback, ['rubrik_cdm_node_ip'])),
-    'username': dict(),
-    'password': dict(no_log=True),
-    'api_token': dict(no_log=True),
+    'username': dict(fallback=(env_fallback, ['rubrik_cdm_username'])),
+    'password': dict(fallback=(env_fallback, ['rubrik_cdm_password']), no_log=True),
+    'api_token': dict(fallback=(env_fallback, ['rubrik_cdm_token']), no_log=True),
 }
 
 rubrik_manual_spec = {
