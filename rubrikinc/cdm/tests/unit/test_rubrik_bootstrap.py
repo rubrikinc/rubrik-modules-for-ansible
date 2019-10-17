@@ -234,7 +234,6 @@ class TestRubrikBootstrap(unittest.TestCase):
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, 'post', autospec=True, spec_set=True)
     @patch.object(rubrik_bootstrap.rubrik_cdm.rubrik_cdm.Bootstrap, '__init__', autospec=True, spec_set=True)
     def test_module_fail_connection_timeout(self, mock_bootstrap_init, mock_post, mock_sleep, mock_get):
-        
         def mock_get_v1_cluster_me_version():
             return {
                 "version": "5.0.2-p1-2130"
@@ -309,7 +308,6 @@ class TestRubrikBootstrap(unittest.TestCase):
         mock_getaddrinfo.side_effect = mock_getaddrinfo_failure()
 
         mock_get.return_value = mock_get_v1_cluster_me_version()
-
 
         with self.assertRaises(AnsibleFailJson) as result:
             rubrik_bootstrap.main()
