@@ -1,13 +1,9 @@
 #!/usr/bin/python
-# Copyright: Rubrik
+# (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or
 # https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
-
-from module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
-
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -91,7 +87,7 @@ options:
     default: 30
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
@@ -115,6 +111,9 @@ response:
     returned: on success
     type: dict
 '''
+
+from module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 
 try:
@@ -178,7 +177,9 @@ def main():
 
     try:
         api_request = rubrik.setup_cluster(cluster_name, admin_email, admin_password, management_gateway, management_subnet_mask,
-                                           node_config, enable_encryption, dns_search_domains, dns_nameservers, ntp_servers, wait_for_completion, timeout)
+                                           node_config, enable_encryption, dns_search_domains, dns_nameservers, ntp_servers,
+                                           wait_for_completion, timeout=timeout)
+
     except Exception as error:
         module.fail_json(msg=str(error))
 
