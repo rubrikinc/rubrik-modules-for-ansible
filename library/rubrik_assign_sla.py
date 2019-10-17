@@ -4,8 +4,6 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -23,7 +21,8 @@ author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   object_name:
     description:
-      - The name of the Rubrik object you wish to assign to an SLA Domain. When the I(object_type) is 'volume_group', the I(object_name) can be a list of volumes.
+      - The name of the Rubrik object you wish to assign to an SLA Domain.
+      - When the I(object_type) is 'volume_group', the I(object_name) can be a list of volumes.
     required: true
     type: raw
   sla_name:
@@ -37,31 +36,27 @@ options:
       - The Rubrik object type you want to assign to the SLA Domain.
     required: false
     default: vmware
-    choices: [vmware, mssql_host, volume_group]
+    choices: [vmware, mssql_host, volume_group, ahv]
     type: str
   log_backup_frequency_in_seconds:
     description:
      - The MSSQL Log Backup frequency you'd like to specify with the SLA. Required when the I(object_type) is mssql_host.
     required: false
-    default: None
     type: int
   log_retention_hours:
     description:
      - The MSSQL Log Retention frequency you'd like to specify with the SLA. Required when the I(object_type) is mssql_host.
     required: false
-    default: None
     type: int
   copy_only:
     description:
      - Take Copy Only Backups with MSSQL. Required when the I(object_type) is mssql_host.
     required: false
-    default: None
     type: bool
   windows_host:
     description:
       - The name of the Windows host that contains the relevant volume group. Required when the I(object_type) is volume_group.
     required: false
-    default: None
     type: str
   timeout:
     description:
@@ -71,7 +66,7 @@ options:
     type: int
 
 extends_documentation_fragment:
-    - rubrik_cdm
+    - rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
@@ -88,25 +83,24 @@ EXAMPLES = '''
     log_retention_hours: 12
     copy_only: false
 
-- rubrik_assign_sla:
-    object_name: ["C:\\", "D:\\"]
-    sla_name: "Gold"
-    windows_host: "windows2016.rubrik.com"
 '''
 
 RETURN = '''
-response:
+full_response:
     description: The full API reponse for POST /internal/sla_domain/{sla_id}/assign.
     returned: on success
     type: dict
     sample: {"status_code": "204"}
 
-response:
+idempotent_response:
     description: A "No changed required" message when the Rubrik object is already assigned to the SLA Domain.
     returned: When the module idempotent check is succesful.
     type: str
     sample: No change required. The vSphere VM 'object_name' is already assigned to the 'sla_name' SLA Domain.
 '''
+
+from module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
 
 
 try:
@@ -132,11 +126,12 @@ def main():
             choices=[
                 'vmware',
                 'mssql_host',
-                'volume_group']),
-        log_backup_frequency_in_seconds=dict(required=False, default=None, type='int'),
-        log_retention_hours=dict(required=False, default=None, type='int'),
-        copy_only=dict(required=False, default=None, type='bool'),
-        windows_host=dict(required=False, default=None, type='str'),
+                'volume_group',
+                'ahv']),
+        log_backup_frequency_in_seconds=dict(required=False, type='int'),
+        log_retention_hours=dict(required=False, type='int'),
+        copy_only=dict(required=False, type='bool'),
+        windows_host=dict(required=False, type='str'),
         timeout=dict(required=False, type='int', default=30),
     )
 
@@ -163,7 +158,8 @@ def main():
     if object_type == "mssql_host":
         if log_backup_frequency_in_seconds is None or log_retention_hours is None or log_retention_hours is None:
             module.fail_json(
-                msg="When the object_type is 'mssql_host', the 'log_backup_frequency_in_seconds', 'log_retention_hours', 'copy_only' paramaters must be populated.")
+                msg="""When the object_type is 'mssql_host', the 'log_backup_frequency_in_seconds',
+                'log_retention_hours', 'copy_only' paramaters must be populated.""")
 
     if object_type == "volume_group":
         if windows_host is None:
