@@ -20,8 +20,7 @@ version_added: '2.8'
 author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 
 
-extends_documentation_fragment:
-    - rubrikinc.cdm.credentials
+extends_documentation_fragment: rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 

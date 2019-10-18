@@ -45,8 +45,7 @@ options:
     default: 15
 
 
-extends_documentation_fragment:
-    - rubrikinc.cdm.credentials
+extends_documentation_fragment: rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
 
