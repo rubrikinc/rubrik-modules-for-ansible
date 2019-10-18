@@ -1,3 +1,5 @@
+# This file will update the module_utils import path in all modules to support Ansible Collections and then create the collection .tar
+
 import fileinput
 import os
 
