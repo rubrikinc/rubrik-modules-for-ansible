@@ -54,7 +54,7 @@ idempotent_response:
     sample: No change required. The Rubrik cluster is already configured with I(location) as its location.
 '''
 
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ..module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 from ansible.module_utils.basic import AnsibleModule
 
 try:
