@@ -129,7 +129,7 @@ idempotent_response:
     sample: No change required. The Rubrik cluster already has a NAS Fileset named 'name' configured with the provided variables.
 '''
 
-from ..module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 from ansible.module_utils.basic import AnsibleModule
 
 try:

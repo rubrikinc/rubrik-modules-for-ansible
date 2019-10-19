@@ -118,7 +118,7 @@ idempotent_response:
     sample: No change required. The 'name' archival location is already configured on the Rubrik cluster.
 '''
 
-from ..module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 from ansible.module_utils.basic import AnsibleModule
 
 try:
