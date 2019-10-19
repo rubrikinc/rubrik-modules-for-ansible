@@ -5,6 +5,12 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+<<<<<<< HEAD:rubrikinc/cdm/plugins/modules/rubrik_cluster_version.py
+=======
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.basic import AnsibleModule
+
+>>>>>>> devel:library/rubrik_cluster_version.py
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'status': ['preview'],

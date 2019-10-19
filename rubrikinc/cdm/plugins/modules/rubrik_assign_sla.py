@@ -65,7 +65,12 @@ options:
     default: 30
     type: int
 
+<<<<<<< HEAD:rubrikinc/cdm/plugins/modules/rubrik_assign_sla.py
 extends_documentation_fragment: rubrikinc.cdm.credentials
+=======
+extends_documentation_fragment:
+    - rubrikinc.cdm.credentials
+>>>>>>> devel:library/rubrik_assign_sla.py
 requirements: [rubrik_cdm]
 '''
 
@@ -98,7 +103,11 @@ idempotent_response:
     sample: No change required. The vSphere VM 'object_name' is already assigned to the 'sla_name' SLA Domain.
 '''
 
+<<<<<<< HEAD:rubrikinc/cdm/plugins/modules/rubrik_assign_sla.py
 from ..module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+=======
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+>>>>>>> devel:library/rubrik_assign_sla.py
 from ansible.module_utils.basic import AnsibleModule
 
 

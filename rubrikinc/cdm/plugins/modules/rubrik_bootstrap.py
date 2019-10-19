@@ -86,7 +86,12 @@ options:
     type: int
     default: 30
 
+<<<<<<< HEAD:rubrikinc/cdm/plugins/modules/rubrik_bootstrap.py
 extends_documentation_fragment: rubrikinc.cdm.credentials
+=======
+extends_documentation_fragment:
+    - rubrikinc.cdm.credentials
+>>>>>>> devel:library/rubrik_bootstrap.py
 requirements: [rubrik_cdm]
 '''
 
@@ -111,7 +116,11 @@ response:
     type: dict
 '''
 
+<<<<<<< HEAD:rubrikinc/cdm/plugins/modules/rubrik_bootstrap.py
 from ..module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+=======
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+>>>>>>> devel:library/rubrik_bootstrap.py
 from ansible.module_utils.basic import AnsibleModule
 
 
