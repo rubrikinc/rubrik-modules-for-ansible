@@ -102,11 +102,6 @@ idempotent_response:
     sample: No change required. The vSphere VM 'object_name' is already assigned to the 'sla_name' SLA Domain.
 '''
 
-<< << << < HEAD: rubrikinc / cdm / plugins / modules / rubrik_assign_sla.py
-== == == =
->>>>>> > devel: library / rubrik_assign_sla.py
-
-
 try:
     import rubrik_cdm
     HAS_RUBRIK_SDK = True
