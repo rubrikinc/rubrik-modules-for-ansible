@@ -1,16 +1,11 @@
 #!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+from ansible.module_utils.basic import AnsibleModule
+from ..module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-<<<<<<< HEAD:rubrikinc/cdm/plugins/modules/rubrik_add_vcenter.py
-=======
-from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
-
-
->>>>>>> devel:library/rubrik_add_vcenter.py
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'status': ['preview'],
@@ -84,10 +79,6 @@ idempotent_response:
     type: str
     sample: No change required. The vCenter '`vcenter_ip`' has already been added to the Rubrik cluster.
 '''
-
-
-from ..module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
 
 
 try:

@@ -1,16 +1,11 @@
 #!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+from ansible.module_utils.basic import AnsibleModule
+from ..module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-<<<<<<< HEAD:rubrikinc/cdm/plugins/modules/rubrik_on_demand_snapshot.py
-=======
-from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
-
-
->>>>>>> devel:library/rubrik_on_demand_snapshot.py
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'status': ['preview'],
@@ -133,9 +128,6 @@ job_status_url:
     sample: https://192.168.8.19/api/v1/fileset/request/CREATE_FILESET_SNAPSHOT_a2f6161c-33a4-3123-efaw-de7d1bef284e_dc0983bf-1c47-45ce-9ce0-b8df3c93b5fa:::0
 '''
 
-
-from ..module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible.module_utils.basic import AnsibleModule
 
 try:
     import rubrik_cdm

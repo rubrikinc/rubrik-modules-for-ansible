@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # (c) 2018 Rubrik, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ..module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
@@ -65,12 +68,8 @@ options:
     default: 30
     type: int
 
-<<<<<<< HEAD:rubrikinc/cdm/plugins/modules/rubrik_assign_sla.py
 extends_documentation_fragment: rubrikinc.cdm.credentials
-=======
-extends_documentation_fragment:
-    - rubrikinc.cdm.credentials
->>>>>>> devel:library/rubrik_assign_sla.py
+
 requirements: [rubrik_cdm]
 '''
 
@@ -103,12 +102,9 @@ idempotent_response:
     sample: No change required. The vSphere VM 'object_name' is already assigned to the 'sla_name' SLA Domain.
 '''
 
-<<<<<<< HEAD:rubrikinc/cdm/plugins/modules/rubrik_assign_sla.py
-from ..module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-=======
-from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
->>>>>>> devel:library/rubrik_assign_sla.py
-from ansible.module_utils.basic import AnsibleModule
+<< << << < HEAD: rubrikinc / cdm / plugins / modules / rubrik_assign_sla.py
+== == == =
+>>>>>> > devel: library / rubrik_assign_sla.py
 
 
 try:
