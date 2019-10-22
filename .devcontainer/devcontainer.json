@@ -1,0 +1,23 @@
+{
+	"name": "Rubrik Ansible Module Development",
+	"dockerFile": "Dockerfile",
+	"context": "..",
+	"extensions": [
+		"ms-python.python",
+		"njpwerner.autodocstring",
+		"github.vscode-pull-request-github",
+		"bierner.markdown-preview-github-styles",
+		"josa.markdown-table-formatter",
+		"mrmlnc.vscode-duplicate",
+		"codezombiech.gitignore"
+	],
+	"postCreateCommand": "chmod +x .devcontainer/start.sh && . .devcontainer/start.sh",
+	"settings": {
+		"terminal.integrated.shell.linux": "/bin/zsh",
+		"python.pythonPath": "/usr/local/bin/python",
+		"python.linting.pylintEnabled": true,
+		"python.linting.pylintPath": "/usr/local/bin/pylint",
+		"python.linting.enabled": true,
+		"python.formatting.autopep8Path": "/usr/local/bin/pylint/autopep8"
+	}
+}
