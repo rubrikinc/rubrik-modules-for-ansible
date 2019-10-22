@@ -29,6 +29,7 @@ RUN mkdir /workspace
 RUN git clone https://github.com/ansible/ansible.git /workspaces/ansible
 
 RUN mkdir -p /root/.ansible/collections/ansible_collections/rubrikinc/cdm
+RUN mkdir -p /workspaces/ansible/lib/ansible/modules/cloud/rubrikinc
 
 ENV PYTHONPATH=/workspaces/rubrik-modules-for-ansible/rubrikinc/cdm:/root/.ansible/collections
 
