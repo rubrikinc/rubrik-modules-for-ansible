@@ -326,7 +326,7 @@ class TestRubrikPhysicalHost(unittest.TestCase):
                 'hostname': 'hostname'
             })
 
-            return {"status_code: 204"}
+            return {"status_code": "204"}
 
         set_module_args({
             'node_ip': '1.1.1.1',

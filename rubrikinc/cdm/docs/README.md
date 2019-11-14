@@ -2,7 +2,12 @@
 
 ## Introduction to the Rubrik Modules for Ansible
 
-Rubrik’s API first architecture enables organizations to embrace and integrate Rubrik functionality into their existing automation processes. While Rubrik APIs can be consumed natively, companies are at various stages in their automation journey with different levels of knowledge on staff. The Rubrik Modules for Ansible extends upon the Rubrik Python SDK, transforming Rubrik API functionality into easy to consume Ansible modules which eliminates the need to create inidividual automation scripts and extends upon one of Rubrik’s main design centers - simplicity.
+Rubrik's API first architecture enables organizations to embrace and integrate
+Rubrik functionality into their existing automation processes. While Rubrik APIs can be consumed natively,
+companies are at various stages in their automation journey with different levels of knowledge on staff.
+The Rubrik Modules for Ansible extends upon the RubrikPython SDK, transforming Rubrik API functionality
+into easy to consume Ansible modules which eliminates the need to create inidividual automation scripts and extends
+upon one of Rubrik's main design centers - simplicity.
 
 ## Authentication Mechanisms
 
