@@ -14,9 +14,9 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 module: rubrik_assign_physical_host_fileset
-short_description: Assign a Rubrik fileset to a Linux or Windows machine.
+short_description: Assign a Rubrik fileset to a Linux, Unix or Windows machine.
 description:
-    - Assign a fileset to a Linux or Windows machine. If you have multiple filesets with identical names, you will
+    - Assign a fileset to a Linux, Unix or Windows machine. If you have multiple filesets with identical names, you will
       need to populate the filesets properties to find a specific match. Filesets with identical names and properties are not supported.
 version_added: '2.8'
 author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
@@ -29,7 +29,7 @@ options:
     type: str
   fileset_name:
     description:
-      - The name of the Fileset you wish to assign to the Linux or Windows host.
+      - The name of the Fileset you wish to assign to the Linux, Unix or Windows host.
     required: true
     type: str
   sla_name:
@@ -42,7 +42,7 @@ options:
     description:
       - The operating system of the physical host you are assigning a Fileset to.
     required: true
-    choices: ['Linux', 'Windows']
+    choices: ['Linux', 'Windows', 'UnixLike']
     type: str
   include:
     description:
@@ -149,7 +149,7 @@ def main():
             hostname=dict(required=True, type='str', aliases=['ip_address']),
             fileset_name=dict(required=True, type='str'),
             sla_name=dict(required=True, type='str', aliases=['sla']),
-            operating_system=dict(required=True, type='str', choices=['Linux', 'Windows']),
+            operating_system=dict(required=True, type='str', choices=['Linux', 'Windows', 'UnixLike']),
             include=dict(required=False, type='list', default=[]),
             exclude=dict(required=False, type='list', default=[]),
             exclude_exception=dict(required=False, type='list', default=[]),
