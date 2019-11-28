@@ -42,7 +42,7 @@ options:
     description:
       - The operating system of the physical host you are assigning a Fileset to.
     required: true
-    choices: ['Linux', 'Windows']
+    choices: ['Linux', 'Windows', 'UnixLike']
     type: str
   include:
     description:
@@ -149,7 +149,7 @@ def main():
             hostname=dict(required=True, type='str', aliases=['ip_address']),
             fileset_name=dict(required=True, type='str'),
             sla_name=dict(required=True, type='str', aliases=['sla']),
-            operating_system=dict(required=True, type='str', choices=['Linux', 'Windows']),
+            operating_system=dict(required=True, type='str', choices=['Linux', 'Windows', 'UnixLike']),
             include=dict(required=False, type='list', default=[]),
             exclude=dict(required=False, type='list', default=[]),
             exclude_exception=dict(required=False, type='list', default=[]),
