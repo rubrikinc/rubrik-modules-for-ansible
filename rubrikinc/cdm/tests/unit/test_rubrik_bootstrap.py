@@ -9,8 +9,7 @@ from ansible.module_utils._text import to_bytes
 from urllib.error import HTTPError
 from rubrik_cdm.exceptions import RubrikException, APICallException
 from socket import gaierror
-from plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-import plugins.modules.rubrik_bootstrap as rubrik_bootstrap
+import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_bootstrap as rubrik_bootstrap
 
 
 def set_module_args(args):
@@ -315,7 +314,7 @@ class TestRubrikBootstrap(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['failed'], True)
         self.assertEqual(
             result.exception.args[0]['msg'],
-            'Error: Could not resolve address for cluster, or invalid IP/address supplied')
+            'Error: Could not resolve addrsss for cluster, or invalid IP/address supplied')
 
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):
