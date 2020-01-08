@@ -98,4 +98,4 @@ class TestRubrikLoginBanner(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['changed'], False)
         self.assertEqual(
             result.exception.args[0]['response'],
-            'No change required. The Rubrik cluster is already configured with I(banner_text) as it\'s banner.')
+            "No change required. The Rubrik cluster is already configured with the login banner text '`banner`'.")
