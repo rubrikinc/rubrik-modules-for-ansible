@@ -60,7 +60,7 @@ class TestRubrikLoginBanner(unittest.TestCase):
             return {}
 
         def mock_put_internal_cluster_me_login_banner():
-            return {'status_code': '200'}
+            return {'loginBanner': 'Banner Test'}
 
         set_module_args({
             'banner_text': 'Banner Test',
@@ -76,7 +76,7 @@ class TestRubrikLoginBanner(unittest.TestCase):
             rubrik_login_banner.main()
 
         self.assertEqual(result.exception.args[0]['changed'], True)
-        self.assertEqual(result.exception.args[0]['response']['status_code'], '200')
+        self.assertEqual(result.exception.args[0]['response']['loginBanner'], 'Banner Test')
 
     @patch.object(rubrik_login_banner.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_idempotence(self, mock_get):
