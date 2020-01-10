@@ -91,14 +91,18 @@ def main():
         rubrik = rubrik_cdm.Connect(node_ip, username, password, api_token)
     except Exception as error:
         module.fail_json(msg=str(error))
+    #setup a check-mode message that resembles the idempotence checks of the python-sdk cdm
     if module.check_mode:
         bannerresponse = rubrik.get("internal", "/cluster/me/login_banner", timeout=ansible["timeout"])
         if bannerresponse["loginBanner"] == ansible["banner_text"]:
             results["changed"] = False
-            results["response"] = "Check-Mode: No change required. The Rubrik cluster is already configured with the login banner text '`banner`'."
+            results["response"] = "check-mode: No change required. The Rubrik cluster is already configured with the login banner text '`banner`'."
             module.exit_json(**results)
         results["changed"]=True
-        results["response"]=bannerresponse
+        if "loginBanner" in bannerresponse:
+            results["response"] = "check-mode: would have changed: \""+bannerresponse["loginBanner"]+ "\" => \""+ ansible["banner_text"]+"\""
+        else:
+            results["response"] = "check-mode: would have changed: UNSET => \""+ ansible["banner_text"]+"\""
         module.exit_json(**results) 
     try:
         api_request = rubrik.configure_login_banner(ansible["banner_text"], ansible["timeout"])
