@@ -76,7 +76,7 @@ def main():
 
     argument_spec.update(rubrik_argument_spec)
 
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
+    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True)
 
     ansible = module.params
 
@@ -91,7 +91,15 @@ def main():
         rubrik = rubrik_cdm.Connect(node_ip, username, password, api_token)
     except Exception as error:
         module.fail_json(msg=str(error))
-
+    if self.module.check_mode:
+        bannerresponse = rubrik.get("internal", "/cluster/me/login_banner", timeout=ansible["timeout"])
+        if bannerresponse["loginBanner"] == ansible["banner_text"]:
+            results["changed"] = False
+            results["response"] = "Check-Mode: No change required. The Rubrik cluster is already configured with the login banner text '`banner`'."
+            return
+        results["changed"]=True
+        results["response"]=bannerresponse
+        return 
     try:
         api_request = rubrik.configure_login_banner(ansible["banner_text"], ansible["timeout"])
     except Exception as error:
