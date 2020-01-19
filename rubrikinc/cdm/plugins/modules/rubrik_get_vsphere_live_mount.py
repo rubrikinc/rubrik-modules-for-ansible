@@ -50,7 +50,7 @@ version:
     type: dict
 '''
 
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 from ansible.module_utils.basic import AnsibleModule
 
 try:
