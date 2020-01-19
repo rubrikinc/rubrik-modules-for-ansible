@@ -31,7 +31,7 @@ options:
     required: False
     type: str
     default: vmware
-    choices: [vmware, physical_host, ahv]
+    choices: [vmware, physical_host, ahv, mssql_db]
 
   sla_name:
     description:
@@ -54,6 +54,27 @@ options:
     type: str
     default: None
     choices: [None, Linux, Windows]
+
+  sql_host:
+    description:
+      - The name of the SQL Host hosting the specified database. Only required when taking a on-demand snapshot of a MSSQL DB.
+    required: False
+    type: str
+    default: None
+
+  sql_instance:
+    description:
+      - The name of the SQL Instance hosting the specified database. Only required when taking a on-demand snapshot of a MSSQL DB.
+    required: False
+    type: str
+    default: None
+
+  timeout:
+      description:
+        - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
+      required: False
+      default: 30
+      type: int
 
 
 extends_documentation_fragment: rubrikinc.cdm.credentials
@@ -142,15 +163,22 @@ def main():
 
     argument_spec = dict(
         object_name=dict(required=True, type='str'),
-        object_type=dict(required=False, type='str', default="vmware", choices=["vmware", "physical_host", "ahv"]),
+        object_type=dict(required=False, type='str', default="vmware", choices=["vmware", "physical_host", "ahv", "mssql_db"]),
         sla_name=dict(required=False, type='str', default='current'),
         fileset=dict(required=False, type='str', default='None'),
         host_os=dict(required=False, type='str', default='None', choices=["None", "Linux", "Windows"]),
+        sql_host=dict(required=False, type='str', default='None'),
+        sql_instance=dict(required=False, type='str', default='None'),
+        timeout=dict(required=False, type='int', default=30),
     )
+
+    required_if = [
+        ["object_type", "mssql_db", ["sql_host", "sql_instance"]],
+    ]
 
     argument_spec.update(rubrik_argument_spec)
 
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
+    module = AnsibleModule(argument_spec=argument_spec, required_if=required_if, supports_check_mode=False)
 
     results = {}
 
@@ -179,9 +207,14 @@ def main():
     sla_name = ansible["sla_name"]
     fileset = ansible["fileset"]
     host_os = ansible["host_os"]
+    sql_host = ansible["sql_host"]
+    sql_instance = ansible["sql_instance"]
+    timeout = ansible["timeout"]
 
     try:
-        api_request, job_status_url = rubrik.on_demand_snapshot(object_name, object_type, sla_name, fileset, host_os)
+        api_request, job_status_url = rubrik.on_demand_snapshot(
+            object_name, object_type, sla_name, fileset, host_os, sql_host,
+            sql_instance, sql_db=object_name, timeout=timeout)
     except Exception as error:
         module.fail_json(msg=str(error))
 
