@@ -167,7 +167,7 @@ def main():
         ]
     ]
 
-    module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
+    module = AnsibleModule(argument_spec=argument_spec, required_together=required_together, supports_check_mode=False)
 
     ansible = module.params
 
