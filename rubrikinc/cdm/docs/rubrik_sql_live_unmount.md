@@ -6,11 +6,10 @@ Delete a Microsoft SQL Live Mount from the Rubrik cluster.
 # Example
 
 ```yaml
-- rubrik_sql_live_mount:
+- rubrik_sql_live_unmount:
     mounted_db_name: 'AdventureWorksClone'
     sql_instance: 'MSSQLSERVER'
     sql_host: 'sql.rubrikdemo.com'
-    force: false
 ```
 
 # Arugments
@@ -30,16 +29,16 @@ Delete a Microsoft SQL Live Mount from the Rubrik cluster.
 
 ## Module Specific
 
-| Name                   | Description                                                                                                                                                         | Default | Type | Choices | Mandatory | Aliases |
-|------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|------|---------|-----------|---------|
-| mounted_db_name        | The name of the Live Mounted database to be unmounted.    |         | str  |         | true      |         |
-| sql_instance           | The SQL instance name with the database you wish to Live Mount.                               | None | str  |         |true|         |
-| sql_host               | The name of the MSSQL host running the Live Mounted database to be unmounted.  | None   | str |         |true|         |
-| force             | Remove all data within the Rubrik cluster related to the Live Mount, even if the SQL Server database cannot be contacted.  | false    | bool |        | false |         |
-| timeout                | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error. | 30      | int  |         |false|         |
+| Name            | Description                                                                                                               | Default | Type | Choices | Mandatory | Aliases |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------|---------|------|---------|-----------|---------|
+| mounted_db_name | The name of the Live Mounted database to be unmounted.                                                                    |         | str  |         | true      |         |
+| sql_instance    | The SQL instance name with the database you wish to Live Mount.                                                           | None    | str  |         | true      |         |
+| sql_host        | The name of the MSSQL host running the Live Mounted database to be unmounted.                                             | None    | str  |         | true      |         |
+| force           | Remove all data within the Rubrik cluster related to the Live Mount, even if the SQL Server database cannot be contacted. | false   | bool |         | false     |         |
+| timeout         | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.              | 30      | int  |         | false     |         |
 
 # Return Values
 
-| Name     | Description                                                                | Returned | Type | Aliases |
-|----------|----------------------------------------------------------------------------|----------|------|---------|
-| response | The full response of `DELETE /mssql/db/mount/{id}?force={bool}`.           | success  | dict |         |
+| Name     | Description                                                      | Returned | Type | Aliases |
+|----------|------------------------------------------------------------------|----------|------|---------|
+| response | The full response of `DELETE /mssql/db/mount/{id}?force={bool}`. | success  | dict |         |
