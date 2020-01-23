@@ -668,7 +668,7 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
             rubrik_on_demand_snapshot.main()
 
         self.assertEqual(result.exception.args[0]['failed'], True)
-        self.assertEqual(result.exception.args[0]['msg'], "value of object_type must be one of: vmware, physical_host, ahv, got: foo")
+        self.assertEqual(result.exception.args[0]['msg'], "value of object_type must be one of: vmware, physical_host, ahv, mssql_db, got: foo")
 
     def test_module_fail_with_incorrect_host_os(self):
         set_module_args({
