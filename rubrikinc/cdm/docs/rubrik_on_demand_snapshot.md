@@ -12,10 +12,10 @@ Take an on-demand snapshot of a Rubrik object.
     object_type: "VMware"
 
 - rubrik_on_demand_snapshot:
-     object_name: "ansible-demo"
-     object_type: "physical_host"
-     fileset: "Python SDK"
-     host_os: "Linux"
+    object_name: "ansible-demo"
+    object_type: "physical_host"
+    fileset: "Python SDK"
+    host_os: "Linux"
 ```
 
 # Arugments
