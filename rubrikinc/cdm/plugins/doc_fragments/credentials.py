@@ -48,7 +48,7 @@ options:
           - The DNS hostname or IP address of the Rubrik cluster. By defeault, the module will attempt to
             read this value from the rubrik_cdm_node_ip environment variable. If this environment variable is
             not present it will need to be manually specified here or in the I(node_ip) parameter.
-        required: True
+        required: False
         type: str
       api_token:
         description:
@@ -77,7 +77,7 @@ options:
       - The DNS hostname or IP address of the Rubrik cluster. By defeault, the module will attempt to
         read this value from the rubrik_cdm_node_ip environment variable. If this environment variable is
         not present it will need to be manually specified here or in the I(provider) parameter.
-    required: True
+    required: False
     type: str
   api_token:
     description:
