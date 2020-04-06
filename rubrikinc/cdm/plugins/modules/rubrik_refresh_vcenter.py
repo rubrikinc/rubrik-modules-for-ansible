@@ -17,7 +17,7 @@ short_description: Refresh the metadata for the specified vCenter Server
 description:
     - Refresh the metadata for the specified vCenter Server.
 version_added: '2.8'
-author: Rubrik Build Team (Matt Elliott) <build@rubrik.com>
+author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   vcenter_ip:
     description:
@@ -43,17 +43,20 @@ requirements: [rubrik_cdm]
 
 EXAMPLES = '''
 - name: Refresh the metadata for the specified vCenter Server
-    rubrik_refresh_vcenter:
-        vcenter_ip: vcenter.example.com
-        wait_for_completion: true
+  rubrik_refresh_vcenter:
+    vcenter_ip: vcenter.example.com
+    wait_for_completion: true
 '''
 
 RETURN = '''
-response:
+full_response:
     description: The full API response for the API call.
     returned: on success
     type: dict
-    sample: [fix].
+    sample:
+      {
+        "fix": "me"
+    }
 '''
 
 from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
