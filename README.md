@@ -14,7 +14,7 @@ Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud D
 
 # :woman_astronaut: Ansible Galaxy
 
-* [Galaxy Roles](https://galaxy.ansible.com/rubrik-devops)
+* [Galaxy Collection](https://galaxy.ansible.com/rubrikinc/cdm)
 
 # :mag: Example
 
