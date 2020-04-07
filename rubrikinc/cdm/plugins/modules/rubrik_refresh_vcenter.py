@@ -55,8 +55,18 @@ full_response:
     type: dict
     sample:
       {
-        "fix": "me"
-    }
+        "endTime": "2020-04-07T00:30:28.448Z",
+        "id": "REFRESH_METADATA_01234567-8910-1abc-d435-0abc1234d567_01234567-8910-1abc-d435-0abc1234d567:::0",
+        "links": [
+            {
+                "href": "https://cluster-b-rr.rubrik.us/api/v1/vmware/vcenter/request/REFRESH_METADATA_01234567-8910-1abc-d435-0abc1234d567_01234567-8910-1abc-d435-0abc1234d567:::0",
+                "rel": "self"
+            }
+        ],
+        "nodeId": "cluster:::RVM111S000000",
+        "startTime": "2020-04-07T00:29:50.585Z",
+        "status": "SUCCEEDED"
+      }
 '''
 
 from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
