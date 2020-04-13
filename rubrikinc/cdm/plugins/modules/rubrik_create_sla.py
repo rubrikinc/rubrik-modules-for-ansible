@@ -40,7 +40,7 @@ options:
     type: int
   daily_retention:
     description:
-      - Number of hours to retain the daily backups.
+      - Number of days to retain the daily backups.
     required: false
     type: int
   monthly_frequency:
@@ -50,7 +50,7 @@ options:
     type: int
   monthly_retention:
     description:
-      - Number of hours to retain the monthly backups.
+      - Number of months to retain the monthly backups.
     required: false
     type: int
   yearly_frequency:
@@ -60,7 +60,7 @@ options:
     type: int
   yearly_retention:
     description:
-      - Number of hours to retain the yearly backups.
+      - Number of years to retain the yearly backups.
     required: false
     type: int
   archive_name:
@@ -101,7 +101,7 @@ EXAMPLES = '''
     monthly_retention: 12
     yearly_frequency: 1
     yearly_retention: 5
-    archive_name: AWS-S3-Bucket
+    archive_name: S3:AWS-S3-Bucket
     retention_on_brik_in_days: 30
     instant_archive: True
 '''

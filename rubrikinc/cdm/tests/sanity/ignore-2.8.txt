@@ -1,0 +1,6 @@
+plugins/modules/rubrik_assign_physical_host_fileset.py validate-modules:parameter-list-no-elements
+plugins/modules/rubrik_physical_fileset.py validate-modules:parameter-list-no-elements
+plugins/modules/rubrik_bootstrap.py validate-modules:parameter-list-no-elements
+plugins/modules/rubrik_configure_ntp.py validate-modules:parameter-list-no-elements
+plugins/modules/rubrik_dns_servers.py validate-modules:parameter-list-no-elements
+plugins/modules/rubrik_nas_fileset.py validate-modules:parameter-list-no-elements

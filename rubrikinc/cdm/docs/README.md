@@ -99,13 +99,23 @@ The following are the prerequisites in order to successfully install and run the
 
 ## Installation
 
-**Install the Rubrik SDK for Python.**
+**Install the Rubrik SDK for Python**
 
 `pip install rubrik_cdm`
 
-**Clone the GitHub repository to a local directory**
+### Install with Git
+
+Clone the GitHub repository to a local directory
 
 `git clone https://github.com/rubrikinc/rubrik-modules-for-ansible.git`
+
+### Install with Ansible Galaxy
+
+`ansible-galaxy collection install rubrikinc.cdm`
+
+> **NOTE**: If you install via Ansible Galaxy, you will need to reference the modules names
+> as their fully qualified name by prepending `rubrikinc.cdm` to the beginning of the
+> module name. For example, `rubrikinc.cdm.rubrik_on_demand_snapshot`. 
 
 ## Configuration
 
@@ -145,6 +155,10 @@ Create a file named `rubrik.yml` in your working directory and copy in the follo
 
 ```
 
+> **NOTE**: If you installed via Ansible Galaxy, you will need to reference the module names
+> as its fully qualified name by prepending `rubrikinc.cdm` to the beginning of the module name. 
+> In this case, `rubrikinc.cdm.rubrik_on_demand_snapshot`. 
+
 #### Breaking Down the Sample Workflow
 
 This section of code represents generic "Ansible" related configurations:
@@ -180,7 +194,7 @@ tasks:
 
 In this example, we are automatically importing the Rubrik cluster credentials through pre-defined environment variables so there is no need to define them in the task.
 
-* `rubrik_on_demand_snapshot` is the specific Ansible module we wish to use
+* `rubrik_on_demand_snapshot` is the specific Ansible module we wish to use. See the note above regarding module naming if you installed via Ansible Galaxy.
 * `object_name` is one of the define paramagters of the `rubrik_on_demand_snapshot` module and is referencing the previously defined `vm_name` variable.
 
 #### Running the Sample Workflow
