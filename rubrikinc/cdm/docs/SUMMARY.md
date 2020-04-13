@@ -14,6 +14,7 @@
 * [rubrik_dns_servers](rubrik_dns_servers.md)
 * [rubrik_end_user_authorization](rubrik_end_user_authorization.md)
 * [rubrik_job_status](rubrik_job_status.md)
+* [rubrik_login_banner](rubrik_login_banner.md)
 * [rubrik_managed_volume](rubrik_managed_volume.md)
 * [rubrik_nas_fileset](rubrik_nas_fileset.md)
 * [rubrik_on_demand_snapshot](rubrik_on_demand_snapshot.md)
