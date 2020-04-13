@@ -1,4 +1,4 @@
-# rubrik_job_status    
+# rubrik_refresh_vcenter
 
 Refresh the metadata for the specified vCenter Server. Refreshing vCenter metadata happens automatically on a regular basis, but it may be necessary to trigger a refresh to protect a newly deployed VM.
 

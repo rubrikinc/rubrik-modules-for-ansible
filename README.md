@@ -4,7 +4,7 @@ Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud D
 
 # :hammer: Installation
 
-**Install the Rubrik SDK for Python.**
+**Install the Rubrik SDK for Python**
 
 `pip install rubrik_cdm`
 
@@ -14,7 +14,11 @@ Ansible Modules that utilize the Rubrik RESTful API to manage the Rubrik Cloud D
 
 # :woman_astronaut: Ansible Galaxy
 
-* [Galaxy Collection](https://galaxy.ansible.com/rubrikinc/cdm)
+**Install the Rubrik Collection for Ansible via Ansible Galaxy**
+
+`ansible-galaxy collection install rubrikinc.cdm`
+
+See the [Quick Start Guide](https://github.com/rubrikinc/rubrik-modules-for-ansible/blob/master/rubrikinc/cdm/docs/README.md) for more information on using modules installed via Ansible Galaxy. For more information, see our [Galaxy Collection](https://galaxy.ansible.com/rubrikinc/cdm)
 
 # :mag: Example
 
