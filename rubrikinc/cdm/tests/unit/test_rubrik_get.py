@@ -38,7 +38,7 @@ def fail_json(*args, **kwargs):
     raise AnsibleFailJson(kwargs)
 
 
-class TestRubrikLoginBanner(unittest.TestCase):
+class TestRubrikGet(unittest.TestCase):
 
     def setUp(self):
         self.mock_module_helper = patch.multiple(basic.AnsibleModule,
@@ -53,21 +53,20 @@ class TestRubrikLoginBanner(unittest.TestCase):
             rubrik_get.main()
 
     @patch.object(rubrik_get.rubrik_cdm.rubrik_cdm.Connect, '_common_api', autospec=True, spec_set=True)
-    def test_module_login_banner(self, mock_get, mock_put):
-
-
+    def test_module_get(self, mock_get):
 
         def mock_get_get():
             return {"data": [], "hasMore": False, "total": 0}
 
         set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'api_version': 'v1',
-            'api_version': '/sla_domain',
+            'api_endpoint': '/sla_domain',
             'params': {"name": "Python SDK"}
         })
 
         mock_get.return_value = mock_get_get()
-
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_get.main()
@@ -75,24 +74,6 @@ class TestRubrikLoginBanner(unittest.TestCase):
         self.assertEqual(result.exception.args[0]['changed'], False)
         self.assertEqual(result.exception.args[0]['response'], {"data": [], "hasMore": False, "total": 0})
 
-    # @patch.object(rubrik_login_banner.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
-    # def test_module_idempotence(self, mock_get):
 
-    #     def mock_get_internal_cluster_me_login_banner():
-    #         return {'loginBanner': 'Banner Test'}
-
-    #     set_module_args({
-    #         'banner_text': 'Banner Test',
-    #         'node_ip': '1.1.1.1',
-    #         'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
-    #     })
-
-    #     mock_get.return_value = mock_get_internal_cluster_me_login_banner()
-
-    #     with self.assertRaises(AnsibleExitJson) as result:
-    #         rubrik_login_banner.main()
-
-    #     self.assertEqual(result.exception.args[0]['changed'], False)
-    #     self.assertEqual(
-    #         result.exception.args[0]['response'],
-    #         "No change required. The Rubrik cluster is already configured with the login banner text '`banner`'.")
+if __name__ == '__main__':
+    unittest.main()

@@ -41,13 +41,12 @@ options:
       - An optional dict containing variables in a key:value format to send with the call.
     required: False
     type: dict
-  
   timeout:
     description:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
     required: False
     type: int
-    default: 15
+    default: 30
 
 extends_documentation_fragment: rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
@@ -71,7 +70,7 @@ response:
     description: The response body of the API call..
     returned: success
     type: str
-    sample: {"acceptedEulaVersion": "1.1", "apiVersion": "1", "geolocation": {"address": "888 Brannan Street, 4th Floor, San Francisco, CA 94103, United States"}, "id": "603109f2-eb30-4da8-9389-911d66abb524", "latestEulaVersion": "1.1", "name": "DEVOPS-1", "timezone": {"timezone": "America/Los_Angeles"}, "version": "5.1.2-8188"}}
+    sample: {"acceptedEulaVersion": "1.1", "name": "DEVOPS-1"}
 '''
 
 from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
@@ -117,8 +116,7 @@ def main():
         module.fail_json(msg=str(error))
 
     try:
-        api_request = rubrik.get(ansible["api_version"], ansible["api_endpoint"], 
-            ansible["timeout"], ansible["authentication"] ,ansible["params"])
+        api_request = rubrik.get(ansible["api_version"], ansible["api_endpoint"], ansible["timeout"], ansible["authentication"], ansible["params"])
     except Exception as error:
         module.fail_json(msg=str(error))
 
