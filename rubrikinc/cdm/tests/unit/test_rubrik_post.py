@@ -63,7 +63,7 @@ class TestRubrikPost(unittest.TestCase):
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'api_version': 'v1',
             'api_endpoint': '/managed_volume',
-            'params': {"name": "AnsibleDemo", "volumeSize": 10737418240}
+            'config': {"name": "AnsibleDemo", "volumeSize": 10737418240}
         })
 
         mock_common_api.return_value = mock_get_post()

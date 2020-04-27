@@ -77,6 +77,7 @@ try:
 except ImportError:
     HAS_RUBRIK_SDK = False
 
+
 def main():
     """ Main entry point for Ansible module execution.
     """
