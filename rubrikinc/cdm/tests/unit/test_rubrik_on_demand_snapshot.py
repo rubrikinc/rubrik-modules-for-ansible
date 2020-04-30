@@ -6,8 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
-from plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-import plugins.modules.rubrik_on_demand_snapshot as rubrik_on_demand_snapshot
+import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_on_demand_snapshot as rubrik_on_demand_snapshot
 
 
 def set_module_args(args):
@@ -669,7 +668,7 @@ class TestRubrikOnDemandSnapshot(unittest.TestCase):
             rubrik_on_demand_snapshot.main()
 
         self.assertEqual(result.exception.args[0]['failed'], True)
-        self.assertEqual(result.exception.args[0]['msg'], "value of object_type must be one of: vmware, physical_host, ahv, got: foo")
+        self.assertEqual(result.exception.args[0]['msg'], "value of object_type must be one of: vmware, physical_host, ahv, mssql_db, got: foo")
 
     def test_module_fail_with_incorrect_host_os(self):
         set_module_args({

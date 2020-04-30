@@ -1,6 +1,6 @@
 # rubrik_assign_physical_host_fileset   
 
-Assign a fileset to a Linux or Windows machine. If you have multiple filesets with identical names, you will need to populate the filesets properties to find a specific match. Filesets with identical names and properties are not supported.
+Assign a fileset to a Linux, Unix or Windows machine. If you have multiple filesets with identical names, you will need to populate the filesets properties to find a specific match. Filesets with identical names and properties are not supported.
 
 `Requirement: Rubrik Python SDK (pip install rubrik_cdm)`
 
@@ -36,11 +36,11 @@ Assign a fileset to a Linux or Windows machine. If you have multiple filesets wi
 | backup_hidden_folders | Include or exclude hidden folders inside locally-mounted remote file systems from backups.                   | False   | Bool   |                |           |            |
 | exclude               | The full paths or wildcards that define the objects to exclude from the Fileset backup.                      | []      | list   |                |           |            |
 | exclude_exception     | The full paths or wildcards that define the objects that are exempt from the excludes variables.             | []      | list   |                |           |            |
-| fileset_name          | The name of the Fileset you wish to assign to the Linux or Windows host.                                     |         | string |                | true      |            |
+| fileset_name          | The name of the Fileset you wish to assign to the Linux, Unix or Windows host.                                     |         | string |                | true      |            |
 | follow_network_shares | Include or exclude locally-mounted remote file systems from backups.                                         | False   | bool   |                |           |            |
 | hostname              | The hostname or IP Address of the physical host you wish to associate to the Fileset.                        |         | string |                | true      | ip_address |
 | include               | The full paths or wildcards that define the objects to include in the Fileset backup.                        | []      | list   |                |           |            |
-| operating_system      | The operating system of the physical host you are assigning a Fileset to                                     |         | string | Linux, Windows | true      |            |
+| operating_system      | The operating system of the physical host you are assigning a Fileset to                                     |         | string | Linux, Windows, UnixLike | true      |            |
 | sla_name              | The name of the SLA Domain to associate with the Fileset.                                                    |         | string |                |           | sla        |
 | timeout               | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error. | 30      | int    |                |           |            |
 

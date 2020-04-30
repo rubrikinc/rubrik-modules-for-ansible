@@ -1,15 +1,14 @@
-# rubrik_sql_live_unmount
+# rubrik_login_banner
 
-Delete a Microsoft SQL Live Mount from the Rubrik cluster.
+Configure the Rubrik cluster login banner text.
+
 `Requirement: Rubrik Python SDK (pip install rubrik_cdm)`
 
 # Example
 
 ```yaml
-- rubrik_sql_live_unmount:
-    mounted_db_name: 'AdventureWorksClone'
-    sql_instance: 'MSSQLSERVER'
-    sql_host: 'sql.rubrikdemo.com'
+- rubrik_login_banner:
+    banner_text: "This is a pre-login Banner. Welcome to Rubrik!"
 ```
 
 # Arugments
@@ -29,16 +28,14 @@ Delete a Microsoft SQL Live Mount from the Rubrik cluster.
 
 ## Module Specific
 
-| Name            | Description                                                                                                               | Default | Type | Choices | Mandatory | Aliases |
-|-----------------|---------------------------------------------------------------------------------------------------------------------------|---------|------|---------|-----------|---------|
-| mounted_db_name | The name of the Live Mounted database to be unmounted.                                                                    |         | str  |         | true      |         |
-| sql_instance    | The SQL instance name with the database you wish to Live Mount.                                                           | None    | str  |         | true      |         |
-| sql_host        | The name of the MSSQL host running the Live Mounted database to be unmounted.                                             | None    | str  |         | true      |         |
-| force           | Remove all data within the Rubrik cluster related to the Live Mount, even if the SQL Server database cannot be contacted. | false   | bool |         | false     |         |
-| timeout         | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.              | 30      | int  |         | false     |         |
+| Name      | Description                                                                                                  | Default | Type | Choices | Mandatory | Aliases |
+|-----------|--------------------------------------------------------------------------------------------------------------|---------|------|---------|-----------|---------|
+| rubrik_login_banner | The Login Banner displayed by the Rubrik cluster to display prior to user login.                   |         | str  |         | true      |         |
+| timeout   | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error. | 15      | int  |         |           |         |
 
 # Return Values
 
-| Name     | Description                                                      | Returned | Type | Aliases |
-|----------|------------------------------------------------------------------|----------|------|---------|
-| response | The full response of `DELETE /mssql/db/mount/{id}?force={bool}`. | success  | dict |         |
+| Name     | Description                                                                       | Returned                                       | Type   | Aliases |
+|----------|-----------------------------------------------------------------------------------|------------------------------------------------|--------|---------|
+| response | The full API response for PUT /internal/cluster/me/login_banner                   | success                                        | dict   |         |
+| response | A "No change required" message when the banner text is identical to that which is already configured on the cluster. | When the module idempotent check is succesful. | string |         |

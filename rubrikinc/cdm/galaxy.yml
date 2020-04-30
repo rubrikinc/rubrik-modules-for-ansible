@@ -4,7 +4,7 @@ namespace: rubrikinc
 # the designation of this specific collection
 name: cdm
 # semantic versioning compliant version designation
-version: "1.0.1"
+version: "1.0.4"
 readme: README.md
 # a list of the collection's content authors: 'Full Name <email> (http://site) @nicks:irc/im/site#channel'
 authors: Rubrik Build

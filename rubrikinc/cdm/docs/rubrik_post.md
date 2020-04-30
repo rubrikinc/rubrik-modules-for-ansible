@@ -1,18 +1,19 @@
-# rubrik_sql_live_unmount
+# rubrik_get
 
-Delete a Microsoft SQL Live Mount from the Rubrik cluster.
+Send a GET request to the provided Rubrik API endpoint.
+
 `Requirement: Rubrik Python SDK (pip install rubrik_cdm)`
 
 # Example
 
 ```yaml
-- rubrik_sql_live_unmount:
-    mounted_db_name: 'AdventureWorksClone'
-    sql_instance: 'MSSQLSERVER'
-    sql_host: 'sql.rubrikdemo.com'
+- rubrik_post:
+    api_version: internal
+    api_endpoint: "/managed_volume"
+    config: {"name": "AnsibleDemo", "volumeSize": 10737418240}
 ```
 
-# Arugments
+# Arguments
 
 ## Common
 
@@ -29,16 +30,16 @@ Delete a Microsoft SQL Live Mount from the Rubrik cluster.
 
 ## Module Specific
 
-| Name            | Description                                                                                                               | Default | Type | Choices | Mandatory | Aliases |
-|-----------------|---------------------------------------------------------------------------------------------------------------------------|---------|------|---------|-----------|---------|
-| mounted_db_name | The name of the Live Mounted database to be unmounted.                                                                    |         | str  |         | true      |         |
-| sql_instance    | The SQL instance name with the database you wish to Live Mount.                                                           | None    | str  |         | true      |         |
-| sql_host        | The name of the MSSQL host running the Live Mounted database to be unmounted.                                             | None    | str  |         | true      |         |
-| force           | Remove all data within the Rubrik cluster related to the Live Mount, even if the SQL Server database cannot be contacted. | false   | bool |         | false     |         |
-| timeout         | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.              | 30      | int  |         | false     |         |
+| Name           | Description                                                                                                  | Default | Type   | Choices | Mandatory | Aliases |
+|----------------|--------------------------------------------------------------------------------------------------------------|---------|--------|---------|-----------|---------|
+| api_version    | The version of the Rubrik CDM API to call.                                                                   |         | string |         | true      |         |
+| api_endpoint   | The endpoint of the Rubrik CDM API to call (ex. /cluster/me).                                                |         | string |         | true      |         |
+| config         | The specified data to send with the API call.                                                                |         | raw    |         | false     |         |
+| authentication | Flag that specifies whether or not to utilize authentication when making the API call.                       | True    | book   |         | false     |         |
+| timeout        | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error. | 30      | int    |         | false     |         |
 
 # Return Values
 
-| Name     | Description                                                      | Returned | Type | Aliases |
-|----------|------------------------------------------------------------------|----------|------|---------|
-| response | The full response of `DELETE /mssql/db/mount/{id}?force={bool}`. | success  | dict |         |
+| Name     | Description                        | Returned | Type |
+|----------|------------------------------------|----------|------|
+| response | The response body of the API call. | success  | dict |

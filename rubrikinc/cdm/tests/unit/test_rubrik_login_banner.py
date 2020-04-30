@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
-import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_dns_servers as rubrik_dns_servers
+import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_login_banner as rubrik_login_banner
 
 
 def set_module_args(args):
@@ -38,7 +38,7 @@ def fail_json(*args, **kwargs):
     raise AnsibleFailJson(kwargs)
 
 
-class TestRubrikDNSServers(unittest.TestCase):
+class TestRubrikLoginBanner(unittest.TestCase):
 
     def setUp(self):
         self.mock_module_helper = patch.multiple(basic.AnsibleModule,
@@ -50,52 +50,52 @@ class TestRubrikDNSServers(unittest.TestCase):
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):
             set_module_args({})
-            rubrik_dns_servers.main()
+            rubrik_login_banner.main()
 
-    @patch.object(rubrik_dns_servers.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
-    @patch.object(rubrik_dns_servers.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
-    def test_module_configure_dns_servers(self, mock_get, mock_post):
+    @patch.object(rubrik_login_banner.rubrik_cdm.rubrik_cdm.Connect, 'put', autospec=True, spec_set=True)
+    @patch.object(rubrik_login_banner.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_login_banner(self, mock_get, mock_put):
 
-        def mock_get_internal_cluster_me_dns_nameserver():
-            return []
+        def mock_get_internal_cluster_me_login_banner():
+            return {}
 
-        def mock_post_internal_cluster_me_dns_nameserver():
-            return {'status_code': '204'}
+        def mock_put_internal_cluster_me_login_banner():
+            return {'loginBanner': 'Banner Test'}
 
         set_module_args({
-            'server_ip': ['server_1'],
+            'banner_text': 'Banner Test',
             'node_ip': '1.1.1.1',
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
 
-        mock_get.return_value = mock_get_internal_cluster_me_dns_nameserver()
+        mock_get.return_value = mock_get_internal_cluster_me_login_banner()
 
-        mock_post.return_value = mock_post_internal_cluster_me_dns_nameserver()
+        mock_put.return_value = mock_put_internal_cluster_me_login_banner()
 
         with self.assertRaises(AnsibleExitJson) as result:
-            rubrik_dns_servers.main()
+            rubrik_login_banner.main()
 
         self.assertEqual(result.exception.args[0]['changed'], True)
-        self.assertEqual(result.exception.args[0]['response']['status_code'], '204')
+        self.assertEqual(result.exception.args[0]['response']['loginBanner'], 'Banner Test')
 
-    @patch.object(rubrik_dns_servers.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_login_banner.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_idempotence(self, mock_get):
 
-        def mock_get_internal_cluster_me_dns_nameserver():
-            return ['server_1']
+        def mock_get_internal_cluster_me_login_banner():
+            return {'loginBanner': 'Banner Test'}
 
         set_module_args({
-            'server_ip': ['server_1'],
+            'banner_text': 'Banner Test',
             'node_ip': '1.1.1.1',
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
 
-        mock_get.return_value = mock_get_internal_cluster_me_dns_nameserver()
+        mock_get.return_value = mock_get_internal_cluster_me_login_banner()
 
         with self.assertRaises(AnsibleExitJson) as result:
-            rubrik_dns_servers.main()
+            rubrik_login_banner.main()
 
         self.assertEqual(result.exception.args[0]['changed'], False)
         self.assertEqual(
             result.exception.args[0]['response'],
-            'No change required. The Rubrik cluster is already configured with the provided DNS servers.')
+            "No change required. The Rubrik cluster is already configured with the login banner text '`banner`'.")

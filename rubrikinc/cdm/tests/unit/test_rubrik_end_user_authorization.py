@@ -6,8 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
-from plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-import plugins.modules.rubrik_end_user_authorization as rubrik_end_user_authorization
+import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_end_user_authorization as rubrik_end_user_authorization
 
 
 def set_module_args(args):

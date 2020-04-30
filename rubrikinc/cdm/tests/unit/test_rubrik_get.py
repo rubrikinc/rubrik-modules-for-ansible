@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
-import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_cluster_version as rubrik_cluster_version
+import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_get as rubrik_get
 
 
 def set_module_args(args):
@@ -38,7 +38,7 @@ def fail_json(*args, **kwargs):
     raise AnsibleFailJson(kwargs)
 
 
-class TestRubrikClusterVersion(unittest.TestCase):
+class TestRubrikGet(unittest.TestCase):
 
     def setUp(self):
         self.mock_module_helper = patch.multiple(basic.AnsibleModule,
@@ -50,23 +50,30 @@ class TestRubrikClusterVersion(unittest.TestCase):
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):
             set_module_args({})
-            rubrik_cluster_version.main()
+            rubrik_get.main()
 
-    @patch.object(rubrik_cluster_version.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
-    def test_module_cluster_version(self, mock_get):
+    @patch.object(rubrik_get.rubrik_cdm.rubrik_cdm.Connect, '_common_api', autospec=True, spec_set=True)
+    def test_module_get(self, mock_get):
 
-        def mock_get_v1_cluster_me_version():
-            return {'version': '5.0.1-1280'}
+        def mock_get_get():
+            return {"data": [], "hasMore": False, "total": 0}
 
         set_module_args({
             'node_ip': '1.1.1.1',
-            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
+            'api_version': 'v1',
+            'api_endpoint': '/sla_domain',
+            'params': {"name": "Python SDK"}
         })
 
-        mock_get.return_value = mock_get_v1_cluster_me_version()
+        mock_get.return_value = mock_get_get()
 
         with self.assertRaises(AnsibleExitJson) as result:
-            rubrik_cluster_version.main()
+            rubrik_get.main()
 
         self.assertEqual(result.exception.args[0]['changed'], False)
-        self.assertEqual(result.exception.args[0]['version'], '5.0.1-1280')
+        self.assertEqual(result.exception.args[0]['response'], {"data": [], "hasMore": False, "total": 0})
+
+
+if __name__ == '__main__':
+    unittest.main()

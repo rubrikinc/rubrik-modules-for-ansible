@@ -1,15 +1,14 @@
-# rubrik_sql_live_unmount
+# rubrik_refresh_vcenter
 
-Delete a Microsoft SQL Live Mount from the Rubrik cluster.
+Refresh the metadata for the specified vCenter Server. Refreshing vCenter metadata happens automatically on a regular basis, but it may be necessary to trigger a refresh to protect a newly deployed VM.
+
 `Requirement: Rubrik Python SDK (pip install rubrik_cdm)`
 
 # Example
 
 ```yaml
-- rubrik_sql_live_unmount:
-    mounted_db_name: 'AdventureWorksClone'
-    sql_instance: 'MSSQLSERVER'
-    sql_host: 'sql.rubrikdemo.com'
+- rubrik_refresh_vcenter:
+    vcenter_ip: "vcenter.example.com"
 ```
 
 # Arugments
@@ -29,16 +28,14 @@ Delete a Microsoft SQL Live Mount from the Rubrik cluster.
 
 ## Module Specific
 
-| Name            | Description                                                                                                               | Default | Type | Choices | Mandatory | Aliases |
-|-----------------|---------------------------------------------------------------------------------------------------------------------------|---------|------|---------|-----------|---------|
-| mounted_db_name | The name of the Live Mounted database to be unmounted.                                                                    |         | str  |         | true      |         |
-| sql_instance    | The SQL instance name with the database you wish to Live Mount.                                                           | None    | str  |         | true      |         |
-| sql_host        | The name of the MSSQL host running the Live Mounted database to be unmounted.                                             | None    | str  |         | true      |         |
-| force           | Remove all data within the Rubrik cluster related to the Live Mount, even if the SQL Server database cannot be contacted. | false   | bool |         | false     |         |
-| timeout         | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.              | 30      | int  |         | false     |         |
+| Name                | Description                                                                                                  | Default | Type   | Choices | Mandatory | Aliases |
+|---------------------|--------------------------------------------------------------------------------------------------------------|---------|--------|---------|-----------|---------|
+| vcenter_ip          | The IP address or FQDN of the vCenter you wish to refesh.                                                    |         | string |         | true      |         |
+| wait_for_completion | Flag that determines if the method should wait for the job to complete before exiting.                       | true    | bool   |         |           |         |
+| timeout             | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error. | 15      | int    |         |           |         |
 
 # Return Values
 
-| Name     | Description                                                      | Returned | Type | Aliases |
-|----------|------------------------------------------------------------------|----------|------|---------|
-| response | The full response of `DELETE /mssql/db/mount/{id}?force={bool}`. | success  | dict |         |
+| Name     | Description                             | Returned | Type |
+|----------|-----------------------------------------|----------|------|
+| response | The full API response for the API call. | success  | dict |

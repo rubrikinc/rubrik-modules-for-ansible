@@ -54,7 +54,7 @@ options:
         - NONE
         - SSL
         - STARTTLS
-    required: True
+    required: False
     default: NONE
     type: str
   timeout:

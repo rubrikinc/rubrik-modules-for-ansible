@@ -6,7 +6,8 @@ import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
-import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_dns_servers as rubrik_dns_servers
+from rubrik_cdm.exceptions import RubrikException, APICallException
+import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_refresh_vcenter as rubrik_refresh_vcenter
 
 
 def set_module_args(args):
@@ -38,7 +39,7 @@ def fail_json(*args, **kwargs):
     raise AnsibleFailJson(kwargs)
 
 
-class TestRubrikDNSServers(unittest.TestCase):
+class TestRubrikJobStatus(unittest.TestCase):
 
     def setUp(self):
         self.mock_module_helper = patch.multiple(basic.AnsibleModule,
@@ -50,52 +51,54 @@ class TestRubrikDNSServers(unittest.TestCase):
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):
             set_module_args({})
-            rubrik_dns_servers.main()
+            rubrik_refresh_vcenter.main()
 
-    @patch.object(rubrik_dns_servers.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
-    @patch.object(rubrik_dns_servers.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
-    def test_module_configure_dns_servers(self, mock_get, mock_post):
+    def test_module_fail_with_invalid_wait_for_completion(self):
 
-        def mock_get_internal_cluster_me_dns_nameserver():
-            return []
-
-        def mock_post_internal_cluster_me_dns_nameserver():
-            return {'status_code': '204'}
+        vcenter_ip = "vcenter.example.com"
+        wait_for_completion = "foo"
 
         set_module_args({
-            'server_ip': ['server_1'],
+            'vcenter_ip': vcenter_ip,
+            'wait_for_completion': wait_for_completion,
             'node_ip': '1.1.1.1',
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
 
-        mock_get.return_value = mock_get_internal_cluster_me_dns_nameserver()
+        with self.assertRaises(AnsibleFailJson) as result:
+            rubrik_refresh_vcenter.main()
 
-        mock_post.return_value = mock_post_internal_cluster_me_dns_nameserver()
+        self.assertEqual(result.exception.args[0]['failed'], True)
 
-        with self.assertRaises(AnsibleExitJson) as result:
-            rubrik_dns_servers.main()
+    @patch.object(rubrik_refresh_vcenter.rubrik_cdm.rubrik_cdm.Cluster, 'refresh_vcenter', autospec=True, spec_set=True)
+    def test_module_get_refresh_vcenter(self, mock_refresh):
 
-        self.assertEqual(result.exception.args[0]['changed'], True)
-        self.assertEqual(result.exception.args[0]['response']['status_code'], '204')
-
-    @patch.object(rubrik_dns_servers.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
-    def test_module_idempotence(self, mock_get):
-
-        def mock_get_internal_cluster_me_dns_nameserver():
-            return ['server_1']
+        def mock_refresh_vcenter():
+            return {
+                "endTime": "2020-04-07T00:30:28.448Z",
+                "id": "REFRESH_METADATA_01234567-8910-1abc-d435-0abc1234d567_01234567-8910-1abc-d435-0abc1234d567:::0",
+                "links": [
+                    {
+                        "href": "https://rubrik/api/v1/vmware/vcenter/request/REFRESH_METADATA_01234567-8910-1abc-d435-0abc1234d567:::0",
+                        "rel": "self"
+                    }
+                ],
+                "nodeId": "cluster:::RVM111S000000",
+                "startTime": "2020-04-07T00:29:50.585Z",
+                "status": "SUCCEEDED"
+            }
 
         set_module_args({
-            'server_ip': ['server_1'],
+            'vcenter_ip': 'vcenter.example.com',
+            'wait_for_completion': True,
             'node_ip': '1.1.1.1',
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
 
-        mock_get.return_value = mock_get_internal_cluster_me_dns_nameserver()
+        mock_refresh.return_value = mock_refresh_vcenter()
 
         with self.assertRaises(AnsibleExitJson) as result:
-            rubrik_dns_servers.main()
+            rubrik_refresh_vcenter.main()
 
         self.assertEqual(result.exception.args[0]['changed'], False)
-        self.assertEqual(
-            result.exception.args[0]['response'],
-            'No change required. The Rubrik cluster is already configured with the provided DNS servers.')
+        self.assertEqual(result.exception.args[0]['response'], mock_refresh_vcenter())
