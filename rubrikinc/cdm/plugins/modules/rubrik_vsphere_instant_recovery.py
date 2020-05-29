@@ -13,7 +13,7 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 module: rubrik_instant_recovery
-short_description: Instantly recover a vSphere VM from a provided snapshot. 
+short_description: Instantly recover a vSphere VM from a provided snapshot.
 description:
     - Instantly recover a vSphere VM from a provided snapshot.
     - If a specific date and time is not provided, the last snapshot taken will be used.
