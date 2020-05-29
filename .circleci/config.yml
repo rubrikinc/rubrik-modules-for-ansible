@@ -52,7 +52,7 @@ jobs:
       - run:
           name: Clone and Setup Ansible Dev Tools
           command: |
-            git clone https://github.com/ansible/ansible.git ~/ansible
+            git clone --single-branch --branch stable-2.9 https://github.com/ansible/ansible.git ~/ansible
             source ~/ansible/hacking/env-setup
             mkdir -p ~/.ansible/collections/ansible_collections/rubrikinc/cdm
             chown -R $USER:$USER ~/.ansible/collections/ansible_collections/rubrikinc/cdm

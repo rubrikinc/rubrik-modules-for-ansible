@@ -33,7 +33,6 @@ plugins/modules/rubrik_post.py validate-modules:module-invalid-version-added
 plugins/modules/rubrik_refresh_vcenter.py validate-modules:module-invalid-version-added
 plugins/modules/rubrik_sql_live_mount.py validate-modules:module-invalid-version-added
 plugins/modules/rubrik_sql_live_unmount.py validate-modules:module-invalid-version-added
-plugins/modules/rubrik_vsphere_instant_recovery.py invalid-documentation: DOCUMENTATION.module: not a valid value for dictionary value @ data['module']. Got 'rubrik_instant_recovery'
 plugins/modules/rubrik_vsphere_instant_recovery.py validate-modules:module-invalid-version-added
 plugins/modules/rubrik_vsphere_live_mount.py validate-modules:module-invalid-version-added
 plugins/modules/rubrik_vsphere_live_unmount.py validate-modules:module-invalid-version-added
