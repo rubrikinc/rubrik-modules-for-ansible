@@ -12,12 +12,12 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_instant_recovery
+module: rubrik_vsphere_instant_recovery
 short_description: Instantly recover a vSphere VM from a provided snapshot.
 description:
     - Instantly recover a vSphere VM from a provided snapshot.
     - If a specific date and time is not provided, the last snapshot taken will be used.
-version_added: '2.9'
+version_added: '2.8'
 author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
   vm_name:
@@ -61,7 +61,8 @@ options:
   disable_network:
     description:
       - Sets the state of the network interfaces when the VM is instantly recovered.
-      - Use False to enable the network interfaces. Use True to disable the network interfaces. Disabling the interfaces can prevent IP conflicts.
+      - Use False to enable the network interfaces. Use True to disable the network interfaces.
+      - Disabling the interfaces can prevent IP conflicts.
     required: False
     type: bool
     default: False
