@@ -45,7 +45,6 @@ Instantly Recover a vSphere VM from a specified snapshot.
 | disable_network        | Sets the state of the network interfaces when the VM is instantly recovered. Use False to enable the network interfaces. Use True to disable the network interfaces. Disabling the interfaces can prevent IP conflicts.                                                                                 | False   | bool |         |           |         |
 | keep_mac_addresses     | Flag that determines whether the MAC addresses of the network interfaces on the source VM are assigned to the new VM. Set to True to assign the original MAC addresses to the new VM. Set to False to assign new MAC addresses. When 'remove_network_devices' is set to True, this property is ignored. | False   | bool |         |           |         |
 | preserve_moid          | Flag that determines whether to preserve the MOID of the source VM in a restore operation. Use True to keep the MOID of the source. Use False to assign a new moid.                                                                                                                                     | False   | bool |         |           |         |
-
 | timeout                | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.                                                                                                            | 15      | int  |         |           |         |
 
 disable_network
