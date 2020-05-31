@@ -47,7 +47,6 @@ Instantly Recover a vSphere VM from a specified snapshot.
 | preserve_moid          | Flag that determines whether to preserve the MOID of the source VM in a restore operation. Use True to keep the MOID of the source. Use False to assign a new moid.                                                                                                                                     | False   | bool |         |           |         |
 | timeout                | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.                                                                                                            | 15      | int  |         |           |         |
 
-disable_network
 # Return Values
 
 | Name     | Description                                                                          | Returned | Type | Aliases |
