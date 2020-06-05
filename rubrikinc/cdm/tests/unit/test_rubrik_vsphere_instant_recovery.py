@@ -347,7 +347,7 @@ class TestRubrikVsphereInstantRecovery(unittest.TestCase):
                         "rel": "string"
                     }
                 ]
-        }
+            }
 
         set_module_args({
             'node_ip': '1.1.1.1',
@@ -357,7 +357,7 @@ class TestRubrikVsphereInstantRecovery(unittest.TestCase):
 
         mock_get.side_effect = [mock_get_v1_vmware_vm(), mock_get_v1_vmware_vm_id()]
 
-        mock_post.return_value = mock_post_v1_vmware_vm_snapshot_id_mount()
+        mock_post.return_value = mock_post_v1_vmware_vm_snapshot_id_instant_recover()
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_vsphere_instant_recovery.main()
@@ -663,7 +663,7 @@ class TestRubrikVsphereInstantRecovery(unittest.TestCase):
                         "rel": "string"
                     }
                 ]
-        }
+            }
 
         set_module_args({
             'node_ip': '1.1.1.1',
@@ -677,7 +677,7 @@ class TestRubrikVsphereInstantRecovery(unittest.TestCase):
 
         mock__date_time_conversion.return_value = "2014-01-15T09:30"
 
-        mock_post.return_value = mock_post_v1_vmware_vm_snapshot_id_mount()
+        mock_post.return_value = mock_post_v1_vmware_vm_snapshot_id_instant_recover()
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_vsphere_instant_recovery.main()
@@ -1031,7 +1031,7 @@ class TestRubrikVsphereInstantRecovery(unittest.TestCase):
 
         mock__date_time_conversion.return_value = "2014-01-15T09:30"
 
-        mock_post.return_value = mock_post_v1_vmware_vm_snapshot_id_mount()
+        mock_post.return_value = mock_post_v1_vmware_vm_snapshot_id_instant_recover()
 
         with self.assertRaises(AnsibleExitJson) as result:
             rubrik_vsphere_instant_recovery.main()
