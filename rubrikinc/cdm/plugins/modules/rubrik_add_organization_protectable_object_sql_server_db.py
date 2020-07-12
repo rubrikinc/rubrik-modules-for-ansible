@@ -43,7 +43,7 @@ options:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
     required: False
     type: int
-    default: 30
+    default: 15
 
 extends_documentation_fragment: rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
