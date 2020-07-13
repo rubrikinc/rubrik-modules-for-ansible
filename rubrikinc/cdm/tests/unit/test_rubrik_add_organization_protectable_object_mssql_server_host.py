@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
-import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_add_organization_protectable_object_mssql_server_host as rubrik_add_organization_protectable_object_mssql_server_host # pylint: ignore
+import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_add_organization_protectable_object_mssql_server_host as rubrik_add_organization_protectable_object_mssql_server_host
 
 
 def set_module_args(args):
@@ -41,7 +41,8 @@ def fail_json(*args, **kwargs):
 class TestRubrikAddOrganizationProtecableObjectMSSQLServerHost(unittest.TestCase):
 
     def setUp(self):
-        self.mock_module_helper = patch.multiple(basic.AnsibleModule, exit_json=exit_json, fail_json=fail_json)
+        self.mock_module_helper = patch.multiple(
+            basic.AnsibleModule, exit_json=exit_json, fail_json=fail_json)
         self.mock_module_helper.start()
         self.addCleanup(self.mock_module_helper.stop)
 
@@ -142,7 +143,8 @@ class TestRubrikAddOrganizationProtecableObjectMSSQLServerHost(unittest.TestCase
             rubrik_add_organization_protectable_object_mssql_server_host.main()
 
         self.assertEqual(result.exception.args[0]['changed'], True)
-        self.assertEqual(result.exception.args[0]['response'], mock_post_internal_role_org_admin_id_authorization())
+        self.assertEqual(result.exception.args[0]['response'],
+                         mock_post_internal_role_org_admin_id_authorization())
 
     @patch.object(rubrik_add_organization_protectable_object_mssql_server_host.rubrik_cdm.rubrik_cdm.Connect, 'object_id', autospec=True, spec_set=True)
     @patch.object(rubrik_add_organization_protectable_object_mssql_server_host.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)

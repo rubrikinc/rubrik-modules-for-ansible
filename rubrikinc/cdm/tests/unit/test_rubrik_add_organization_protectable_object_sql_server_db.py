@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
-import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_add_organization_protectable_object_sql_server_db as rubrik_add_organization_protectable_object_sql_server_db # pylint: ignore
+import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_add_organization_protectable_object_sql_server_db as rubrik_add_organization_protectable_object_sql_server_db
 
 
 def set_module_args(args):
