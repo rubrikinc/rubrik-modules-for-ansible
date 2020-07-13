@@ -28,12 +28,12 @@ options:
       - The name of the MSSQL DB to add to the organization as a protectable object.
     required: True
     type: str
- mssql_instance:
+  mssql_instance:
     description:
       - The name of the MSSQL instance where the MSSQL DB lives.
     required: True
     type: str
- mssql_host:
+  mssql_host:
     description:
       - The name of the MSSQL host where the MSSQL DB lives.
     required: True
@@ -53,7 +53,7 @@ EXAMPLES = '''
 - rubrik_add_organization_protectable_object_sql_server_db:
     organization_name: "Ansible"
     mssql_db: "DemoDB"
-    mssql_host: "dmeo-sql-instance"
+    mssql_instance: "dmeo-sql-instance"
     mssql_host: "demo-sql-host"
 '''
 
