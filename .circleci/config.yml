@@ -12,7 +12,7 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            sudo pip install pylint requests python-dateutil pytz coverage pytest-cov pytest-mock tox pep8 autopep8 rubrik_cdm paramiko PyYAML Jinja2 httplib2 six voluptuous isort lazy-object-proxy wrapt docutils rstcheck pathspec yamllint
+            sudo pip install pylint requests python-dateutil pytz coverage pytest-cov pytest-mock tox pep8 autopep8 rubrik_cdm paramiko PyYAML Jinja2 httplib2 six voluptuous 'isort lazy-object-proxy wrapt docutils rstcheck pathspec yamllint
             sudo apt-get install -y man
       - run:
           name: Clone and Setup Ansible Dev Tools
@@ -84,7 +84,7 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            sudo pip install pylint requests python-dateutil pytz coverage pytest-cov pytest-mock tox pep8 autopep8 rubrik_cdm paramiko PyYAML Jinja2 httplib2 six voluptuous isort lazy-object-proxy wrapt docutils rstcheck pathspec yamllint --progress-bar off
+            sudo pip install pylint requests python-dateutil pytz coverage pytest-cov pytest-mock tox pep8 autopep8 rubrik_cdm paramiko PyYAML Jinja2 httplib2 six voluptuous 'isort<5.0' lazy-object-proxy wrapt docutils rstcheck pathspec yamllint --progress-bar off
             sudo apt-get install -y man
       - run:
           name: Clone and Setup Ansible Dev Tools
@@ -121,7 +121,7 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            sudo pip install pylint requests python-dateutil pytz coverage pytest-cov pytest-mock tox pep8 autopep8 rubrik_cdm paramiko PyYAML Jinja2 httplib2 six voluptuous isort lazy-object-proxy wrapt docutils rstcheck pathspec yamllint --progress-bar off
+            sudo pip install pylint requests python-dateutil pytz coverage pytest-cov pytest-mock tox pep8 autopep8 rubrik_cdm paramiko PyYAML Jinja2 httplib2 six voluptuous 'isort<5.0' lazy-object-proxy wrapt docutils rstcheck pathspec yamllint --progress-bar off
             sudo apt-get install -y man
       - run:
           name: Clone and Setup Ansible Dev Tools
