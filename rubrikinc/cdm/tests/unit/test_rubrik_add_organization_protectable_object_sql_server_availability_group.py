@@ -144,8 +144,8 @@ class TestRubrikAddOrganizationProtecableObjectAvailabilityGroup(unittest.TestCa
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'], mock_post_internal_role_org_admin_id_authorization())
 
-    @patch.object(rubrik_add_organization_protectable_object_sql_server_availability_group.rubrik_cdm.rubrik_cdm.Connect, 'object_id', autospec=True, spec_set=True)
-    @patch.object(rubrik_add_organization_protectable_object_sql_server_availability_group.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_add_organization_protectable_object_sql_server_availability_group.rubrik_cdm.rubrik_cdm.Connect, 'object_id', autospec=True, spec_set=True)  # noqa E501
+    @patch.object(rubrik_add_organization_protectable_object_sql_server_availability_group.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)  # noqa E501
     def test_module_idempotence(self, mock_get, mock_object_id):
 
         def mock_get_internal_organization_org_id_mssql():
