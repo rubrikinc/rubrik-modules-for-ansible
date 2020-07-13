@@ -10,7 +10,7 @@ Add a MSSQL DB to an organization as a protectable object.
 - rubrik_add_organization_protectable_object_sql_server_db:
     organization_name: "Ansible"
     mssql_db: "DemoDB"
-    mssql_host: "dmeo-sql-instance"
+    mssql_instance: "dmeo-sql-instance"
     mssql_host: "demo-sql-host"
 ```
 
