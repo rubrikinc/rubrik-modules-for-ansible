@@ -23,6 +23,7 @@ options:
       - The DNS Server IPs you wish to add to the Rubrik cluster.
     required: True
     type: list
+    elements: str
   timeout:
     description:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
@@ -71,7 +72,7 @@ def main():
     results = {}
 
     argument_spec = dict(
-        server_ip=dict(required=True, type='list'),
+        server_ip=dict(required=True, type='list', elements='str'),
         timeout=dict(required=False, type='int', default=15),
 
     )

@@ -23,6 +23,7 @@ options:
       - A list of the NTP server(s) you wish to configure the Rubrik cluster to use.
     required: True
     type: list
+    elements: str
   timeout:
     description:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
@@ -70,7 +71,7 @@ def main():
     results = {}
 
     argument_spec = dict(
-        ntp_servers=dict(required=True, type='list'),
+        ntp_servers=dict(required=True, type='list', elements='str'),
         timeout=dict(required=False, type='int', default=15),
 
     )
