@@ -121,7 +121,7 @@ def main():
         module.fail_json(msg=str(error))
 
     try:
-        api_request = rubrik.rubrik_add_organization_protectable_object_sql_server_db(organization_name, mssql_db, mssql_host, mssql_instance, timeout)
+        api_request = rubrik.add_organization_protectable_object_sql_server_db(organization_name, mssql_db, mssql_host, mssql_instance, timeout)
     except Exception as error:
         module.fail_json(msg=str(error))
 
