@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
-import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_add_organization_protectable_object_sql_server_availability_group as rubrik_add_organization_protectable_object_sql_server_availability_group
+import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_add_organization_protectable_object_sql_server_availability_group as rubrik_add_organization_protectable_object_sql_server_availability_group    # noqa E501
 
 
 def set_module_args(args):
@@ -50,9 +50,9 @@ class TestRubrikAddOrganizationProtecableObjectAvailabilityGroup(unittest.TestCa
             set_module_args({})
             rubrik_add_organization_protectable_object_sql_server_availability_group.main()
 
-    @patch.object(rubrik_add_organization_protectable_object_sql_server_availability_group.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
-    @patch.object(rubrik_add_organization_protectable_object_sql_server_availability_group.rubrik_cdm.rubrik_cdm.Connect, 'object_id', autospec=True, spec_set=True)
-    @patch.object(rubrik_add_organization_protectable_object_sql_server_availability_group.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_add_organization_protectable_object_sql_server_availability_group.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)    # noqa E501
+    @patch.object(rubrik_add_organization_protectable_object_sql_server_availability_group.rubrik_cdm.rubrik_cdm.Connect, 'object_id', autospec=True, spec_set=True)    # noqa E501
+    @patch.object(rubrik_add_organization_protectable_object_sql_server_availability_group.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)    # noqa E501
     def test_module_configure_rubrik_add_organization_protectable_object_sql_server_availability_group(self, mock_get, mock_object_id, mock_post):
 
         def mock_get_internal_organization_org_id_mssql():
