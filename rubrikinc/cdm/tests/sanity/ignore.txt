@@ -31,5 +31,5 @@ plugins/modules/rubrik_vsphere_live_mount.py validate-modules:module-invalid-ver
 plugins/modules/rubrik_vsphere_live_unmount.py validate-modules:module-invalid-version-added
 
 tests/unit/test_rubrik_add_organization_protectable_object_mssql_server_host.py pep8:E501
-tests/unit/test_rubrik_add_organization_protectable_object_sql_server_availability_group pep8:E501
+tests/unit/test_rubrik_add_organization_protectable_object_sql_server_availability_group.py pep8:E501
 tests/unit/test_rubrik_add_organization_protectable_object_sql_server_db.py pep8:E501
