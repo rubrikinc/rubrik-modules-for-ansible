@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
-import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_add_organization_protectable_object_mssql_server_host as rubrik_add_organization_protectable_object_mssql_server_host # pylint: ignore
+import ansible_collections.rubrikinc.cdm.plugins.modules.rubrik_add_organization_protectable_object_sql_server_db as rubrik_add_organization_protectable_object_sql_server_db # pylint: ignore
 
 
 def set_module_args(args):
@@ -48,12 +48,12 @@ class TestRubrikAddOrganizationProtecableObjectMSSQLServerHost(unittest.TestCase
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):
             set_module_args({})
-            rubrik_add_organization_protectable_object_mssql_server_host.main()
+            rubrik_add_organization_protectable_object_sql_server_db.main()
 
-    @patch.object(rubrik_add_organization_protectable_object_mssql_server_host.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
-    @patch.object(rubrik_add_organization_protectable_object_mssql_server_host.rubrik_cdm.rubrik_cdm.Connect, 'object_id', autospec=True, spec_set=True)
-    @patch.object(rubrik_add_organization_protectable_object_mssql_server_host.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
-    def test_module_configure_rubrik_add_organization_protectable_object_mssql_server_host(self, mock_get, mock_object_id, mock_post):
+    @patch.object(rubrik_add_organization_protectable_object_sql_server_db.rubrik_cdm.rubrik_cdm.Connect, 'post', autospec=True, spec_set=True)
+    @patch.object(rubrik_add_organization_protectable_object_sql_server_db.rubrik_cdm.rubrik_cdm.Connect, 'object_id', autospec=True, spec_set=True)
+    @patch.object(rubrik_add_organization_protectable_object_sql_server_db.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    def test_module_configure_rubrik_add_organization_protectable_object_sql_server_db(self, mock_get, mock_object_id, mock_post):
 
         def mock_get_internal_organization_org_id_mssql():
             return {
@@ -129,23 +129,25 @@ class TestRubrikAddOrganizationProtecableObjectMSSQLServerHost(unittest.TestCase
             'node_ip': '1.1.1.1',
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'organization_name': 'org_name',
+            'mssql_db': 'mssql_db',
+            'mssql_instance': 'mssql_instance',
             'mssql_host': 'mssql_host',
         })
 
         mock_get.return_value = mock_get_internal_organization_org_id_mssql()
 
-        mock_object_id.side_effect = ["org_id", "ord_admin_role_id", "host_id"]
+        mock_object_id.side_effect = ["org_id", "ord_admin_role_id", "mssql_db_id"]
 
         mock_post.return_value = mock_post_internal_role_org_admin_id_authorization()
 
         with self.assertRaises(AnsibleExitJson) as result:
-            rubrik_add_organization_protectable_object_mssql_server_host.main()
+            rubrik_add_organization_protectable_object_sql_server_db.main()
 
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response'], mock_post_internal_role_org_admin_id_authorization())
 
-    @patch.object(rubrik_add_organization_protectable_object_mssql_server_host.rubrik_cdm.rubrik_cdm.Connect, 'object_id', autospec=True, spec_set=True)
-    @patch.object(rubrik_add_organization_protectable_object_mssql_server_host.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
+    @patch.object(rubrik_add_organization_protectable_object_sql_server_db.rubrik_cdm.rubrik_cdm.Connect, 'object_id', autospec=True, spec_set=True)
+    @patch.object(rubrik_add_organization_protectable_object_sql_server_db.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
     def test_module_idempotence(self, mock_get, mock_object_id):
 
         def mock_get_internal_organization_org_id_mssql():
@@ -153,7 +155,7 @@ class TestRubrikAddOrganizationProtecableObjectMSSQLServerHost(unittest.TestCase
                 "hasMore": True,
                 "data": [
                     {
-                        "managedId": "host_id",
+                        "managedId": "mssql_db_id",
                         "objectType": "string",
                         "name": "string",
                         "primaryClusterId": "string",
@@ -209,17 +211,19 @@ class TestRubrikAddOrganizationProtecableObjectMSSQLServerHost(unittest.TestCase
             'node_ip': '1.1.1.1',
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
             'organization_name': 'org_name',
+            'mssql_db': 'mssql_db',
+            'mssql_instance': 'mssql_instance',
             'mssql_host': 'mssql_host',
         })
 
         mock_get.return_value = mock_get_internal_organization_org_id_mssql()
 
-        mock_object_id.side_effect = ["org_id", "ord_admin_role_id", "host_id"]
+        mock_object_id.side_effect = ["org_id", "ord_admin_role_id", "mssql_db_id"]
 
         with self.assertRaises(AnsibleExitJson) as result:
-            rubrik_add_organization_protectable_object_mssql_server_host.main()
+            rubrik_add_organization_protectable_object_sql_server_db.main()
 
         self.assertEqual(result.exception.args[0]['changed'], False)
         self.assertEqual(
             result.exception.args[0]['response'],
-            "No change required. The MSSQL host mssql_host is already assigned to the org_name organization.")
+            "No change required. The MSSQL DB mssql_db is already assigned to the org_name organization.")
