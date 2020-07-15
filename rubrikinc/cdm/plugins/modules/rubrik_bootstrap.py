@@ -60,19 +60,22 @@ options:
       - The search domain that the DNS Service will use to resolve hostnames that are not fully qualified.
     required: False
     type: list
+    elements: str
     default: []
   dns_nameservers:
     description:
       - IPv4 addresses of DNS servers
     required: False
     type: list
+    elements: str
     default: [8.8.8.8]
   ntp_servers:
     description:
       - FQDN or IPv4 address of a network time protocol (NTP) server.
     required: False
     type: list
-    default: [pool.ntp.org]
+    elements: str
+    default: ["pool.ntp.org"]
   wait_for_completion:
     description:
       - Flag to determine if the function should wait for the bootstrap process to complete.
@@ -136,9 +139,9 @@ def main():
         management_subnet_mask=dict(required=True, type='str'),
         node_config=dict(required=True, type='dict'),
         enable_encryption=dict(required=False, type='bool', default=True),
-        dns_search_domains=dict(required=False, type='list', default=[]),
-        dns_nameservers=dict(required=False, type='list', default=['8.8.8.8']),
-        ntp_servers=dict(required=False, type='list', default=['pool.ntp.org']),
+        dns_search_domains=dict(required=False, type='list', elements='str', default=[]),
+        dns_nameservers=dict(required=False, type='list', elements='str', default=['8.8.8.8']),
+        ntp_servers=dict(required=False, type='list', elements='str', default=['pool.ntp.org']),
         wait_for_completion=dict(required=False, type='bool', default=True),
         timeout=dict(required=False, type='int', default=30),
     )

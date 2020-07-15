@@ -35,18 +35,21 @@ options:
       - The full paths or wildcards that define the objects to include in the Fileset backup.
     required: False
     type: list
+    elements: str
     default: []
   exclude:
     description:
       - The full paths or wildcards that define the objects to exclude from the Fileset backup.
     required: False
     type: list
+    elements: str
     default: []
   exclude_exception:
     description:
       - The full paths or wildcards that define the objects that are exempt from the excludes variables.
     required: False
     type: list
+    elements: str
     default: []
   follow_network_shares:
     description:
@@ -148,9 +151,9 @@ def main():
     argument_spec = dict(
         fileset_name=dict(required=True, aliases=['name']),
         operating_system=dict(required=True, choices=['Linux', 'Windows']),
-        include=dict(required=False, type='list', default=[]),
-        exclude=dict(required=False, type='list', default=[]),
-        exclude_exception=dict(required=False, type='list', default=[]),
+        include=dict(required=False, type='list', elements='str', default=[]),
+        exclude=dict(required=False, type='list', elements='str', default=[]),
+        exclude_exception=dict(required=False, type='list', elements='str', default=[]),
         follow_network_shares=dict(required=False, type='bool', default=False),
         backup_hidden_folders=dict(required=False, type='bool', default=False),
         timeout=dict(required=False, type='int', default=15),

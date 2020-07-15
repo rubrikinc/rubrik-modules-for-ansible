@@ -14,7 +14,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - **Fixed** for any bug fixes.
 - **Security** in case of vulnerabilities.
 
-## Unreleased
+## v1.0.6
+
+### Added
+
+- `rubrik_add_organization_protectable_object_mssql_server_host`
+- `rubrik_add_organization_protectable_object_sql_server_availability_group`
+- `rubrik_add_organization_protectable_object_sql_server_db`
 
 ## v1.0.5
 
