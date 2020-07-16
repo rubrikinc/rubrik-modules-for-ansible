@@ -11,19 +11,23 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_dns_servers
-short_description: Configure the DNS Servers on the Rubrik cluster.
+module: rubrik_add_organization_protectable_object_mssql_server_host
+short_description: Add a MSSQL Server Host to an organization as a protectable object.
 description:
-    - Configure the DNS Servers on the Rubrik cluster.
-version_added: '2.8'
+    - Add a MSSQL Server Host to an organization as a protectable object.
+version_added: '2.9'
 author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
-  server_ip:
+  organization_name:
     description:
-      - The DNS Server IPs you wish to add to the Rubrik cluster.
+      - The name of the organization you wish to add the protectable object to.
     required: True
-    type: list
-    elements: str
+    type: str
+  mssql_host:
+    description:
+      - The name of the MSSQL Host to add to the organization as a protectable object.
+    required: True
+    type: str
   timeout:
     description:
       - The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error.
@@ -36,23 +40,24 @@ requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
-- rubrik_dns_servers:
-    server_ip: ["192.168.100.20", "192.168.100.21"]
+- rubrik_add_organization_protectable_object_mssql_server_host:
+    organization_name: "Ansible"
+    mssql_host: "demo-sql-host"
 '''
 
 
 RETURN = '''
 full_response:
-    description: The full API response for POST /internal/cluster/me/dns_nameserver.
+    description:
+      - The full API response for `POST /internal/role/{}/authorization`.
     returned: on success
     type: dict
 
-
 idempotent_response:
-    description: A "No changed required" message when
+    description: A "No changed required" message when the MSSQL host has already been added to the organization.
     returned: When the module idempotent check is succesful.
     type: str
-    sample: No change required. The Rubrik cluster is already configured with the provided DNS servers.
+    sample: No change required. The MSSQL host `mssql_host` is already assigned to the `organization_name` organization.
 '''
 
 from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
@@ -72,9 +77,9 @@ def main():
     results = {}
 
     argument_spec = dict(
-        server_ip=dict(required=True, type='list', elements='str'),
+        organization_name=dict(required=True, type='str'),
+        mssql_host=dict(required=True, type='str'),
         timeout=dict(required=False, type='int', default=15),
-
     )
 
     argument_spec.update(rubrik_argument_spec)
@@ -82,6 +87,10 @@ def main():
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=False)
 
     ansible = module.params
+
+    organization_name = ansible["organization_name"]
+    mssql_host = ansible["mssql_host"]
+    timeout = ansible["timeout"]
 
     load_provider_variables(module)
 
@@ -96,7 +105,7 @@ def main():
         module.fail_json(msg=str(error))
 
     try:
-        api_request = rubrik.configure_dns_servers(ansible["server_ip"], ansible["timeout"])
+        api_request = rubrik.add_organization_protectable_object_mssql_server_host(organization_name, mssql_host, timeout)
     except Exception as error:
         module.fail_json(msg=str(error))
 
