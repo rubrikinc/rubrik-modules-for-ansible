@@ -32,9 +32,20 @@ if arguments.action == 'build':
 
     # Switch to the Collection directory and build the collection
     os.chdir('./rubrikinc/cdm')
+    os.system('mv ./docs/create_documentation_block.py /tmp')
+    os.system('mv ./docs/README.md /tmp')
+    os.system('mv ./docs/SUMMARY.md /tmp')
+    os.system('mv ./docs/template.md /tmp')
+    os.system('mv ./docs/rubrik_module_template.py /tmp')
+
     os.system('ansible-galaxy collection build')
 
-
+    os.system('mv /tmp/create_documentation_block.py ./docs')
+    os.system('mv /tmp/README.md ./docs')
+    os.system('mv /tmp/SUMMARY.md ./docs')
+    os.system('mv /tmp/template.md ./docs')
+    os.system('mv /tmp/rubrik_module_template.py ./docs')
+    
     # Switch back to the root dir
     os.chdir('../..')
 
