@@ -115,9 +115,9 @@ EXAMPLES = '''
     monthly_retention: 12
     yearly_frequency: 1
     yearly_retention: 5
-    starttime_hour = 0
-    starttime_minute = 30
-    duration_hours = 8
+    starttime_hour: 0
+    starttime_minute: 30
+    duration_hours: 8
     archive_name: S3:AWS-S3-Bucket
     retention_on_brik_in_days: 30
     instant_archive: True
