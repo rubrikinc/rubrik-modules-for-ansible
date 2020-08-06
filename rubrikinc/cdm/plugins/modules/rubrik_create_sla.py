@@ -64,12 +64,12 @@ options:
     required: false
     type: int
   starttime_hour:
-    description: 
+    description:
       - Starting hour of allowed backup window.
     required: false
     type: int
   starttime_minute:
-    description: 
+    description:
       - Starting minute of allowed backup window.
     required: false
     type: int
