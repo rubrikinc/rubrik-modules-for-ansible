@@ -126,27 +126,32 @@ def main():
         rubrik = rubrik_cdm.Connect(node_ip, username, password, api_token)
     except Exception as error:
         module.fail_json(msg=str(error))
+    
+    chg_required = True
+    if not force:
+        local_config = rubrik.get("internal", "/internal/replication/target", timeout)
+        if len(local_config['data']) > 0:
+            try:
+              remote_rubrik = rubrik_cdm.Connect(target_cluster_address, target_username, target_password)
+            except Exception as error:
+              module.fail_json(msg=str(error))
+            remote_cluster_name = remote_rubrik.get("internal", "/cluster/me/name", timeout)
+            for rep_target in local_config['data']:
+                if rep_target['targetClusterName'] == remote_cluster_name:
+                  chg_required = False
+                  break
 
-    local_config = rubrik.get("internal", "/internal/replication/target", timeout)
-
-    if len(local_config.data) > 0 and not force:
-      for rep_target in local_config.data:
-        if ""
-
-    try:
-      remote_rubrik = rubrik_cdm.Connect(target_cluster_address, target_username, target_password)
-    except Exception as error:
-      module.fail_json(msg=str(error))
-    remote_cluster_name = remote_rubrik.get("internal", "/cluster/me/name", timeout)
-
-    if rubrik.get("internal", "/cluster/me/name", timeout) in 
-    try:
-        api_request = rubrik.configure_smtp_settings(
-            hostname, port, from_email, smtp_username, smtp_password, encryption, timeout)
-    except Exception as error:
-        module.fail_json(msg=str(error))
-
-    if "No change required" in api_request:
+    api_request = None
+    if chg_required:
+        try:
+            api_request = rubrik.configure_replication_private(
+                target_username, target_password, target_cluster_address, ca_certificate, timeout)
+        except Exception as error:
+            module.fail_json(msg=str(error))
+    else:
+        api_request = "No change required. The Rubrik cluster is already configured with I(target_cluster_address) as it's target_cluster_address."
+    
+    if "No change required" in api_request
         results["changed"] = False
     else:
         results["changed"] = True
