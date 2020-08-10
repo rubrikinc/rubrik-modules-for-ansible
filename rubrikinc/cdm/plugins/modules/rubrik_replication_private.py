@@ -151,7 +151,7 @@ def main():
     else:
         api_request = "No change required. The Rubrik cluster is already configured with I(target_cluster_address) as it's target_cluster_address."
     
-    if "No change required" in api_request
+    if "No change required" in api_request:
         results["changed"] = False
     else:
         results["changed"] = True
