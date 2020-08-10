@@ -96,7 +96,7 @@ def main():
         target_username=dict(required=True, type='str'),
         target_password=dict(required=True, type='str', no_log=True),
         target_cluster_address=dict(required=True, type='str'),
-        force=dict(required=False, type='bool', default=False)
+        force=dict(required=False, type='bool', default=False),
         ca_certificate=dict(required=False, type='str'),
         timeout=dict(required=False, type='int', default=15),
 
