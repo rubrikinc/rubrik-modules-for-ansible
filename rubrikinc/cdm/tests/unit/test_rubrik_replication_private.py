@@ -71,7 +71,7 @@ class TestRubrikReplicationPrivate(unittest.TestCase):
         set_module_args({
             'target_username': 'admin',
             'target_password': 'Rubrik',
-            'target_cluster': '10.10.10.10',
+            'target_cluster_address': '10.10.10.10',
             'node_ip': '1.1.1.1',
             'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
         })
