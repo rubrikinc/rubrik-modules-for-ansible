@@ -130,9 +130,9 @@ def main():
         local_config = rubrik.get("internal", "/replication/target", timeout)
         if len(local_config) > 0 and len(local_config['data']) > 0:
             try:
-               remote_rubrik = rubrik_cdm.Connect(target_cluster_address, target_username, target_password)
+                remote_rubrik = rubrik_cdm.Connect(target_cluster_address, target_username, target_password)
             except Exception as error:
-               module.fail_json(msg=str(error))
+                module.fail_json(msg=str(error))
             remote_cluster_name = remote_rubrik.get("internal", "/cluster/me/name", timeout)
             for rep_target in local_config['data']:
                 if rep_target['targetClusterName'] == remote_cluster_name:
@@ -147,7 +147,7 @@ def main():
         except Exception as error:
             module.fail_json(msg=str(error))
     else:
-        api_request = "No change required. The Rubrik cluster is already configured with cluster "+ remote_cluster_name +" as it's target_cluster_address."
+        api_request = "No change required. The Rubrik cluster is already configured with cluster " + remote_cluster_name + " as it's target_cluster_address."
 
     if "No change required" in api_request:
         results["changed"] = False
