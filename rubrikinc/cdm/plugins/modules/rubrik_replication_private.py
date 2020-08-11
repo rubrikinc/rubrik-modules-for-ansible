@@ -20,18 +20,17 @@ author: Eric Alba (@KowMangler) <noman.wonder@gmail.com>
 options:
   target_username:
     description:
-      - Hostname of the SMTP server.
+      - Username allowed to connect to the replication target cluster.
     required: True
     type: str
   target_password:
     description:
-      - Incoming port on the SMTP server.
-      - Normally port 25, port 465, or port 587, depending upon the type of encryption used.
+      - Password to connect to the replication target cluster.
     required: True
     type: str
   target_cluster_address:
     description:
-      - The email address assigned to the account on the SMTP server.
+      - The FQDN or IP of the replication target cluster.
     required: True
     type: str
   force:
@@ -50,7 +49,6 @@ options:
     required: False
     type: int
     default: 15
-
 extends_documentation_fragment: rubrikinc.cdm.credentials
 requirements: [rubrik_cdm]
 '''
@@ -73,7 +71,7 @@ idempotent_response:
     description: A "No changed required" message when the target cluster is already configured on the local cluster.
     returned: When the module idempotent check is succesful.
     type: str
-    sample: No change required. The Rubrik cluster is already configured with I(target_cluster_address) as it's target_cluster_address.
+    sample: No change required. The Rubrik cluster is already configured with I(remote_cluster_name) as it's target_cluster_address.
 '''
 
 from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
@@ -126,20 +124,20 @@ def main():
         rubrik = rubrik_cdm.Connect(node_ip, username, password, api_token)
     except Exception as error:
         module.fail_json(msg=str(error))
-    
+
     chg_required = True
     if not force:
         local_config = rubrik.get("internal", "/replication/target", timeout)
         if len(local_config['data']) > 0:
             try:
-              remote_rubrik = rubrik_cdm.Connect(target_cluster_address, target_username, target_password)
+               remote_rubrik = rubrik_cdm.Connect(target_cluster_address, target_username, target_password)
             except Exception as error:
-              module.fail_json(msg=str(error))
+               module.fail_json(msg=str(error))
             remote_cluster_name = remote_rubrik.get("internal", "/cluster/me/name", timeout)
             for rep_target in local_config['data']:
                 if rep_target['targetClusterName'] == remote_cluster_name:
-                  chg_required = False
-                  break
+                    chg_required = False
+                    break
 
     api_request = None
     if chg_required:
@@ -149,8 +147,8 @@ def main():
         except Exception as error:
             module.fail_json(msg=str(error))
     else:
-        api_request = "No change required. The Rubrik cluster is already configured with I(target_cluster_address) as it's target_cluster_address."
-    
+        api_request = "No change required. The Rubrik cluster is already configured with cluster "+ remote_cluster_name +" as it's target_cluster_address."
+
     if "No change required" in api_request:
         results["changed"] = False
     else:
