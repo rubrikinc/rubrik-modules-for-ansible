@@ -57,7 +57,7 @@ class TestRubrikReplicationPrivate(unittest.TestCase):
     def test_module_replication_private(self, mock_get, mock_post):
 
         def mock_get_internal_cluster_me_replication_private():
-            return {}
+            return { 'hasMore': False, 'data':[] }
 
         def mock_post_internal_cluster_me_replication_private():
             return {
@@ -85,25 +85,3 @@ class TestRubrikReplicationPrivate(unittest.TestCase):
 
         self.assertEqual(result.exception.args[0]['changed'], True)
         self.assertEqual(result.exception.args[0]['response']['targetClusterName'], 'REPLCLUSTER')
-
-    # @patch.object(rubrik_replication_private.rubrik_cdm.rubrik_cdm.Connect, 'get', autospec=True, spec_set=True)
-    # def test_module_idempotence(self, mock_get):
-
-    #     def mock_get_internal_cluster_me_replication_private():
-    #         return {'loginBanner': 'Banner Test'}
-
-    #     set_module_args({
-    #         'banner_text': 'Banner Test',
-    #         'node_ip': '1.1.1.1',
-    #         'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP'
-    #     })
-
-    #     mock_get.return_value = mock_get_internal_cluster_me_replication_private()
-
-    #     with self.assertRaises(AnsibleExitJson) as result:
-    #         rubrik_replication_private.main()
-
-    #     self.assertEqual(result.exception.args[0]['changed'], False)
-    #     self.assertEqual(
-    #         result.exception.args[0]['response'],
-    #         "No change required. The Rubrik cluster is already configured with the login banner text '`banner`'.")
