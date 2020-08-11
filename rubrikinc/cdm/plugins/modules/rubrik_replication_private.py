@@ -128,7 +128,7 @@ def main():
     chg_required = True
     if not force:
         local_config = rubrik.get("internal", "/replication/target", timeout)
-        if len(local_config['data']) > 0:
+        if len(local_config) > 0 and len(local_config['data']) > 0:
             try:
                remote_rubrik = rubrik_cdm.Connect(target_cluster_address, target_username, target_password)
             except Exception as error:
