@@ -57,7 +57,7 @@ class TestRubrikReplicationPrivate(unittest.TestCase):
     def test_module_replication_private(self, mock_get, mock_post):
 
         def mock_get_internal_cluster_me_replication_private():
-            return { 'hasMore': False, 'data':[] }
+            return {}
 
         def mock_post_internal_cluster_me_replication_private():
             return {
