@@ -35,7 +35,7 @@ Configure replication partner as specified by user using PRIVATE NETWORK (direct
 | target_username | Username allowed to connect to the replication target cluster.                                         |         | str  |         | true      |         |
 | target_password | Password to connect to the replication target cluster.                                                 |         | str  |         | true      |         |
 | target_cluster_address | The FQDN or IP of the replication target cluster.                                               |         | str  |         | true      |         |
-| force | Force the replication target to refresh if it already exists.                                                    |         | str  |         | false     |         |
+| force | Force the replication target to refresh if it already exists.                                                    | False   | str  |         | false     |         |
 | ca_certificate | CA certificiate used to perform TLS certificate validation.                                             |         | str  |         | false     |         |
 | timeout   | The number of seconds to wait to establish a connection the Rubrik cluster before returning a timeout error. | 15      | int  |         |           |         |
 
