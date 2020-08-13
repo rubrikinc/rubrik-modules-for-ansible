@@ -65,17 +65,17 @@ options:
     type: int
   starttime_hour:
     description:
-      - Starting hour of allowed backup window.
+      - Starting hour of allowed snapshot window. (CDM 5.0+)
     required: false
     type: int
   starttime_minute:
     description:
-      - Starting minute of allowed backup window.
+      - Starting minute of allowed snapshot window. (CDM 5.0+)
     required: false
     type: int
   duration_hours:
     description:
-      - Length of allowed backup window in hours.
+      - Length of allowed snapshot window in hours. (CDM 5.0+)
     type: int
   archive_name:
     description:
