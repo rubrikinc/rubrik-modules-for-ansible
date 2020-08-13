@@ -63,6 +63,20 @@ options:
       - Number of years to retain the yearly backups.
     required: false
     type: int
+  starttime_hour:
+    description:
+      - Starting hour of allowed snapshot window. (CDM 5.0+)
+    required: false
+    type: int
+  starttime_minute:
+    description:
+      - Starting minute of allowed snapshot window. (CDM 5.0+)
+    required: false
+    type: int
+  duration_hours:
+    description:
+      - Length of allowed snapshot window in hours. (CDM 5.0+)
+    type: int
   archive_name:
     description:
       - The optional archive location you wish to configure on the SLA Domain. When populated, you must also provide a I(retention_on_brik_in_days).
@@ -101,6 +115,9 @@ EXAMPLES = '''
     monthly_retention: 12
     yearly_frequency: 1
     yearly_retention: 5
+    starttime_hour: 0
+    starttime_minute: 30
+    duration_hours: 8
     archive_name: S3:AWS-S3-Bucket
     retention_on_brik_in_days: 30
     instant_archive: True
@@ -150,6 +167,9 @@ def main():
         monthly_retention=dict(required=False, default=None, type='int'),
         yearly_frequency=dict(required=False, default=None, type='int'),
         yearly_retention=dict(required=False, default=None, type='int'),
+        starttime_hour=dict(required=False, default=None, type='int'),
+        starttime_minute=dict(required=False, default=None, type='int'),
+        duration_hours=dict(required=False, default=None, type='int'),
         archive_name=dict(required=False, default=None, type='str'),
         retention_on_brik_in_days=dict(required=False, default=None, type='int'),
         instant_archive=dict(required=False, default=False, type='bool'),
@@ -173,6 +193,9 @@ def main():
     monthly_retention = ansible["monthly_retention"]
     yearly_frequency = ansible["yearly_frequency"]
     yearly_retention = ansible["yearly_retention"]
+    starttime_hour = ansible["starttime_hour"]
+    starttime_minute = ansible["starttime_minute"]
+    duration_hours = ansible["duration_hours"]
     archive_name = ansible["archive_name"]
     retention_on_brik_in_days = ansible["retention_on_brik_in_days"]
     instant_archive = ansible["instant_archive"]
@@ -202,6 +225,9 @@ def main():
             archive_name,
             retention_on_brik_in_days,
             instant_archive,
+            starttime_hour,
+            starttime_minute,
+            duration_hours,
             timeout)
     except Exception as error:
         module.fail_json(msg=str(error))
