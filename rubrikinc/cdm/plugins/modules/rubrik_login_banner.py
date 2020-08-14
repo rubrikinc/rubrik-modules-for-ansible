@@ -104,7 +104,7 @@ def main():
             results["response"] = "check-mode: would have changed: \"" + bannerresponse["loginBanner"] + "\" => \"" + ansible["banner_text"] + "\""
         else:
             results["response"] = "check-mode: would have changed: UNSET => \"" + ansible["banner_text"] + "\""
-        module.exit_json(**results) 
+        module.exit_json(**results)
     try:
         api_request = rubrik.configure_login_banner(ansible["banner_text"], ansible["timeout"])
     except Exception as error:
