@@ -19,9 +19,9 @@ description:
 version_added: '2.8'
 author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
-  nutanix_ahv_ip:
+  nutanix_ahv_cluster_name:
     description:
-      - The IP address or FQDN of the AHV cluster you wish to refresh metadata from
+      - The Rubrik display name of the AHV cluster you wish to refresh metadata from
     required: True
     type: str
   wait_for_completion:
@@ -44,7 +44,7 @@ requirements: [rubrik_cdm]
 EXAMPLES = '''
 - name: Refresh the metadata for the specified AHV cluster
   rubrik_refresh_ahv:
-    nutanix_ahv_ip: ahv.example.com
+    nutanix_ahv_cluster_name: ahvcluster
     wait_for_completion: true
 '''
 
@@ -110,7 +110,7 @@ def main():
         module.fail_json(msg=str(error))
 
     try:
-        api_request = rubrik.refresh_ahv(ansible["nutanix_ahv_ip"], ansible["wait_for_completion"], ansible["timeout"])
+        api_request = rubrik.refresh_ahv(ansible["nutanix_ahv_cluster_name"], ansible["wait_for_completion"], ansible["timeout"])
     except Exception as error:
         module.fail_json(msg=str(error))
 
