@@ -19,9 +19,9 @@ description:
 version_added: '2.8'
 author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
-  nutanix_ahv_cluster_name:
+  nutanix_ahv_cluster:
     description:
-      - The Rubrik display name of the AHV cluster you wish to refresh metadata from
+      - The name of the AHV cluster you wish to refresh metadata from
     required: True
     type: str
   wait_for_completion:
@@ -44,7 +44,7 @@ requirements: [rubrik_cdm]
 EXAMPLES = '''
 - name: Refresh the metadata for the specified AHV cluster
   rubrik_refresh_ahv:
-    nutanix_ahv_cluster_name: ahvcluster
+    nutanix_ahv_cluster: ahvcluster
     wait_for_completion: true
 '''
 
@@ -59,7 +59,7 @@ full_response:
         "id": "REFRESH_METADATA_01234567-8910-1abc-d435-0abc1234d567_01234567-8910-1abc-d435-0abc1234d567:::0",
         "links": [
             {
-                "href": "https://rubrik/api/internal/nutanix/cluster/request/REFRESH_METADATA_01234567:::0",
+                "href": "https://rubrik/api/internal/nutanix/cluster/request/REFRESH_NUTANIX_CLUSTER_01234567:::0",
                 "rel": "self"
             }
         ],
@@ -86,7 +86,7 @@ def main():
     results = {}
 
     argument_spec = dict(
-        nutanix_ahv_ip=dict(required=True, type='str'),
+        nutanix_ahv_cluster=dict(required=True, type='str'),
         wait_for_completion=dict(required=False, type='bool', default=True),
         timeout=dict(required=False, type='int', default=15)
     )
@@ -110,7 +110,7 @@ def main():
         module.fail_json(msg=str(error))
 
     try:
-        api_request = rubrik.refresh_ahv(ansible["nutanix_ahv_cluster_name"], ansible["wait_for_completion"], ansible["timeout"])
+        api_request = rubrik.refresh_ahv(ansible["nutanix_ahv_cluster"], ansible["wait_for_completion"], ansible["timeout"])
     except Exception as error:
         module.fail_json(msg=str(error))
 
