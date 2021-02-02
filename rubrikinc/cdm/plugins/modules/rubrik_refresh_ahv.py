@@ -12,16 +12,16 @@ ANSIBLE_METADATA = {
 }
 
 DOCUMENTATION = '''
-module: rubrik_refresh_vcenter
-short_description: Refresh the metadata for the specified vCenter Server
+module: rubrik_refresh_ahv
+short_description: Refresh the metadata for the specified AHV cluster
 description:
-    - Refresh the metadata for the specified vCenter Server.
+    - Refresh the metadata for the specified AHV cluster
 version_added: '2.8'
 author: Rubrik Build Team (@drew-russell) <build@rubrik.com>
 options:
-  vcenter_ip:
+  nutanix_ahv_ip:
     description:
-      - The IP address or FQDN of the vCenter you wish to refresh metadata from
+      - The IP address or FQDN of the AHV cluster you wish to refresh metadata from
     required: True
     type: str
   wait_for_completion:
@@ -42,9 +42,9 @@ requirements: [rubrik_cdm]
 '''
 
 EXAMPLES = '''
-- name: Refresh the metadata for the specified vCenter Server
-  rubrik_refresh_vcenter:
-    vcenter_ip: vcenter.example.com
+- name: Refresh the metadata for the specified AHV cluster
+  rubrik_refresh_ahv:
+    nutanix_ahv_ip: ahv.example.com
     wait_for_completion: true
 '''
 
@@ -59,7 +59,7 @@ full_response:
         "id": "REFRESH_METADATA_01234567-8910-1abc-d435-0abc1234d567_01234567-8910-1abc-d435-0abc1234d567:::0",
         "links": [
             {
-                "href": "https://rubrik/api/v1/vmware/vcenter/request/REFRESH_METADATA_01234567:::0",
+                "href": "https://rubrik/api/internal/nutanix/cluster/request/REFRESH_METADATA_01234567:::0",
                 "rel": "self"
             }
         ],
@@ -86,7 +86,7 @@ def main():
     results = {}
 
     argument_spec = dict(
-        vcenter_ip=dict(required=True, type='str'),
+        nutanix_ahv_ip=dict(required=True, type='str'),
         wait_for_completion=dict(required=False, type='bool', default=True),
         timeout=dict(required=False, type='int', default=15)
     )
@@ -110,7 +110,7 @@ def main():
         module.fail_json(msg=str(error))
 
     try:
-        api_request = rubrik.refresh_vcenter(ansible["vcenter_ip"], ansible["wait_for_completion"], ansible["timeout"])
+        api_request = rubrik.refresh_ahv(ansible["nutanix_ahv_ip"], ansible["wait_for_completion"], ansible["timeout"])
     except Exception as error:
         module.fail_json(msg=str(error))
 
