@@ -69,8 +69,9 @@ full_response:
       }
 '''
 # Using the module from Ansible Galaxy doesn't seem to work properly unless you specify the module_utils directory for rubrikinc.cdm
-# from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
-from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+# Leaving this commented out until clarification in pull request
+# from ansible_collections.rubrikinc.cdm.plugins.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
+from ansible.module_utils.rubrik_cdm import credentials, load_provider_variables, rubrik_argument_spec
 from ansible.module_utils.basic import AnsibleModule
 
 try:
