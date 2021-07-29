@@ -73,7 +73,27 @@ class TestRubrikGet(unittest.TestCase):
 
         self.assertEqual(result.exception.args[0]['changed'], False)
         self.assertEqual(result.exception.args[0]['response'], {"data": [], "hasMore": False, "total": 0})
+    
+    def test_v3_support(self, mock_get):
 
+        def mock_get_get():
+            return {"data": [], "hasMore": False, "total": 0}
+
+        set_module_args({
+            'node_ip': '1.1.1.1',
+            'api_token': 'vkys219gn2jziReqdPJH0asGM3PKEQHP',
+            'api_version': 'v3',
+            'api_endpoint': '/sla_domain',
+            'params': {"name": "Python SDK"}
+        })
+
+        mock_get.return_value = mock_get_get()
+
+        with self.assertRaises(AnsibleExitJson) as result:
+            rubrik_get.main()
+
+        self.assertEqual(result.exception.args[0]['changed'], False)
+        self.assertEqual(result.exception.args[0]['response'], {"data": [], "hasMore": False, "total": 0})
 
 if __name__ == '__main__':
     unittest.main()
